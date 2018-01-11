@@ -19,7 +19,8 @@ class REST(Keywords):
                  content_type="application/json",
                  user_agent="Robot Framework RESTinstance",
                  proxies={},
-                 schema={}):
+                 schema={},
+                 spec=None):
 
         if not url.startswith("http://") and not url.startswith("https://"):
             url = "http://" + url
@@ -48,8 +49,9 @@ class REST(Keywords):
             "response": {}
         }
         self.schema.update(self.input(schema))
-        self.spec = None
+        self.spec = self.input(spec)
         self.instances = []
+
 
     @staticmethod
     def print(json, header="\n", with_colors=True):
