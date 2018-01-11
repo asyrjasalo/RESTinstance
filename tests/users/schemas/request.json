@@ -1,0 +1,17 @@
+{
+  "body": {
+    "enum": [
+      ""
+    ],
+    "type": "string"
+  },
+  "method": {
+    "enum": [
+      "GET"
+    ],
+    "type": "string"
+  },
+  "query": {
+    "type": "object"
+  }
+}

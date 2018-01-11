@@ -1,0 +1,20 @@
+# docker-compose up --force-recreate --build
+
+version: '2'
+
+services:
+  mountebank:
+    build: ./docker
+    container_name: mountebank
+    command: --configfile apis/apis.ejs --allowInjection --debug
+    environment:
+      - HOST_UID
+      - HOST_GID
+    ports:
+      - 2525:2525
+      - 8273:8273
+      - 8274:8274
+      - 8080:8080
+    volumes:
+      - ./apis:/home/mountebank/apis
+    stop_signal: SIGKILL

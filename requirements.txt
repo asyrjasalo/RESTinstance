@@ -1,0 +1,5 @@
+flex==6.11.1
+GenSON==0.2.3
+jsonschema==2.6.0
+pygments==2.2.0
+requests==2.18.4

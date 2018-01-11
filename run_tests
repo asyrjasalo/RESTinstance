@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e
+
+this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# https://github.com/bbyars/mountebank
+"$this_path/testapi/mountebank"
+
+# https://github.com/asyrjasalo/rfdocker
+RUN_ARGS="--network=host" \
+  "$this_path/rfdocker" \
+    "${@:-tests}"

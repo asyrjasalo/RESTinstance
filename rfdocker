@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# https://github.com/asyrjasalo/rfdocker
+# https://hub.docker.com/r/robotframework/rfdocker
+
+set -e
+
+### constants ##################################################################
+
+this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+### variables ##################################################################
+
+: ${BUILD_ARGS:=""}
+: ${BUILD_DIR:="$this_path"}
+: ${BUILD_NAME:=${PWD##*/}}
+: ${RUN_ARGS:=''}
+
+### build and run tests ########################################################
+
+docker build $BUILD_ARGS --tag "rfdocker:$BUILD_NAME" "$BUILD_DIR"
+
+docker run --rm -ti -e HOST_UID=$(id -u) -e HOST_GID=$(id -g) $RUN_ARGS \
+  -v "$this_path/tests":/home/robot/tests \
+  -v "$this_path/results":/home/robot/results \
+  "rfdocker:$BUILD_NAME" "${@:-tests}"
