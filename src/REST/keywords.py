@@ -156,8 +156,11 @@ class Keywords(object):
         keys = found['keys']
         reality = found['reality']
         schema = { "type": "boolean" }
-        if value:
-            self._set_value_validations(schema, value)
+        if value is not None:
+            if isinstance(value, str) and value != "true" and value != "false":
+                raise AssertionError(
+                    "Expected value {} is not a boolean".format(value))
+            schema['enum'] = [self.input(value)]
         skip = self.input(validations.pop('skip', False))
         if not skip:
             self._assert_schema(schema, reality)
@@ -172,6 +175,12 @@ class Keywords(object):
         skip = self.input(validations.pop('skip', False))
         self._set_type_validations("integer", schema, validations)
         if enum:
+            for value in enum:
+                try:
+                    int(value)
+                except ValueError:
+                    raise AssertionError(
+                        "Expected value {} is not an integer".format(value))
             self._set_value_validations(schema, enum)
         if not skip:
             self._assert_schema(schema, reality)
@@ -186,6 +195,12 @@ class Keywords(object):
         skip = self.input(validations.pop('skip', False))
         self._set_type_validations("number", schema, validations)
         if enum:
+            for value in enum:
+                try:
+                    float(value)
+                except ValueError:
+                    raise AssertionError(
+                        "Expected value {} is not a number".format(value))
             self._set_value_validations(schema, enum)
         if not skip:
             self._assert_schema(schema, reality)
@@ -200,6 +215,7 @@ class Keywords(object):
         skip = self.input(validations.pop('skip', False))
         self._set_type_validations("string", schema, validations)
         if enum:
+            enum = [self._stringify(value) for value in enum]
             self._set_value_validations(schema, enum)
         if not skip:
             self._assert_schema(schema, reality)
@@ -237,24 +253,21 @@ class Keywords(object):
 
     @keyword
     def input(self, what):
-        if isinstance(what, dict) or isinstance(what, list):
-            return what
         if not isinstance(what, str):
             return loads(dumps(what, ensure_ascii=False))
-        try:
+        if path.isfile(what):
             try:
                 with open(what) as file:
                     return load(file)
             except JSONDecodeError as e:
-                raise RuntimeError("Error loading JSON file: {}". format(e))
-            except (FileNotFoundError, OSError):
-                try:
-                    return loads(what)
-                except JSONDecodeError as e:
-                    return self._find_by_field(what, also_schema=False)['reality']
-            raise RuntimeError("Error loading JSON input: {}".format(e))
-        except IndexError:
-            return self.input('"' + what + '"')
+                raise RuntimeError("Error loading JSON file: {}".format(e))
+            except Exception as e:
+                raise RuntimeError(
+                    "Error opening file '{}': {}".format(what, e))
+        try:
+            return loads(what)
+        except JSONDecodeError:
+            return self._find_by_field(what, also_schema=False)['reality']
 
     @keyword
     def output(self, what=None, file_path=None):

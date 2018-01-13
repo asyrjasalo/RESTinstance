@@ -63,3 +63,11 @@ class REST(Keywords):
                                   formatters.TerminalFormatter())
             logger.info("{}{}".format(header, json_data), also_console=True)
         return json
+
+    @staticmethod
+    def _stringify(value):
+        if value[0] != '"':
+            value = '"{}'.format(value)
+        if value[-1] != '"':
+            value = '{}"'.format(value)
+        return value
