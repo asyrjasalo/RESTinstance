@@ -1,12 +1,12 @@
 from copy import deepcopy
 from datetime import datetime, timezone
-from json import dump, dumps, load, loads, JSONDecodeError
+from json import dump
 from os import path, getcwd
 from urllib.parse import parse_qs, urljoin, urlparse
 
 from flex.core import validate_api_call
 from genson import Schema
-from jsonschema import Draft4Validator, FormatChecker
+from jsonschema import Draft4Validator
 from jsonschema.exceptions import ValidationError
 from requests import request as client
 from requests.packages.urllib3 import disable_warnings
@@ -27,34 +27,34 @@ class Keywords(object):
 
     @keyword
     def set_basic_auth(self, auth):
-        self.request['auth'] = self.input(auth)
+        self.request['auth'] = self._input_list(auth)
         return self.request
 
     @keyword
     def set_client_certificate(self, cert):
-        self.request['cert'] = self.input(cert)
+        self.request['cert'] = self._input_client_certificate(cert)
         return self.request
 
     @keyword
     def set_headers(self, headers):
-        self.request['headers'].update(self.input(headers))
+        self.request['headers'].update(self._input_object(headers))
         return self.request
 
     ### Expectations
 
     @keyword
     def expect_request(self, schema):
-        self.schema['request'].update(self.input(schema))
+        self.schema['request'].update(self._input_object(schema))
         return self.schema['request']
 
     @keyword
     def expect_response(self, schema):
-        self.schema['response'].update(self.input(schema))
+        self.schema['response'].update(self._input_object(schema))
         return self.schema['response']
 
     @keyword
     def expect_spec(self, spec):
-        self.spec = self.input(spec)
+        self.spec = self._input_string(spec)
         return self.spec
 
     ### HTTP methods
@@ -64,8 +64,9 @@ class Keywords(object):
         request = {}
         request['method'] = "HEAD"
         request['endpoint'] = endpoint
-        request['redirects'] = self.input(redirects)
-        request['timeout'] = self.input(timeout)
+        request['redirects'] = self._input_boolean(redirects)
+        if timeout:
+            request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
@@ -73,8 +74,9 @@ class Keywords(object):
         request = {}
         request['method'] = "OPTIONS"
         request['endpoint'] = endpoint
-        request['redirects'] = self.input(redirects)
-        request['timeout'] = self.input(timeout)
+        request['redirects'] = self._input_boolean(redirects)
+        if timeout:
+            request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
@@ -87,10 +89,11 @@ class Keywords(object):
             request['query'].update(query_in_url)
             endpoint = endpoint.rsplit('?', 1)[0]
         if query:
-            request['query'].update(self.input(query))
+            request['query'].update(self._input_object(query))
         request['endpoint'] = endpoint
-        request['redirects'] = self.input(redirects)
-        request['timeout'] = self.input(timeout)
+        request['redirects'] = self._input_boolean(redirects)
+        if timeout:
+            request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
@@ -99,8 +102,9 @@ class Keywords(object):
         request['method'] = "POST"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        request['redirects'] = self.input(redirects)
-        request['timeout'] = self.input(timeout)
+        request['redirects'] = self._input_boolean(redirects)
+        if timeout:
+            request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
@@ -109,8 +113,9 @@ class Keywords(object):
         request['method'] = "PUT"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        request['redirects'] = self.input(redirects)
-        request['timeout'] = self.input(timeout)
+        request['redirects'] = self._input_boolean(redirects)
+        if timeout:
+            request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
@@ -119,8 +124,9 @@ class Keywords(object):
         request['method'] = "PATCH"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        request['redirects'] = self.input(redirects)
-        request['timeout'] = self.input(timeout)
+        request['redirects'] = self._input_boolean(redirects)
+        if timeout:
+            request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
@@ -128,8 +134,9 @@ class Keywords(object):
         request = {}
         request['method'] = "DELETE"
         request['endpoint'] = endpoint
-        request['redirects'] = self.input(redirects)
-        request['timeout'] = self.input(timeout)
+        request['redirects'] = self._input_boolean(redirects)
+        if timeout:
+            request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     ### Assertions
@@ -145,7 +152,7 @@ class Keywords(object):
         found = self._find_by_field(field)
         reality = found['reality']
         schema = { "type": "null" }
-        skip = self.input(validations.pop('skip', False))
+        skip = self._input_boolean(validations.pop('skip', False))
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -157,11 +164,8 @@ class Keywords(object):
         reality = found['reality']
         schema = { "type": "boolean" }
         if value is not None:
-            if isinstance(value, str) and value != "true" and value != "false":
-                raise AssertionError(
-                    "Expected value {} is not a boolean".format(value))
-            schema['enum'] = [self.input(value)]
-        skip = self.input(validations.pop('skip', False))
+            schema['enum'] = [self._input_boolean(value)]
+        skip = self._input_boolean(validations.pop('skip', False))
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -172,15 +176,10 @@ class Keywords(object):
         keys = found['keys']
         schema = found['schema']
         reality = found['reality']
-        skip = self.input(validations.pop('skip', False))
+        skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("integer", schema, validations)
         if enum:
-            for value in enum:
-                try:
-                    int(value)
-                except ValueError:
-                    raise AssertionError(
-                        "Expected value {} is not an integer".format(value))
+            enum = [self._input_integer(value) for value in enum]
             self._set_value_validations(schema, enum)
         if not skip:
             self._assert_schema(schema, reality)
@@ -192,15 +191,10 @@ class Keywords(object):
         keys = found['keys']
         schema = found['schema']
         reality = found['reality']
-        skip = self.input(validations.pop('skip', False))
+        skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("number", schema, validations)
         if enum:
-            for value in enum:
-                try:
-                    float(value)
-                except ValueError:
-                    raise AssertionError(
-                        "Expected value {} is not a number".format(value))
+            enum = [self._input_number(value) for value in enum]
             self._set_value_validations(schema, enum)
         if not skip:
             self._assert_schema(schema, reality)
@@ -212,10 +206,10 @@ class Keywords(object):
         keys = found['keys']
         schema = found['schema']
         reality = found['reality']
-        skip = self.input(validations.pop('skip', False))
+        skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("string", schema, validations)
         if enum:
-            enum = [self._stringify(value) for value in enum]
+            enum = [self._input_string(value) for value in enum]
             self._set_value_validations(schema, enum)
         if not skip:
             self._assert_schema(schema, reality)
@@ -227,9 +221,10 @@ class Keywords(object):
         keys = found['keys']
         schema = found['schema']
         reality = found['reality']
-        skip = self.input(validations.pop('skip', False))
+        skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("object", schema, validations)
         if enum:
+            enum = [self._input_object(value) for value in enum]
             self._set_value_validations(schema, enum)
         if not skip:
             self._assert_schema(schema, reality)
@@ -241,36 +236,22 @@ class Keywords(object):
         keys = found['keys']
         schema = found['schema']
         reality = found['reality']
-        skip = self.input(validations.pop('skip', False))
+        skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("array", schema, validations)
         if enum:
+            enum = [self._input_array(value) for value in enum]
             self._set_value_validations(schema, enum)
         if not skip:
             self._assert_schema(schema, reality)
         return reality
 
-    ### IO
-
     @keyword
     def input(self, what):
         if not isinstance(what, str):
-            return loads(dumps(what, ensure_ascii=False))
+            return self._input_non_string(what)
         if path.isfile(what):
-            try:
-                with open(what) as file:
-                    return load(file)
-            except IOError as e:
-                raise RuntimeError("Error opening file '{}': {}".format(
-                    what, e))
-            except JSONDecodeError as e:
-                raise RuntimeError("Error loading JSON file '{}': {}".format(
-                    what, e))
-        try:
-            return loads(what)
-        except ValueError as e:
-            raise RuntimeError("Error parsing JSON: {}".format(e))
-        except JSONDecodeError:
-            return self.input(self._stringify(what))
+            return self._input_json_file(what)
+        return self._input_json_string(what)
 
     @keyword
     def output(self, what=None, file_path=None):
@@ -302,8 +283,6 @@ class Keywords(object):
             raise RuntimeError("Error writing JSON to file: {}".format(e))
         return instances
 
-    ### Internal methods
-
     def _request(self, **fields):
         request = deepcopy(self.request)
         request.update(fields)
@@ -318,14 +297,16 @@ class Keywords(object):
             endpoint = urljoin(self.url, endpoint)
         if not request['ssl_verify']:
             disable_warnings()
+        auth = tuple(request['auth']) if request['auth'] else None
+        timeout = tuple(request['timeout']) if request['timeout'] else None
         response = client(request['method'], endpoint,
                           params=request['query'],
                           json=request['body'],
                           headers=request['headers'],
                           proxies=request['proxies'],
-                          auth=tuple(request['auth']),
+                          auth=auth,
                           cert=request['cert'],
-                          timeout=request['timeout'],
+                          timeout=timeout,
                           allow_redirects=request['redirects'],
                           verify=request['ssl_verify'])
         utc_datetime = datetime.now(timezone.utc)
@@ -469,13 +450,4 @@ class Keywords(object):
     def _set_value_validations(self, schema, enum):
         schema['enum'] = []
         for value in enum:
-            schema['enum'].append(self.input(value))
-
-    #def _assert_value(self, reality, expected, keys):
-    #    expected = self.input(expected)
-    #    if expected == reality:
-    #        return expected
-    #    self.print(reality,
-    #        "\nField '{}' is in reality".format(' '.join(keys)))
-    #    self.print(expected, "But it is expected to be")
-    #    raise AssertionError("Expected value did not match the real value.")
+            schema['enum'].append(value)

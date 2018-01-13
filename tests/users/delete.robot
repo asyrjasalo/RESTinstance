@@ -9,6 +9,7 @@ Successful delete
     DELETE      /users/2
     Integer     response status           204
     String      response body             ""
+    String      response body             ${EMPTY}
     GET         /users/2
     Integer     response status           not={ "enum": [200] }
     Object      response body             { "error": "Not found" }
