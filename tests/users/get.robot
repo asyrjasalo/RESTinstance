@@ -1,5 +1,5 @@
 *** Settings ***
-Library         REST                            localhost:8273
+Library         REST                            localhost:8273  ssl_verify=false
 Suite setup     Set headers and assume schema   ${CURDIR}/json/headers.json
 Suite teardown  Rest instances                  ${OUTPUTDIR}/instances.json
 

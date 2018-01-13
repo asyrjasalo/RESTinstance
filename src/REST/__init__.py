@@ -40,7 +40,7 @@ class REST(Keywords):
             'timeout': None,
             'auth': [],
             'cert': None,
-            'ssl_verify': ssl_verify,
+            'ssl_verify': self.input(ssl_verify),
             'redirects': True
         }
         self.schema = {
