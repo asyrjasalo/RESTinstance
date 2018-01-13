@@ -259,15 +259,15 @@ class Keywords(object):
             try:
                 with open(what) as file:
                     return load(file)
+            except IOError as e:
+                raise RuntimeError("Error opening file '{}': {}".format(
+                    what, e))
             except JSONDecodeError as e:
                 raise RuntimeError("Error loading JSON file '{}': {}".format(
                     what, e))
-            except Exception as e:
-                raise RuntimeError(
-                    "Error opening file '{}': {}".format(what, e))
         try:
             return loads(what)
-        except JSONDecodeError as e:
+        except JSONDecodeError:
             return self.input(self._stringify(what))
 
     @keyword
@@ -280,8 +280,11 @@ class Keywords(object):
             json = self._find_by_field(what, also_schema=False)['reality']
             if not file_path:
                 return self.print(json, "\n\n")
-        with open(path.join(getcwd(), file_path), 'w') as file:
-            dump(json, file, ensure_ascii=False, indent=4)
+        try:
+            with open(path.join(getcwd(), file_path), 'w') as file:
+                dump(json, file, ensure_ascii=False, indent=4)
+        except IOError as e:
+            raise RuntimeError("Error writing JSON to file: {}".format(e))
         return json
 
     @keyword
@@ -290,8 +293,11 @@ class Keywords(object):
             "url": self.url,
             "instances": self.instances
         }
-        with open(path.join(getcwd(), file_path), 'w') as file:
-            dump(instances, file, ensure_ascii=False, indent=4)
+        try:
+            with open(path.join(getcwd(), file_path), 'w') as file:
+                dump(instances, file, ensure_ascii=False, indent=4)
+        except IOError as e:
+            raise RuntimeError("Error writing JSON to file: {}".format(e))
         return instances
 
     ### Internal methods
