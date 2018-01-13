@@ -14,7 +14,7 @@ class REST(Keywords):
     ROBOT_LIBRARY_SCOPE = 'TEST SUITE'
 
     def __init__(self, url,
-                 verify=False,
+                 ssl_verify=True,
                  accept="application/json, */*",
                  content_type="application/json",
                  user_agent="Robot Framework RESTinstance",
@@ -39,7 +39,7 @@ class REST(Keywords):
             'timeout': None,
             'auth': [],
             'cert': None,
-            'verify': verify,
+            'ssl_verify': ssl_verify,
             'redirects': True
         }
         self.schema = {

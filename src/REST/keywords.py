@@ -293,7 +293,7 @@ class Keywords(object):
             if endpoint.endswith('/'):
                 endpoint = endpoint[:-1]
             endpoint = urljoin(self.url, endpoint)
-        if not request['verify']:
+        if not request['ssl_verify']:
             disable_warnings()
         response = client(request['method'], endpoint,
                           params=request['query'],
@@ -304,7 +304,7 @@ class Keywords(object):
                           cert=request['cert'],
                           timeout=request['timeout'],
                           allow_redirects=request['redirects'],
-                          verify=request['verify'])
+                          verify=request['ssl_verify'])
         utc_datetime = datetime.now(timezone.utc)
         request['timestamp'] = {
             'utc': utc_datetime.isoformat(),
