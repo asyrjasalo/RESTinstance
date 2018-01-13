@@ -420,28 +420,16 @@ class Keywords(object):
             return json[key]
 
     def _schema_by_key(self, schema, key, value, add_example=False):
-        try:
-            schema = schema[key]
-        except KeyError:
-            try:
+        if key not in schema:
+            if 'properties' in schema:
                 schema = schema['properties']
-                if key not in schema:
-                    schema[key] = self._new_schema(value)
-                if add_example:
-                    schema[key]['example'] = value
-            except KeyError:
-                try:
-                    schema = schema['items']
-                except KeyError:
-                    if key not in schema:
-                        schema[key] = self._new_schema(value)
-                    if add_example:
-                        schema[key]['example'] = value
-            try:
-                schema = schema[key]
-            except KeyError:
-                pass
-        return schema
+            elif 'items' in schema:
+                schema = schema['items']
+            if key not in schema:
+                schema[key] = self._new_schema(value)
+            if add_example:
+                schema[key]['example'] = value
+        return schema[key]
 
     def _set_type_validations(self, json_type, schema, validations):
         if validations:
