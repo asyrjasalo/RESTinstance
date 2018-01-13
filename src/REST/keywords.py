@@ -81,13 +81,14 @@ class Keywords(object):
     def get(self, endpoint, query={}, redirects=True, timeout=None):
         request = {}
         request['method'] = "GET"
-        request['endpoint'] = endpoint
+        request['query'] = {}
         query_in_url = parse_qs(urlparse(endpoint).query)
         if query_in_url:
-            request['query'] = query_in_url
+            request['query'].update(query_in_url)
             endpoint = endpoint.rsplit('?', 1)[0]
         if query:
             request['query'].update(self.input(query))
+        request['endpoint'] = endpoint
         request['redirects'] = self.input(redirects)
         request['timeout'] = self.input(timeout)
         return self._request(**request)['response']
