@@ -45,6 +45,7 @@ Create /users in mountebank
     \   Append to list                  ${user.urls}            ${url2}
 
     \   ${user.organizationId}=         Input                   null
+    \   ${user.strActive}=              Input                   "true"
     \   ${user.active}=                 FakerLibrary.Boolean    # overlapping kw
     \   ${user.registeredAt}=           ISO8601
     \   Append to list                  ${users}                ${user}
