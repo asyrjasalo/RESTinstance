@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-HOST_UID=$(id -u) HOST_GID=$(id -g) \
-  docker-compose -f "$this_path/docker-compose.yml" \
-    up -d --build --force-recreate

@@ -4,8 +4,10 @@ set -e
 
 this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# https://github.com/bbyars/mountebank
-"$this_path/testapi/mountebank"
+# https://github.com/asyrjasalo/mounterest
+HOST_UID=$(id -u) HOST_GID=$(id -g) \
+  docker-compose -f "$this_path/testapi/docker-compose.yml" \
+    up -d --build --force-recreate
 
 # https://github.com/asyrjasalo/rfdocker
 RUN_ARGS="--network=host" \
