@@ -1,6 +1,7 @@
 from json import dumps
 
 from pygments import highlight, lexers, formatters
+
 from robot.api import logger
 
 from .keywords import Keywords
