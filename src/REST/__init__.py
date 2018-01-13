@@ -66,8 +66,8 @@ class REST(Keywords):
 
     @staticmethod
     def _stringify(value):
-        if value[0] != '"':
-            value = '"{}'.format(value)
-        if value[-1] != '"':
-            value = '{}"'.format(value)
+        if not value.startswith('"'):
+            value = '"' + value
+        if not value.endswith('"'):
+            value = value + '"'
         return value
