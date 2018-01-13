@@ -260,7 +260,8 @@ class Keywords(object):
                 with open(what) as file:
                     return load(file)
             except JSONDecodeError as e:
-                raise RuntimeError("Error loading JSON file: {}".format(e))
+                raise RuntimeError("Error loading JSON file '{}': {}".format(
+                    what, e))
             except Exception as e:
                 raise RuntimeError(
                     "Error opening file '{}': {}".format(what, e))
