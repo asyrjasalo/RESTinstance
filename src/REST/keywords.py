@@ -27,12 +27,12 @@ class Keywords(object):
 
     @keyword
     def set_basic_auth(self, auth):
-        self.request.update({ "auth": self.input(auth) })
+        self.request['auth'] = self.input(auth)
         return self.request
 
     @keyword
     def set_client_certificate(self, cert):
-        self.request.update({ "cert": self.input(cert) })
+        self.request['cert'] = self.input(cert)
         return self.request
 
     @keyword
@@ -315,7 +315,7 @@ class Keywords(object):
                           json=request['body'],
                           headers=request['headers'],
                           proxies=request['proxies'],
-                          auth=request['auth'],
+                          auth=tuple(request['auth']),
                           cert=request['cert'],
                           timeout=request['timeout'],
                           allow_redirects=request['redirects'],
