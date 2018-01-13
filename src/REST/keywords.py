@@ -267,6 +267,8 @@ class Keywords(object):
                     what, e))
         try:
             return loads(what)
+        except ValueError as e:
+            raise RuntimeError("Error parsing JSON: {}".format(e))
         except JSONDecodeError:
             return self.input(self._stringify(what))
 
