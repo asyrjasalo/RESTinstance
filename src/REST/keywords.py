@@ -267,8 +267,8 @@ class Keywords(object):
                     "Error opening file '{}': {}".format(what, e))
         try:
             return loads(what)
-        except JSONDecodeError:
-            return self._find_by_field(what, also_schema=False)['reality']
+        except JSONDecodeError as e:
+            return self.input(self._stringify(what))
 
     @keyword
     def output(self, what=None, file_path=None):
