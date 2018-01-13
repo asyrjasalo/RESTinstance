@@ -55,7 +55,7 @@ class REST(Keywords):
 
 
     @staticmethod
-    def print(json, header="\n", with_colors=True):
+    def print(json, header="", with_colors=True):
         json_data = dumps(json, ensure_ascii=False, indent=4)
         if with_colors:
             json_data = highlight(json_data,

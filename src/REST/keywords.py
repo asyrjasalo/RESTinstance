@@ -274,11 +274,11 @@ class Keywords(object):
         if not what:
             json = self.instances[-1]
             if not file_path:
-                return self.print(json, "\nJSON for the instance is:\n")
+                return self.print(json, "\n\nJSON for the instance is:\n")
         else:
             json = self.input(what)
             if not file_path:
-                return self.print(json)
+                return self.print(json, "\n\n")
         with open(path.join(getcwd(), file_path), 'w') as file:
             dump(json, file, ensure_ascii=False, indent=4)
         return json
@@ -409,12 +409,12 @@ class Keywords(object):
                 value = self._value_by_key(value, key)
             except KeyError:
                 self.print(value,
-                    "\nProperty '{}' does not exist in:\n".format(key))
+                    "\n\nProperty '{}' does not exist in:\n".format(key))
                 raise AssertionError(
                     "\nExpected field '{}' was not found.".format(field))
             except IndexError:
                 self.print(value,
-                    "\nIndex '{}' does not exist in:\n".format(key))
+                    "\n\nIndex '{}' does not exist in:\n".format(key))
                 raise AssertionError(
                     "\nExpected index '{}' did not exist.".format(field))
             if also_schema:
