@@ -26,12 +26,12 @@ class Keywords(object):
     ### Settings
 
     @keyword
-    def set_auth(self, auth):
+    def set_basic_auth(self, auth):
         self.request.update({ "auth": self.input(auth) })
         return self.request
 
     @keyword
-    def set_cert(self, cert):
+    def set_client_certificate(self, cert):
         self.request.update({ "cert": self.input(cert) })
         return self.request
 
