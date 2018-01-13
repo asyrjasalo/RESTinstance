@@ -1,6 +1,6 @@
 *** Settings ***
 Library         REST                            localhost:8273
-Suite setup     Set headers and assume schema   ${CURDIR}/headers.json
+Suite setup     Set headers and assume schema   ${CURDIR}/json/headers.json
 Suite teardown  Rest instances                  results/instances.json
 
 *** Keywords ***
