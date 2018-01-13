@@ -168,7 +168,7 @@ class REST(Keywords):
             raise RuntimeError("Error parsing value to JSON: {}".format(e))
 
     @staticmethod
-    def _input_client_certificate(value):
+    def _input_client_cert(value):
         if isinstance(value, str):
             return value
         if isinstance(value, list):

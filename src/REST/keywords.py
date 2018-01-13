@@ -31,8 +31,8 @@ class Keywords(object):
         return self.request
 
     @keyword
-    def set_client_certificate(self, cert):
-        self.request['cert'] = self._input_client_certificate(cert)
+    def set_client_cert(self, cert):
+        self.request['cert'] = self._input_client_cert(cert)
         return self.request
 
     @keyword
