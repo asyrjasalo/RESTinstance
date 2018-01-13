@@ -144,9 +144,7 @@ class Keywords(object):
         found = self._find_by_field(field)
         reality = found['reality']
         schema = { "type": "null" }
-        skip = False
-        if 'skip' in validations:
-            skip = self.input(validations.pop('skip'))
+        skip = self.input(validations.pop('skip', False))
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -159,9 +157,7 @@ class Keywords(object):
         schema = { "type": "boolean" }
         if value:
             self._set_value_validations(schema, value)
-        skip = False
-        if 'skip' in validations:
-            skip = self.input(validations.pop('skip'))
+        skip = self.input(validations.pop('skip', False))
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -172,9 +168,7 @@ class Keywords(object):
         keys = found['keys']
         schema = found['schema']
         reality = found['reality']
-        skip = False
-        if 'skip' in validations:
-            skip = self.input(validations.pop('skip'))
+        skip = self.input(validations.pop('skip', False))
         self._set_type_validations("integer", schema, validations)
         if enum:
             self._set_value_validations(schema, enum)
@@ -188,9 +182,7 @@ class Keywords(object):
         keys = found['keys']
         schema = found['schema']
         reality = found['reality']
-        skip = False
-        if 'skip' in validations:
-            skip = self.input(validations.pop('skip'))
+        skip = self.input(validations.pop('skip', False))
         self._set_type_validations("number", schema, validations)
         if enum:
             self._set_value_validations(schema, enum)
@@ -204,9 +196,7 @@ class Keywords(object):
         keys = found['keys']
         schema = found['schema']
         reality = found['reality']
-        skip = False
-        if 'skip' in validations:
-            skip = self.input(validations.pop('skip'))
+        skip = self.input(validations.pop('skip', False))
         self._set_type_validations("string", schema, validations)
         if enum:
             self._set_value_validations(schema, enum)
@@ -220,9 +210,7 @@ class Keywords(object):
         keys = found['keys']
         schema = found['schema']
         reality = found['reality']
-        skip = False
-        if 'skip' in validations:
-            skip = self.input(validations.pop('skip'))
+        skip = self.input(validations.pop('skip', False))
         self._set_type_validations("object", schema, validations)
         if enum:
             self._set_value_validations(schema, enum)
@@ -236,9 +224,7 @@ class Keywords(object):
         keys = found['keys']
         schema = found['schema']
         reality = found['reality']
-        skip = False
-        if 'skip' in validations:
-            skip = self.input(validations.pop('skip'))
+        skip = self.input(validations.pop('skip', False))
         self._set_type_validations("array", schema, validations)
         if enum:
             self._set_value_validations(schema, enum)
