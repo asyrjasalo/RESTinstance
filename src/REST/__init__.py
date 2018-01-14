@@ -9,6 +9,7 @@ from .keywords import Keywords
 
 
 __version__ = '1.0.0.dev8'
+user_agent =  "RESTinstance/{}".format(__version__)
 
 
 class REST(Keywords):
@@ -19,7 +20,7 @@ class REST(Keywords):
                  ssl_verify=True,
                  accept="application/json, */*",
                  content_type="application/json",
-                 user_agent="Robot Framework RESTinstance",
+                 user_agent=user_agent,
                  proxies={},
                  schema={},
                  spec=None):
