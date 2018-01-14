@@ -1,4 +1,4 @@
-from json import dumps, load, loads, JSONDecodeError
+from json import dumps, load, loads
 from os import path
 
 from pygments import highlight, lexers, formatters
