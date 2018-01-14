@@ -60,7 +60,7 @@ class Keywords(object):
     ### HTTP methods
 
     @keyword
-    def head(self, endpoint, allow_redirects=True, timeout=None):
+    def head(self, endpoint, timeout=None, allow_redirects=True):
         request = {}
         request['method'] = "HEAD"
         request['endpoint'] = endpoint
@@ -70,7 +70,7 @@ class Keywords(object):
         return self._request(**request)['response']
 
     @keyword
-    def options(self, endpoint, allow_redirects=True, timeout=None):
+    def options(self, endpoint, timeout=None, allow_redirects=True):
         request = {}
         request['method'] = "OPTIONS"
         request['endpoint'] = endpoint
@@ -80,7 +80,7 @@ class Keywords(object):
         return self._request(**request)['response']
 
     @keyword
-    def get(self, endpoint, query=None, allow_redirects=True, timeout=None):
+    def get(self, endpoint, query=None, timeout=None, allow_redirects=True):
         request = {}
         request['method'] = "GET"
         request['query'] = {}
@@ -97,7 +97,7 @@ class Keywords(object):
         return self._request(**request)['response']
 
     @keyword
-    def post(self, endpoint, body=None, allow_redirects=True, timeout=None):
+    def post(self, endpoint, body=None, timeout=None, allow_redirects=True):
         request = {}
         request['method'] = "POST"
         request['endpoint'] = endpoint
@@ -108,7 +108,7 @@ class Keywords(object):
         return self._request(**request)['response']
 
     @keyword
-    def put(self, endpoint, body=None, allow_redirects=True, timeout=None):
+    def put(self, endpoint, body=None, timeout=None, allow_redirects=True):
         request = {}
         request['method'] = "PUT"
         request['endpoint'] = endpoint
@@ -119,7 +119,7 @@ class Keywords(object):
         return self._request(**request)['response']
 
     @keyword
-    def patch(self, endpoint, body=None, allow_redirects=True, timeout=None):
+    def patch(self, endpoint, body=None, timeout=None, allow_redirects=True):
         request = {}
         request['method'] = "PATCH"
         request['endpoint'] = endpoint
@@ -130,7 +130,7 @@ class Keywords(object):
         return self._request(**request)['response']
 
     @keyword
-    def delete(self, endpoint, allow_redirects=True, timeout=None):
+    def delete(self, endpoint, timeout=None, allow_redirects=True):
         request = {}
         request['method'] = "DELETE"
         request['endpoint'] = endpoint
