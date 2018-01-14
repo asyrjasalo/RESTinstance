@@ -97,7 +97,7 @@ class Keywords(object):
         return self._request(**request)['response']
 
     @keyword
-    def post(self, endpoint, body="", redirects=True, timeout=None):
+    def post(self, endpoint, body=None, redirects=True, timeout=None):
         request = {}
         request['method'] = "POST"
         request['endpoint'] = endpoint
@@ -108,7 +108,7 @@ class Keywords(object):
         return self._request(**request)['response']
 
     @keyword
-    def put(self, endpoint, body="", redirects=True, timeout=None):
+    def put(self, endpoint, body=None, redirects=True, timeout=None):
         request = {}
         request['method'] = "PUT"
         request['endpoint'] = endpoint
@@ -119,7 +119,7 @@ class Keywords(object):
         return self._request(**request)['response']
 
     @keyword
-    def patch(self, endpoint, body="", redirects=True, timeout=None):
+    def patch(self, endpoint, body=None, redirects=True, timeout=None):
         request = {}
         request['method'] = "PATCH"
         request['endpoint'] = endpoint

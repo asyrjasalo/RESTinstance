@@ -31,7 +31,7 @@ class REST(Keywords):
             'method': None,
             'endpoint': None,
             'query': {},
-            'body': "",
+            'body': None,
             'headers': {
                 'Accept': accept,
                 'Content-Type': content_type,
