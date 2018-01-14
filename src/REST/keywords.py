@@ -2,7 +2,7 @@ from copy import deepcopy
 from datetime import datetime, timezone
 from json import dump
 from os import path, getcwd
-from urllib.parse import parse_qs, urljoin, urlparse
+from urllib.parse import parse_qs, urlparse
 
 from flex.core import validate_api_call
 from genson import Schema
@@ -286,20 +286,19 @@ class Keywords(object):
     def _request(self, **fields):
         request = deepcopy(self.request)
         request.update(fields)
-        endpoint = request['endpoint']
-        if endpoint.startswith('http://') or endpoint.startswith('https://'):
-            endpoint = urlparse(endpoint).geturl()
+        if request['endpoint'].endswith('/'):
+            request['endpoint'] = request['endpoint'][:-1]
+        if request['endpoint'].startswith(('http://', 'https://')):
+            full_url = request['endpoint']
         else:
-            if not endpoint.startswith('/'):
-                endpoint = '/' + endpoint
-            if endpoint.endswith('/'):
-                endpoint = endpoint[:-1]
-            endpoint = urljoin(self.url, endpoint)
+            if not request['endpoint'].startswith('/'):
+                request['endpoint'] = '/' + request['endpoint']
+            full_url = self.url + request['endpoint']
         if not request['sslVerify']:
             disable_warnings()
         auth = tuple(request['auth']) if request['auth'] else None
         timeout = tuple(request['timeout']) if request['timeout'] else None
-        response = client(request['method'], endpoint,
+        response = client(request['method'], full_url,
                           params=request['query'],
                           json=request['body'],
                           headers=request['headers'],

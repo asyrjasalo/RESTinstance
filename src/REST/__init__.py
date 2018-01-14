@@ -24,8 +24,10 @@ class REST(Keywords):
                  schema={},
                  spec=None):
 
-        if not url.startswith("http://") and not url.startswith("https://"):
+        if not url.startswith(("http://", "https://")):
             url = "http://" + url
+        if url.endswith('/'):
+            url = url[:-1]
         self.url = url
         self.request = {
             'method': None,
