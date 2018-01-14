@@ -148,7 +148,7 @@ class Keywords(object):
         except AssertionError:
             return None
         self.print(found['reality'],
-            "\n\nExpected '{}' actually does exist:\n".format(field))
+            "\n\nExpected '{}' to not exist, but it is:\n{}".format(field))
         raise AssertionError("Expected '{}' to not exist, but it does.".format(
             field))
 
@@ -272,7 +272,8 @@ class Keywords(object):
             with open(path.join(getcwd(), file_path), 'w') as file:
                 dump(json, file, ensure_ascii=False, indent=4)
         except IOError as e:
-            raise RuntimeError("Error writing JSON to file: {}".format(e))
+            raise RuntimeError("Error outputting to file '{}':\n{}".format(
+                file_path, e))
         return json
 
     @keyword
@@ -285,7 +286,8 @@ class Keywords(object):
             with open(path.join(getcwd(), file_path), 'w') as file:
                 dump(instances, file, ensure_ascii=False, indent=4)
         except IOError as e:
-            raise RuntimeError("Error writing JSON to file: {}".format(e))
+            raise RuntimeError("Error exporting instances " +
+                "to file '{}':\n{}".format(file_path, e))
         return instances
 
     def _request(self, **fields):
@@ -372,8 +374,8 @@ class Keywords(object):
             if schema_version == 'draft04':
                 validator = Draft4Validator(schema)
             else:
-                raise RuntimeError("Unknown JSON Schema version: {}.".format(
-                    schema_version))
+                raise RuntimeError("Unknown JSON Schema version " +
+                    "was given:\n{}.".format(schema_version))
             validator.validate(reality)
         except ValidationError as e:
             raise AssertionError(e)
@@ -406,7 +408,7 @@ class Keywords(object):
                     self.print(value,
                         "\n\nProperty '{}' does not exist in:\n".format(key))
                 raise AssertionError(
-                    "\nExpected field '{}' was not found.".format(field))
+                    "\nExpected property '{}' was not found.".format(field))
             except IndexError:
                 if show_found:
                     self.print(value,
@@ -448,7 +450,7 @@ class Keywords(object):
         for validation in validations:
             if validation not in kws:
                 raise RuntimeError("Unknown JSON Schema ({})".format(
-                    self.schema['version']) + " validation keyword '{}'".format(
-                        validation) + " for type '{}'".format(json_type))
+                    self.schema['version']) + " validation keyword " +
+                "for {}:\n{}".format(json_type, validation))
             schema[validation] = self.input(validations[validation])
         schema.update({ "type": json_type })

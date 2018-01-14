@@ -76,7 +76,8 @@ class REST(Keywords):
         else:
             value = REST._input_json_string(value)
         if not isinstance(value, bool):
-            raise RuntimeError("Value {} is not a boolean".format(value))
+            raise RuntimeError("This expected value " +
+                "is not a boolean:\n{}".format(value))
         return value
 
     @staticmethod
@@ -88,7 +89,8 @@ class REST(Keywords):
         else:
             value = REST._input_json_string(value)
         if not isinstance(value, int):
-            raise RuntimeError("Value {} is not an integer".format(value))
+            raise RuntimeError("This expected value " +
+                "is not an integer:\n{}".format(value))
         return value
 
     @staticmethod
@@ -100,7 +102,8 @@ class REST(Keywords):
         else:
             value = REST._input_json_string(value)
         if not isinstance(value, float):
-            raise RuntimeError("Value {} is not a number".format(value))
+            raise RuntimeError("This expected value " +
+                "is not a number:\n{}".format(value))
         return value
 
     @staticmethod
@@ -116,7 +119,8 @@ class REST(Keywords):
         else:
             value = REST._input_json_string(value)
         if not isinstance(value, str):
-            raise RuntimeError("Value {} is not a string".format(value))
+            raise RuntimeError("This expected value " +
+                "is not a string:\n{}".format(value))
         return value
 
     @staticmethod
@@ -128,7 +132,8 @@ class REST(Keywords):
         else:
             value = REST._input_json_string(value)
         if not isinstance(value, dict):
-            raise RuntimeError("Value {} is not an object".format(value))
+            raise RuntimeError("This expected value " +
+                "is not an object:\n{}".format(value))
         return value
 
     @staticmethod
@@ -140,7 +145,8 @@ class REST(Keywords):
         else:
             value = REST._input_json_string(value)
         if not isinstance(value, list):
-            raise RuntimeError("Value {} is not an array".format(value))
+            raise RuntimeError("This expected value " +
+                "is not an array:\n{}".format(value))
         return value
 
     @staticmethod
@@ -149,25 +155,27 @@ class REST(Keywords):
             with open(path) as file:
                 return load(file)
         except IOError as e:
-            raise RuntimeError("Error opening file '{}': {}".format(
+            raise RuntimeError("File '{}' could not be opened:\n{}".format(
                 path, e))
-        except JSONDecodeError as e:
-            raise RuntimeError("Error loading JSON file '{}': {}".format(
+        except ValueError as e:
+            raise RuntimeError("File '{}' is not valid JSON:\n{}".format(
                 path, e))
 
     @staticmethod
     def _input_json_string(string):
         try:
             return loads(string)
-        except ValueError as e:
-            raise RuntimeError("Error parsing JSON: {}".format(e))
+        except ValueError:
+            raise RuntimeError("This input is not valid JSON:\n{}".format(
+                string))
 
     @staticmethod
     def _input_non_string(value):
         try:
             return loads(dumps(value, ensure_ascii=False))
-        except ValueError as e:
-            raise RuntimeError("Error parsing value to JSON: {}".format(e))
+        except ValueError:
+            raise RuntimeError("This input is not valid JSON:\n{}".format(
+                value))
 
     @staticmethod
     def _input_client_cert(value):
@@ -175,16 +183,17 @@ class REST(Keywords):
             return value
         if isinstance(value, list):
             if len(value) != 2:
-                raise RuntimeError(
-                    "Cert given as a Python list must have length of 2.")
+                raise RuntimeError("This cert, given as a Python list, " +
+                    "must have length of 2:\n{}".format(value))
             return value
         value = REST._input_json_string(value)
         if not isinstance(value, (str, list)):
-            raise RuntimeError("Cert must be either a string or an array")
+            raise RuntimeError("This cert must be either " +
+                "a string or an array:\n{}".format(value))
         if isinstance(value, list):
             if len(value) != 2:
-                raise RuntimeError(
-                    "Cert given as an array must have length of 2.")
+                raise RuntimeError("This cert, given as an array, " +
+                    "must have length of 2:\n{}".format(value))
         return value
 
     @staticmethod
@@ -193,17 +202,17 @@ class REST(Keywords):
             return [value, value]
         if isinstance(value, list):
             if len(value) != 2:
-                raise RuntimeError(
-                    "Timeout given as a Python list must have length of 2.")
+                raise RuntimeError("This timeout, given as a Python list, " +
+                    "must have length of 2:\n{}".format(value))
             return value
         value = REST._input_json_string(value)
         if not isinstance(value, (int, float, list)):
-            raise RuntimeError(
-                "Timeout must be either an integer, a number or an array")
+            raise RuntimeError("This timeout must be either an integer, " +
+                "a number or an array:\n{}".format(value))
         if isinstance(value, list):
             if len(value) != 2:
-                raise RuntimeError(
-                    "Timeout given as an array must have length of 2.")
+                raise RuntimeError("This timeout, given as an array, " +
+                    "must have length of 2:\n{}".format(value))
             else:
                 return value
         return [value, value]
