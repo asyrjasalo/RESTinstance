@@ -267,7 +267,7 @@ class Keywords(object):
         else:
             json = self._find_by_field(what, also_schema=False)['reality']
             if not file_path:
-                return self.print(json, "\n\n")
+                return self.print(json, "\n\nJSON for '{}' is:\n".format(what))
         try:
             with open(path.join(getcwd(), file_path), 'w') as file:
                 dump(json, file, ensure_ascii=False, indent=4)
