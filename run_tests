@@ -10,6 +10,6 @@ HOST_UID=$(id -u) HOST_GID=$(id -g) \
     up -d --build --force-recreate
 
 # https://github.com/asyrjasalo/rfdocker
-RUN_ARGS="--network=host" \
+BUILD_ARGS="--file Dockerfile.dev" RUN_ARGS="--network=host" \
   "$this_path/rfdocker" \
     "${@:-tests}"
