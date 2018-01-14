@@ -8,7 +8,7 @@ from robot.api import logger
 from .keywords import Keywords
 
 
-__version__ = '1.0.0.dev7'
+__version__ = '1.0.0.dev8'
 
 
 class REST(Keywords):
