@@ -41,8 +41,8 @@ class REST(Keywords):
             'timeout': None,
             'auth': [],
             'cert': None,
-            'ssl_verify': REST._input_boolean(ssl_verify),
-            'redirects': True
+            'sslVerify': REST._input_boolean(ssl_verify),
+            'allowRedirects': True
         }
         self.schema = {
             "exampled": True,

@@ -60,27 +60,27 @@ class Keywords(object):
     ### HTTP methods
 
     @keyword
-    def head(self, endpoint, redirects=True, timeout=None):
+    def head(self, endpoint, allow_redirects=True, timeout=None):
         request = {}
         request['method'] = "HEAD"
         request['endpoint'] = endpoint
-        request['redirects'] = self._input_boolean(redirects)
+        request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
-    def options(self, endpoint, redirects=True, timeout=None):
+    def options(self, endpoint, allow_redirects=True, timeout=None):
         request = {}
         request['method'] = "OPTIONS"
         request['endpoint'] = endpoint
-        request['redirects'] = self._input_boolean(redirects)
+        request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
-    def get(self, endpoint, query=None, redirects=True, timeout=None):
+    def get(self, endpoint, query=None, allow_redirects=True, timeout=None):
         request = {}
         request['method'] = "GET"
         request['query'] = {}
@@ -91,50 +91,50 @@ class Keywords(object):
         if query:
             request['query'].update(self._input_object(query))
         request['endpoint'] = endpoint
-        request['redirects'] = self._input_boolean(redirects)
+        request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
-    def post(self, endpoint, body=None, redirects=True, timeout=None):
+    def post(self, endpoint, body=None, allow_redirects=True, timeout=None):
         request = {}
         request['method'] = "POST"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        request['redirects'] = self._input_boolean(redirects)
+        request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
-    def put(self, endpoint, body=None, redirects=True, timeout=None):
+    def put(self, endpoint, body=None, allow_redirects=True, timeout=None):
         request = {}
         request['method'] = "PUT"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        request['redirects'] = self._input_boolean(redirects)
+        request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
-    def patch(self, endpoint, body=None, redirects=True, timeout=None):
+    def patch(self, endpoint, body=None, allow_redirects=True, timeout=None):
         request = {}
         request['method'] = "PATCH"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        request['redirects'] = self._input_boolean(redirects)
+        request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
 
     @keyword
-    def delete(self, endpoint, redirects=True, timeout=None):
+    def delete(self, endpoint, allow_redirects=True, timeout=None):
         request = {}
         request['method'] = "DELETE"
         request['endpoint'] = endpoint
-        request['redirects'] = self._input_boolean(redirects)
+        request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(**request)['response']
@@ -295,7 +295,7 @@ class Keywords(object):
             if endpoint.endswith('/'):
                 endpoint = endpoint[:-1]
             endpoint = urljoin(self.url, endpoint)
-        if not request['ssl_verify']:
+        if not request['sslVerify']:
             disable_warnings()
         auth = tuple(request['auth']) if request['auth'] else None
         timeout = tuple(request['timeout']) if request['timeout'] else None
@@ -307,8 +307,8 @@ class Keywords(object):
                           auth=auth,
                           cert=request['cert'],
                           timeout=timeout,
-                          allow_redirects=request['redirects'],
-                          verify=request['ssl_verify'])
+                          allow_redirects=request['allowRedirects'],
+                          verify=request['sslVerify'])
         utc_datetime = datetime.now(timezone.utc)
         request['timestamp'] = {
             'utc': utc_datetime.isoformat(),
