@@ -403,7 +403,7 @@ class Keywords(object):
         for key in keys:
             try:
                 value = self._value_by_key(value, key)
-            except KeyError:
+            except (KeyError, TypeError):
                 if show_found:
                     self.print(value,
                         "\n\nProperty '{}' does not exist in:\n".format(key))
