@@ -147,6 +147,8 @@ class Keywords(object):
             found = self._find_by_field(field, show_found=False)
         except AssertionError:
             return None
+        self.print(found['reality'],
+            "\n\nExpected '{}' actually does exist:\n".format(field))
         raise AssertionError("Expected '{}' to not exist, but it does.".format(
             field))
 
