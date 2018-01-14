@@ -143,9 +143,12 @@ class Keywords(object):
 
     @keyword
     def missing(self, field):
-        found = self._find_by_field(field)
-        reality = found['reality']
-        return reality
+        try:
+            found = self._find_by_field(field, show_found=False)
+        except AssertionError:
+            return None
+        raise AssertionError("Expected '{}' to not exist, but it does.".format(
+            field))
 
     @keyword
     def null(self, field, **validations):
@@ -385,7 +388,7 @@ class Keywords(object):
         elif isinstance(body, list):
             schema['example'] = body
 
-    def _find_by_field(self, field, also_schema=True):
+    def _find_by_field(self, field, also_schema=True, show_found=True):
         keys = field.split()
         value = self.instances[-1]
         schema = value['schema']
@@ -397,13 +400,15 @@ class Keywords(object):
             try:
                 value = self._value_by_key(value, key)
             except KeyError:
-                self.print(value,
-                    "\n\nProperty '{}' does not exist in:\n".format(key))
+                if show_found:
+                    self.print(value,
+                        "\n\nProperty '{}' does not exist in:\n".format(key))
                 raise AssertionError(
                     "\nExpected field '{}' was not found.".format(field))
             except IndexError:
-                self.print(value,
-                    "\n\nIndex '{}' does not exist in:\n".format(key))
+                if show_found:
+                    self.print(value,
+                        "\n\nIndex '{}' does not exist in:\n".format(key))
                 raise AssertionError(
                     "\nExpected index '{}' did not exist.".format(field))
             if also_schema:
