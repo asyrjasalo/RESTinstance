@@ -80,7 +80,7 @@ class Keywords(object):
         return self._request(**request)['response']
 
     @keyword
-    def get(self, endpoint, query={}, redirects=True, timeout=None):
+    def get(self, endpoint, query=None, redirects=True, timeout=None):
         request = {}
         request['method'] = "GET"
         request['query'] = {}
