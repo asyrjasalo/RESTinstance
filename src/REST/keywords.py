@@ -28,17 +28,17 @@ class Keywords(object):
     @keyword
     def set_basic_auth(self, auth):
         self.request['auth'] = self._input_list(auth)
-        return self.request
+        return self.request['auth']
 
     @keyword
     def set_client_cert(self, cert):
         self.request['cert'] = self._input_client_cert(cert)
-        return self.request
+        return self.request['cert']
 
     @keyword
     def set_headers(self, headers):
         self.request['headers'].update(self._input_object(headers))
-        return self.request
+        return self.request['headers']
 
     ### Expectations
 
