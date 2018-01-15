@@ -52,11 +52,6 @@ class Keywords(object):
         self.schema['response'].update(self._input_object(schema))
         return self.schema['response']
 
-    @keyword
-    def expect_spec(self, spec):
-        self.spec = self._input_string(spec)
-        return self.spec
-
     ### HTTP methods
 
     @keyword
