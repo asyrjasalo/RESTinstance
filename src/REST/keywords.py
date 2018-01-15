@@ -257,7 +257,10 @@ class Keywords(object):
             return self._input_non_string(what)
         if path.isfile(what):
             return self._input_json_file(what)
-        return self._input_json_string(what)
+        try:
+            return self._input_json_string(what)
+        except RuntimeError:
+            return self._input_string(what)
 
     @keyword
     def output(self, what=None, file_path=None):
