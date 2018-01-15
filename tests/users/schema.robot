@@ -1,5 +1,6 @@
 *** Settings ***
 Library         REST        localhost:8273
+Test teardown   Clear expectations
 
 *** Test Cases ***
 Request and response conforms the schema

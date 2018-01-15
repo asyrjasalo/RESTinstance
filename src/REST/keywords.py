@@ -52,6 +52,12 @@ class Keywords(object):
         self.schema['response'].update(self._input_object(schema))
         return self.schema['response']
 
+    @keyword
+    def clear_expectations(self):
+        self.schema['request'] = {}
+        self.schema['response'] = {}
+        return self.schema
+
     ### HTTP methods
 
     @keyword
