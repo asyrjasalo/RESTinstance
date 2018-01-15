@@ -52,8 +52,8 @@ class REST(Keywords):
             "request": {},
             "response": {}
         }
-        self.schema.update(REST._input_object(schema))
-        self.spec = REST._input_string(spec)
+        self.schema.update(self.input(schema))
+        self.spec = self.input(spec)
         self.instances = []
 
 
