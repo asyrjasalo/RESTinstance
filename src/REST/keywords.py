@@ -9,6 +9,7 @@ from genson import Schema
 from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
+from requests.exceptions import Timeout
 from requests.packages.urllib3 import disable_warnings
 
 from robot.api import logger
@@ -313,16 +314,20 @@ class Keywords(object):
             disable_warnings()
         auth = tuple(request['auth']) if request['auth'] else None
         timeout = tuple(request['timeout']) if request['timeout'] else None
-        response = client(request['method'], full_url,
-                          params=request['query'],
-                          json=request['body'],
-                          headers=request['headers'],
-                          proxies=request['proxies'],
-                          auth=auth,
-                          cert=request['cert'],
-                          timeout=timeout,
-                          allow_redirects=request['allowRedirects'],
-                          verify=request['sslVerify'])
+        try:
+            response = client(request['method'], full_url,
+                              params=request['query'],
+                              json=request['body'],
+                              headers=request['headers'],
+                              proxies=request['proxies'],
+                              auth=auth,
+                              cert=request['cert'],
+                              timeout=timeout,
+                              allow_redirects=request['allowRedirects'],
+                              verify=request['sslVerify'])
+        except Timeout as e:
+            raise AssertionError("{} request to {} timed out:\n{}".format(
+                request['method'], full_url, e))
         utc_datetime = datetime.now(timezone.utc)
         request['timestamp'] = {
             'utc': utc_datetime.isoformat(),
