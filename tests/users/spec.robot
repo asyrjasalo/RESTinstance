@@ -1,5 +1,5 @@
 *** Settings ***
-Library         REST        localhost:8273     spec=${CURDIR}/openapi/users.json
+Library         REST        localhost:8080     spec=${CURDIR}/openapi/users.json
 
 *** Test Cases ***
 Get one

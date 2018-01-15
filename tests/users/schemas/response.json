@@ -40,7 +40,8 @@
         "type": "object"
       },
       "email": {
-        "type": "string"
+        "type": "string",
+        "format": "email"
       },
       "id": {
         "type": "integer"
@@ -50,7 +51,10 @@
         "type": "string"
       },
       "organizationId": {
-        "type": "null"
+        "type": [
+          "null",
+          "integer"
+        ]
       },
       "phone": {
         "type": "string"
@@ -60,7 +64,8 @@
       },
       "urls": {
         "items": {
-          "type": "string"
+          "type": "string",
+          "format": "uri"
         },
         "type": "array"
       },

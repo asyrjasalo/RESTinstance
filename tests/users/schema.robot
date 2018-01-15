@@ -1,5 +1,5 @@
 *** Settings ***
-Library         REST        localhost:8273
+Library         REST        localhost:8273   schema={ "exampled": false }
 Test teardown   Clear expectations
 
 *** Test Cases ***

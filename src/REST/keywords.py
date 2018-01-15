@@ -6,7 +6,7 @@ from urllib.parse import parse_qs, urlparse
 
 from flex.core import validate_api_call
 from genson import Schema
-from jsonschema import Draft4Validator
+from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
 from requests.packages.urllib3 import disable_warnings
@@ -377,7 +377,8 @@ class Keywords(object):
         try:
             schema_version = self.schema['version']
             if schema_version == 'draft04':
-                validator = Draft4Validator(schema)
+                validator = Draft4Validator(schema,
+                    format_checker=FormatChecker())
             else:
                 raise RuntimeError("Unknown JSON Schema version " +
                     "was given:\n{}".format(schema_version))

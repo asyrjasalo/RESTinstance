@@ -105,7 +105,8 @@
           "type": "object"
         },
         "email": {
-          "type": "string"
+          "type": "string",
+          "format": "email"
         },
         "id": {
           "type": "integer"
