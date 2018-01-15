@@ -58,10 +58,10 @@ class REST(Keywords):
 
 
     @staticmethod
-    def print(json, header="", with_colors=True):
+    def print(json, header="", also_console=True):
         json = dumps(json, ensure_ascii=False, indent=4)
         logger.info("{}{}".format(header, json))    # no coloring for log.html
-        if with_colors:
+        if also_console:
             json_data = highlight(json,
                                   lexers.JsonLexer(),
                                   formatters.TerminalFormatter())
