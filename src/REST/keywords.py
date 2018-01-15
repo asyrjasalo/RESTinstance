@@ -375,7 +375,7 @@ class Keywords(object):
                 validator = Draft4Validator(schema)
             else:
                 raise RuntimeError("Unknown JSON Schema version " +
-                    "was given:\n{}.".format(schema_version))
+                    "was given:\n{}".format(schema_version))
             validator.validate(reality)
         except ValidationError as e:
             raise AssertionError(e)
