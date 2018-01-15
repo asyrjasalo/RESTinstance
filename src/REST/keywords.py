@@ -380,8 +380,8 @@ class Keywords(object):
         except ValidationError as e:
             raise AssertionError(e)
 
-    def _new_schema(self, json_dict):
-        return Schema().add_object(json_dict).to_dict()
+    def _new_schema(self, value):
+        return Schema().add_object(value).to_dict()
 
     def _generate_schema_examples(self, schema, response):
         body = response['body']
