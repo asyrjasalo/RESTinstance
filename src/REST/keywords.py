@@ -261,7 +261,11 @@ class Keywords(object):
     @keyword
     def output(self, what=None, file_path=None):
         if not what:
-            json = self.instances[-1]
+            try:
+                json = self.instances[-1]
+            except IndexError:
+                raise RuntimeError("No instance to output " +
+                    "before a request is made.")
             if not file_path:
                 return self.print(json, "\n\nJSON for the instance is:\n")
         else:
