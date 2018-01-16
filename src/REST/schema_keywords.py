@@ -12,7 +12,7 @@ SCHEMA_KEYWORDS = {
                    "exclusiveMinimum"]
     },
     "string": {
-        "draft04": ["maxLength", "minLength", "pattern"]
+        "draft04": ["format", "maxLength", "minLength", "pattern"]
     },
     "object": {
         "draft04": ["maxProperties", "minProperties", "required",

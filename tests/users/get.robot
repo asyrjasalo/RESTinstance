@@ -13,6 +13,7 @@ Set headers and assume schema
 Get found
     GET             /users/1                    timeout=3.0
     Boolean         response body active        true
+    String          response body email         format=email
     String          response body strActive     true
     Integer         response body id            1
     Number          response body address geo latitude    ${-74.490087}
