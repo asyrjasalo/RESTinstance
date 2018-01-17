@@ -1,3 +1,7 @@
 # RESTinstance
 
-    PYTHONPATH="src" python -c 'from REST import REST; res = REST("localhost:8080").get("/users/1"); REST.print(res["body"])'
+[Robot Framework](http://robotframework.org/) test library for (RESTful) JSON APIs.
+
+TBA at [RoboCon 2018](https://robocon.io/).
+
+[Python package at PyPi](https://pypi.python.org/pypi/RESTinstance)
