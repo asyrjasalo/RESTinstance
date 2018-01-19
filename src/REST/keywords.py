@@ -17,6 +17,24 @@ from robot.api.deco import keyword
 
 from .schema_keywords import SCHEMA_KEYWORDS
 
+from robot.reporting.jswriter import JsResultWriter
+
+JAVASCRIPT_CODE_TO_INJECT = '''
+alert('hello from javascript');
+'''
+
+# ugly monkeypatch
+_orig_JsResultWriter_write = JsResultWriter.write
+
+def JsResultWriter_write(self, result, settings):
+    _orig_JsResultWriter_write(self, result=result, settings=settings)
+    self._write(
+        '<script>{}</script>'.format(JAVASCRIPT_CODE_TO_INJECT),
+        postfix='',
+        separator=False
+    )
+
+JsResultWriter.write = JsResultWriter_write
 
 class Keywords(object):
 
