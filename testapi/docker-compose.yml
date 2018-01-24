@@ -5,7 +5,7 @@ version: '2'
 services:
   mounterest:
     container_name: mounterest
-    image: mounterest
+    image: asyrjasalo/mounterest
     environment:
       - HOST_UID
       - HOST_GID
