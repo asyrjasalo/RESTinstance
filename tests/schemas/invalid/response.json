@@ -1,0 +1,24 @@
+{
+  "status": {
+    "type": "integer",
+    "enum": [
+        400,
+        404
+    ]
+  },
+  "body": {
+    "type": "object",
+    "properties": {
+      "error": {
+        "type": "string",
+        "enum": [
+          "Not found",
+          "Bad request",
+          "Updating read-only parameter not allowed",
+          "No property 'id' given",
+          "Cannot change property that does not exist"
+        ]
+      }
+    }
+  }
+}

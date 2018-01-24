@@ -1,0 +1,257 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "RoboCon RESTinstance API",
+    "version": "2018-01-18"
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "GET many",
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        }
+      },
+      "post": {
+        "responses": {
+          "201": {
+            "description": "POST with valid params",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          },
+          "400": {
+            "description": "POST with invalid params",
+            "schema": {
+              "$ref": "#/definitions/post_400"
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GET to existing",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          },
+          "404": {
+            "description": "GET to non-existing",
+            "schema": {
+              "$ref": "#/definitions/404"
+            }
+          }
+        }
+      },
+      "put": {
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PUT with valid params",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          },
+          "400": {
+            "description": "PUT with invalid params",
+            "schema": {
+              "$ref": "#/definitions/400"
+            }
+          },
+          "404": {
+            "description": "PUT to non-existing",
+            "schema": {
+              "$ref": "#/definitions/404"
+            }
+          }
+        }
+      },
+      "patch": {
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PATCH with valid params",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          },
+          "400": {
+            "description": "PATCH with invalid params",
+            "schema": {
+              "$ref": "#/definitions/400"
+            }
+          },
+          "404": {
+            "description": "PATCH to non-existing",
+            "schema": {
+              "$ref": "#/definitions/404"
+            }
+          }
+        }
+      },
+      "delete": {
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "DELETE to existing"
+          },
+          "404": {
+            "description": "DELETE to non-existing",
+            "schema": {
+              "$ref": "#/definitions/404"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "400": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "error"
+      ]
+    },
+    "post_400": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "error"
+      ]
+    },
+    "404": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "Not found"
+        }
+      },
+      "required": [
+        "error"
+      ]
+    },
+    "users": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/user"
+      }
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "address": {
+          "properties": {
+            "city": {
+              "type": "string"
+            },
+            "geo": {
+              "properties": {
+                "latitude": {
+                  "type": "number"
+                },
+                "longitude": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "postalcode": {
+              "type": "string"
+            },
+            "street": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "city"
+          ],
+          "type": "object"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "organizationId": {
+          "type": [
+            "null",
+            "integer"
+          ]
+        },
+        "phone": {
+          "type": "string"
+        },
+        "registeredAt": {
+          "type": "string"
+        },
+        "urls": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  }
+}

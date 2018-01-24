@@ -1,0 +1,21 @@
+{
+  "responses": [
+    {
+      "proxy": {
+        "to": "https://jsonplaceholder.typicode.com",
+        "mode": "proxyAlways",
+        "predicateGenerators": [
+          {
+            "matches": {
+              "method": true,
+              "path": true,
+              "body": true,
+              "query": true
+            },
+            "caseSensitive": true
+          }
+        ]
+      }
+    }
+  ]
+}
