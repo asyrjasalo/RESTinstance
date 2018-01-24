@@ -6,9 +6,7 @@ from pygments import highlight, lexers, formatters
 from robot.api import logger
 
 from .keywords import Keywords
-
-
-__version__ = '1.0.0b4'
+from .version import __version__
 
 
 class REST(Keywords):
