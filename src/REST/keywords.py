@@ -54,6 +54,11 @@ class Keywords(object):
         return self.schema['response']
 
     @keyword
+    def expect_spec(self, spec):
+        self.spec = self.input(spec)
+        return self.spec
+
+    @keyword
     def clear_expectations(self):
         self.schema['request'] = {}
         self.schema['response'] = {}
