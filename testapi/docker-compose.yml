@@ -1,18 +1,15 @@
-# docker-compose up --force-recreate --build
+# docker-compose up --force-recreate
 
 version: '2'
 
 services:
   mounterest:
     container_name: mounterest
-    image: asyrjasalo/mounterest
-    command: --debug
+    image: mounterest
     environment:
       - HOST_UID
       - HOST_GID
     ports:
       - 2525:2525
       - 8273:8273
-      - 8274:8274
-      - 8080:8080
     stop_signal: SIGKILL
