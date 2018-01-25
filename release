@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -e
+
+### consts #####################################################################
+
+this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+## variables ###################################################################
+
+registry_url="$1"
+version=$(grep -oP "'(.*)'" "$this_path/src/REST/version.py" | sed "s/'//g")
+
+### release ####################################################################
+
+if [ -z "$registry_url" ]; then
+  echo "Usage: $0 REGISTRY_URL"
+  echo ""
+  echo "  e.g.: $0 https://your.registry.com:5000/RESTinstance"
+  exit 64
+fi
+
+echo "### Tagging image 'rfdocker:RESTinstance' to '$registry_url:$version'"
+docker tag "rfdocker:RESTinstance" "$registry_url:$version"
+
+echo "### Pushing image 'RESTinstance:$version' to registry..."
+docker push "$registry_url:$version"
