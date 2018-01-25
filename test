@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+set -e
+
+### globals ####################################################################
+
+this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+### variables ##################################################################
+
+: ${BUILD_NAME="RESTinstance"}
+: ${MR_ARGS:="--debug"}
+: ${MR_NETWORK:="host"}
+: ${RF_ARGS:="--randomize all"}
+
+### helpers ####################################################################
+
+check_docker_installed() {
+  if ! which docker >/dev/null ; then
+    echo "Please install Docker first for a RESTinstance testenv:"
+    echo "https://www.docker.com/community-edition#/download"
+    exit 1
+  fi
+}
+
+cleanup_mounterest() {
+  docker rm --force mounterest 1>/dev/null
+}
+
+start_mounterest() {
+  docker run -d -t --name mounterest \
+    -e HOST_UID=$(id -u) -e HOST_GID=$(id -g) \
+    --network=$MR_NETWORK -p 2525:2525 -p 8273:8273 \
+    "mounterest:latest" $MR_ARGS
+
+    echo "### Waiting the test API to be started in background"
+    if ! _portable_timeout 60 bash -c _wait_mounterest_ready 2>/dev/null; then
+      echo "Error: Test API starting timeouted, exiting."
+      exit 124  # same as GNU coreutils `timeout` exit status
+    fi
+    echo "... test API ready for the RESTinstance's tests"
+}
+
+_portable_timeout() {
+  perl -e 'alarm shift; exec @ARGV' "$@";
+}
+
+_wait_mounterest_ready() {
+  local done_msg="\[http:8273.*\] Open for business"
+  while ! docker logs mounterest | grep "$done_msg" >/dev/null; do
+    echo -n '.'
+    sleep 0.2
+  done
+}
+export -f _wait_mounterest_ready
+
+### main #######################################################################
+
+check_docker_installed
+
+# https://github.com/asyrjasalo/mounterest
+cleanup_mounterest || true
+trap "cleanup_mounterest &" SIGINT SIGTERM
+start_mounterest
+
+# https://github.com/asyrjasalo/rfdocker
+BUILD_NAME="$BUILD_NAME" RUN_ARGS="--network=$MR_NETWORK" \
+  "$this_path/rfdocker" \
+    $RF_ARGS "${@:-tests}"
