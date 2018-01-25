@@ -31,7 +31,7 @@ start_mounterest() {
   docker run -d -t --name mounterest \
     -e HOST_UID=$(id -u) -e HOST_GID=$(id -g) \
     --network=$MR_NETWORK -p 2525:2525 -p 8273:8273 \
-    "mounterest:latest" $MR_ARGS
+    "asyrjasalo/mounterest:latest" $MR_ARGS
 
     echo "### Waiting the test API to be started in background"
     if ! _portable_timeout 60 bash -c _wait_mounterest_ready 2>/dev/null; then
