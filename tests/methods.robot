@@ -1,6 +1,6 @@
 *** Settings ***
-Library         REST                        localhost:8273
-Suite setup     DELETE                      /invalidate
+Resource        resources/mounterest.robot
+Suite setup     Reset state
 
 
 *** Test Cases ***

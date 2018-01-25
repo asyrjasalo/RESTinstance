@@ -1,6 +1,7 @@
 *** Settings ***
-Library         REST       localhost:8273   schema={ "exampled": false }
-Suite setup     DELETE     /invalidate
+Resource        resources/mounterest.robot
+Library         REST       localhost:${api_port}   schema={ "exampled": false }
+Suite setup     Reset state
 Test setup      Set expectations
 
 
