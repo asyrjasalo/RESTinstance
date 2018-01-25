@@ -8,7 +8,7 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 ### variables ##################################################################
 
-: ${BUILD_NAME="RESTinstance"}
+: ${BUILD_NAME="restinstance"}
 : ${MR_ARGS:="--debug"}
 : ${MR_NETWORK:="testapi_default"}
 : ${RF_ARGS:="--randomize all"}

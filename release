@@ -16,12 +16,12 @@ version=$(cat "$this_path/src/REST/version.py" | cut -d"'" -f2 | sed "s/'//g")
 if [ -z "$registry_url" ]; then
   echo "Usage: $0 REGISTRY_URL"
   echo ""
-  echo "  e.g.: $0 https://your.registry.com:5000/RESTinstance"
+  echo "  e.g.: $0 https://your.registry.com:5000/restinstance"
   exit 64
 fi
 
-echo "### Tagging image 'rfdocker:RESTinstance' to '$registry_url:$version'"
-docker tag "rfdocker:RESTinstance" "$registry_url:$version"
+echo "### Tagging image 'rfdocker:restinstance' to '$registry_url:$version'"
+docker tag "rfdocker:restinstance" "$registry_url:$version"
 
-echo "### Pushing image 'RESTinstance:$version' to registry..."
+echo "### Pushing image 'restinstance:$version' to registry..."
 docker push "$registry_url:$version"
