@@ -1,6 +1,6 @@
 *** Settings ***
 Resource        resources/mounterest.robot
-Library         REST       localhost:${api_port}   schema={ "exampled": false }
+Library         REST       mounterest:${api_port}   schema={ "exampled": false }
 Suite setup     Reset state
 Test setup      Set expectations
 

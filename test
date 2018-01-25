@@ -10,7 +10,7 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 : ${BUILD_NAME="RESTinstance"}
 : ${MR_ARGS:="--debug"}
-: ${MR_NETWORK:="host"}
+: ${MR_NETWORK:="testapi_default"}
 : ${RF_ARGS:="--randomize all"}
 
 ### helpers ####################################################################
@@ -28,6 +28,8 @@ cleanup_mounterest() {
 }
 
 start_mounterest() {
+  docker network create --driver bridge $MR_NETWORK 2>/dev/null || true
+
   docker run -d -t --name mounterest \
     -e HOST_UID=$(id -u) -e HOST_GID=$(id -g) \
     --network=$MR_NETWORK -p 2525:2525 -p 8273:8273 \

@@ -11,6 +11,6 @@ HOST_UID=$(id -u) HOST_GID=$(id -g) \
     up -d --force-recreate
 
 # https://github.com/asyrjasalo/rfdocker
-RUN_ARGS="--network=host" \
+RUN_ARGS="--network=testapi_default" \
   "$root_path/rfdocker" \
     --randomize all "${@:-tests}"
