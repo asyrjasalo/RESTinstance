@@ -6,9 +6,9 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_path="$this_path/.."
 
 # https://github.com/asyrjasalo/mounterest
+docker rm --force mounterest 1>/dev/null
 HOST_UID=$(id -u) HOST_GID=$(id -g) \
-  docker-compose -f "$this_path/docker-compose.yml" \
-    up -d --force-recreate
+  docker-compose up -d
 
 # https://github.com/asyrjasalo/rfdocker
 RUN_ARGS="--network=testapi_default" \

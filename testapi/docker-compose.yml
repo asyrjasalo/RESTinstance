@@ -10,4 +10,3 @@ services:
     ports:
       - 2525:2525
       - 8273:8273
-    stop_signal: SIGKILL
