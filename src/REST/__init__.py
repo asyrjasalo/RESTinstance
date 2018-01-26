@@ -20,7 +20,7 @@ class REST(Keywords):
                  user_agent="RESTinstance/{}".format(__version__),
                  proxies={},
                  schema={},
-                 spec=None):
+                 spec={}):
 
         if not url.startswith(("http://", "https://")):
             url = "http://" + url

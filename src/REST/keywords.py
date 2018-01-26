@@ -347,9 +347,9 @@ class Keywords(object):
             'utc': utc_datetime.isoformat(),
             'local': utc_datetime.astimezone().isoformat()
         }
-        return self._instantiate(request, response)
+        return self._instantiate(request, response, spec)
 
-    def _instantiate(self, request, response):
+    def _instantiate(self, request, response, spec=None):
         try:
             response_body = response.json()
         except ValueError:
@@ -377,7 +377,7 @@ class Keywords(object):
             'request': request,
             'response': response,
             'schema': schema,
-            'spec': self.spec
+            'spec': spec if spec else {}
         }
         self.instances.append(instance)
         return instance
