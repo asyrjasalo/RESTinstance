@@ -160,7 +160,7 @@ class REST(Keywords):
     def _input_noneness_or_object(value):
         if value is None:
             return None
-        if value.lower() == "null":
+        if isinstance(value, str) and value.lower() == "null":
             return None
         return REST._input_object(value)
 
