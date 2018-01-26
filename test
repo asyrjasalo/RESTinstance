@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
 
+# https://github.com/asyrjasalo/restinstance
+# https://hub.docker.com/r/asyrjasalo/restinstance
+
 set -e
 
 ### globals ####################################################################
 
 this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-### variables ##################################################################
+### settings ###################################################################
 
 : ${BUILD_NAME="restinstance"}
-: ${MR_ARGS:="--debug"}
+: ${MB_PORT:=2525}                    # this is your host machine's port
+: ${MR_ARGS:="--debug --loglevel debug"}
+: ${MR_IMAGE_LABEL:="asyrjasalo/mounterest"}
+: ${MR_IMAGE_TAG:="latest"}
 : ${MR_NETWORK:="testapi_default"}
+: ${MR_PORT:=8273}                    # this is your host machine's port
 : ${RF_ARGS:="--randomize all"}
 
 ### helpers ####################################################################
@@ -32,8 +39,8 @@ start_mounterest() {
 
   docker run -d -t --name mounterest \
     -e HOST_UID=$(id -u) -e HOST_GID=$(id -g) \
-    --network=$MR_NETWORK -p 2525:2525 -p 8273:8273 \
-    "asyrjasalo/mounterest:latest" $MR_ARGS
+    --network=$MR_NETWORK -p $MB_PORT:2525 -p $MR_PORT:8273 \
+    "$MR_IMAGE_LABEL:$MR_IMAGE_TAG" $MR_ARGS
 
     echo "### Waiting for the background API to start"
     if ! _portable_timeout 60 bash -c _wait_mounterest_ready 2>/dev/null; then
