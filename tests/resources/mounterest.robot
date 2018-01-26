@@ -6,4 +6,4 @@ ${api_port}=                        8273
 
 *** Keywords ***
 Reset state
-    DELETE                          http://mounterest:${api_port}/state
+    DELETE            http://mounterest:${api_port}/state     spec=null

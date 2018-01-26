@@ -1,7 +1,7 @@
 *** Settings ***
 Resource        resources/mounterest.robot
-Suite setup     Reset state
-Test setup      Expect spec     ${CURDIR}/spec/users_api.json
+Suite setup     Expect spec     ${CURDIR}/spec/users_api.json
+Test setup      Reset state
 
 *** Test Cases ***
 GET to existing

@@ -145,8 +145,16 @@ class REST(Keywords):
             value = REST._input_json_string(value)
         if not isinstance(value, list):
             raise RuntimeError("This expected value " +
-                "is not an array:\n{}".format(value))
-        return value
+            "is not a JSON array:\n{}".format(json_value))
+        return json_value
+
+    @staticmethod
+    def _input_noneness_or_object(value):
+        if value is None:
+            return None
+        if value.lower() == "null":
+            return None
+        return REST._input_object(value)
 
     @staticmethod
     def _input_json_file(path):
