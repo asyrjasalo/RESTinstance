@@ -1,7 +1,6 @@
 *** Settings ***
 Resource        resources/mounterest.robot
 Suite setup     Reset state
-Suite teardown  Rest instances      ${OUTPUTDIR}/instances.json
 Test setup      Set expectations
 Test teardown   Clear expectations
 
