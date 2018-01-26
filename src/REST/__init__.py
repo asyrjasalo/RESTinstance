@@ -172,19 +172,14 @@ class REST(Keywords):
 
     @staticmethod
     def _input_json_as_string(string):
-        try:
-            return loads(string)
-        except ValueError:
-            raise RuntimeError("This input is not valid JSON:\n{}".format(
-                string))
+        return loads(string)
 
     @staticmethod
     def _input_json_from_non_string(value):
         try:
-            return loads(dumps(value, ensure_ascii=False))
+            return REST._input_json_as_string(dumps(value, ensure_ascii=False))
         except ValueError:
-            raise RuntimeError("This input is not valid JSON:\n{}".format(
-                value))
+            raise RuntimeError("This cannot be read to JSON:\n{}".format(value))
 
     @staticmethod
     def _input_client_cert(value):
@@ -202,10 +197,10 @@ class REST(Keywords):
                     value))
         except (ValueError, TypeError):
             raise RuntimeError("This cert must be either " +
-                "a string or an array:\n{}".format(value))
+                "a JSON string or an array:\n{}".format(value))
         if isinstance(value, list):
             if len(value) != 2:
-                raise RuntimeError("This cert, given as an array, " +
+                raise RuntimeError("This cert, given as a JSON array, " +
                     "must have length of 2:\n{}".format(value))
         return value
 
@@ -224,11 +219,11 @@ class REST(Keywords):
                 raise TypeError("This is not an integer, " +
                     "float or a list:\n{}".format(value))
         except (ValueError, TypeError):
-            raise RuntimeError("This timeout must be either an integer, " +
+            raise RuntimeError("This timeout must be either a JSON integer, " +
                 "a number or an array:\n{}".format(value))
         if isinstance(value, list):
             if len(value) != 2:
-                raise RuntimeError("This timeout, given as an array, " +
+                raise RuntimeError("This timeout, given as a JSON array, " +
                     "must have length of 2:\n{}".format(value))
             else:
                 return value

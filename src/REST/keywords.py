@@ -267,7 +267,7 @@ class Keywords(object):
             return self._input_json_from_file(what)
         try:
             return self._input_json_as_string(what)
-        except RuntimeError:
+        except ValueError:
             return self._input_string(what)
 
     @keyword
