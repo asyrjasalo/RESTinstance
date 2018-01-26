@@ -3,6 +3,11 @@ Resource        resources/mounterest.robot
 Suite setup     Reset state
 
 
+*** Variables ***
+&{invalid}=     name=John Galt
+${valid}=       { "name": "Julie Langford" }
+
+
 *** Test Cases ***
 GET existing user
     GET         /users/1
@@ -22,7 +27,7 @@ GET many users
     Array       response body               ${CURDIR}/responses/limit_3.json
 
 POST with invalid params
-    POST        /users                      { "name": "John Galt" }
+    POST        /users                      ${invalid}
     Integer     response status             400
     String      response body error         No property 'id' given
 
@@ -43,7 +48,7 @@ PUT with valid params
 PATCH with valid params
     GET         /users/3
     String      response body name          Clementine Bauch
-    PATCH       /users/3                    { "name": "Julie Langford" }
+    PATCH       /users/3                    ${valid}
     String      response body name          Julie Langford
 
 DELETE existing
