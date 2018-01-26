@@ -50,8 +50,8 @@ class REST(Keywords):
             "request": {},
             "response": {}
         }
-        self.schema.update(self.input(schema))
-        self.spec = self.input(spec)
+        self.schema.update(self._input_object(schema))
+        self.spec = self._input_noneness_or_object(spec)
         self.instances = []
 
 
@@ -70,40 +70,31 @@ class REST(Keywords):
     def _input_boolean(value):
         if isinstance(value, bool):
             return value
-        if path.isfile(value):
-            value = REST._input_json_file(value)
-        else:
-            value = REST._input_json_string(value)
-        if not isinstance(value, bool):
+        json_value = REST._input_json_as_string(value)
+        if not isinstance(json_value, bool):
             raise RuntimeError("This expected value " +
-                "is not a boolean:\n{}".format(value))
-        return value
+                "is not a JSON boolean:\n{}".format(json_value))
+        return json_value
 
     @staticmethod
     def _input_integer(value):
         if isinstance(value, int):
             return value
-        if path.isfile(value):
-            value = REST._input_json_file(value)
-        else:
-            value = REST._input_json_string(value)
-        if not isinstance(value, int):
+        json_value = REST._input_json_as_string(value)
+        if not isinstance(json_value, int):
             raise RuntimeError("This expected value " +
-                "is not an integer:\n{}".format(value))
-        return value
+                "is not a JSON integer:\n{}".format(json_value))
+        return json_value
 
     @staticmethod
     def _input_number(value):
         if isinstance(value, float):
             return value
-        if path.isfile(value):
-            value = REST._input_json_file(value)
-        else:
-            value = REST._input_json_string(value)
-        if not isinstance(value, float):
+        json_value = REST._input_json_as_string(value)
+        if not isinstance(json_value, float):
             raise RuntimeError("This expected value " +
-                "is not a number:\n{}".format(value))
-        return value
+                "is not a JSON number:\n{}".format(json_value))
+        return json_value
 
     @staticmethod
     def _input_string(value):
@@ -113,37 +104,38 @@ class REST(Keywords):
             value = '"' + value
         if not value.endswith('"'):
             value = value + '"'
-        if path.isfile(value):
-            value = REST._input_json_file(value)
-        else:
-            value = REST._input_json_string(value)
-        if not isinstance(value, str):
+        json_value = REST._input_json_as_string(value)
+        if not isinstance(json_value, str):
             raise RuntimeError("This expected value " +
-                "is not a string:\n{}".format(value))
-        return value
+                "is not a JSON string:\n{}".format(json_value))
+        return json_value
 
     @staticmethod
     def _input_object(value):
         if isinstance(value, dict):
             return value
         if path.isfile(value):
-            value = REST._input_json_file(value)
+            json_value = REST._input_json_from_file(value)
         else:
-            value = REST._input_json_string(value)
-        if not isinstance(value, dict):
-            raise RuntimeError("This expected value " +
-                "is not an object:\n{}".format(value))
-        return value
+            try:
+                json_value = loads(value)
+                if not isinstance(json_value, dict):
+                    raise TypeError("This is not a JSON object: {}".format(
+                        json_value))
+            except (ValueError, TypeError):
+                raise RuntimeError("This is not a JSON object, " +
+                "nor a path to an existing file:\n{}".format(value))
+        return json_value
 
     @staticmethod
     def _input_array(value):
         if isinstance(value, list):
             return value
         if path.isfile(value):
-            value = REST._input_json_file(value)
+            json_value = REST._input_json_from_file(value)
         else:
-            value = REST._input_json_string(value)
-        if not isinstance(value, list):
+            json_value = REST._input_json_as_string(value)
+        if not isinstance(json_value, list):
             raise RuntimeError("This expected value " +
             "is not a JSON array:\n{}".format(json_value))
         return json_value
@@ -157,7 +149,7 @@ class REST(Keywords):
         return REST._input_object(value)
 
     @staticmethod
-    def _input_json_file(path):
+    def _input_json_from_file(path):
         try:
             with open(path) as file:
                 return load(file)
@@ -169,7 +161,7 @@ class REST(Keywords):
                 path, e))
 
     @staticmethod
-    def _input_json_string(string):
+    def _input_json_as_string(string):
         try:
             return loads(string)
         except ValueError:
@@ -177,7 +169,7 @@ class REST(Keywords):
                 string))
 
     @staticmethod
-    def _input_non_string(value):
+    def _input_json_from_non_string(value):
         try:
             return loads(dumps(value, ensure_ascii=False))
         except ValueError:
@@ -193,7 +185,7 @@ class REST(Keywords):
                 raise RuntimeError("This cert, given as a Python list, " +
                     "must have length of 2:\n{}".format(value))
             return value
-        value = REST._input_json_string(value)
+        value = REST._input_json_as_string(value)
         if not isinstance(value, (str, list)):
             raise RuntimeError("This cert must be either " +
                 "a string or an array:\n{}".format(value))
@@ -212,7 +204,7 @@ class REST(Keywords):
                 raise RuntimeError("This timeout, given as a Python list, " +
                     "must have length of 2:\n{}".format(value))
             return value
-        value = REST._input_json_string(value)
+        value = REST._input_json_as_string(value)
         if not isinstance(value, (int, float, list)):
             raise RuntimeError("This timeout must be either an integer, " +
                 "a number or an array:\n{}".format(value))

@@ -259,12 +259,14 @@ class Keywords(object):
 
     @keyword
     def input(self, what):
+        if what is None:
+            return None
         if not isinstance(what, str):
-            return self._input_non_string(what)
+            return self._input_json_from_non_string(what)
         if path.isfile(what):
-            return self._input_json_file(what)
+            return self._input_json_from_file(what)
         try:
-            return self._input_json_string(what)
+            return self._input_json_as_string(what)
         except RuntimeError:
             return self._input_string(what)
 
