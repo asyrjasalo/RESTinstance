@@ -296,7 +296,8 @@ class Keywords(object):
     def rest_instances(self, file_path):
         instances = {
             "url": self.url,
-            "instances": self.instances
+            "instances": self.instances,
+            "spec": self.spec
         }
         try:
             with open(path.join(getcwd(), file_path), 'w') as file:
