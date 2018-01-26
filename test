@@ -17,7 +17,7 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 check_docker_installed() {
   if ! which docker >/dev/null ; then
-    echo "Please install Docker first for a RESTinstance testenv:"
+    echo "Please install Docker for testenv:"
     echo "https://www.docker.com/community-edition#/download"
     exit 1
   fi
@@ -35,12 +35,12 @@ start_mounterest() {
     --network=$MR_NETWORK -p 2525:2525 -p 8273:8273 \
     "asyrjasalo/mounterest:latest" $MR_ARGS
 
-    echo "### Waiting the test API to be started in background"
+    echo "### Waiting for the background API to start"
     if ! _portable_timeout 60 bash -c _wait_mounterest_ready 2>/dev/null; then
       echo "Error: Test API starting timeouted, exiting."
       exit 124  # same as GNU coreutils `timeout` exit status
     fi
-    echo "... test API ready for the RESTinstance's tests"
+    echo "... ready for tests"
 }
 
 _portable_timeout() {
