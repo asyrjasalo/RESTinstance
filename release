@@ -25,3 +25,9 @@ docker tag "rfdocker:restinstance" "$registry_url:$version"
 
 echo "### Pushing image 'restinstance:$version' to registry..."
 docker push "$registry_url:$version"
+
+echo "### Tagging image 'restinstance:$version' to '$registry_url:latest'"
+docker tag "restinstance:$version" "$registry_url:latest"
+
+echo "### Pushing image 'restinstance:$version' to '$registry_url:latest'"
+docker push "$registry_url:latest"
