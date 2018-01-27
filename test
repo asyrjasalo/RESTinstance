@@ -82,6 +82,7 @@ trap "cleanup_mounterest &" SIGINT SIGTERM
 start_or_reset_mounterest
 
 # https://github.com/asyrjasalo/rfdocker
-BUILD_NAME="$BUILD_NAME" RUN_ARGS="--network=$MR_NETWORK" \
+BUILD_NAME="$BUILD_NAME" \
+RUN_ARGS="--network=$MR_NETWORK -e MB_PORT=$MB_PORT -e MR_PORT=$MR_PORT" \
   "$this_path/rfdocker" \
     $RF_ARGS "${@:-tests}"

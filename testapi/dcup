@@ -13,6 +13,7 @@ root_path="$this_path/.."
 ### settings ###################################################################
 
 : ${BUILD_NAME="restinstance"}
+: ${MB_PORT:=2525}
 : ${MR_NETWORK:=${PWD##*/}_default}
 : ${MR_PORT:=8273}
 : ${RF_ARGS:="--randomize all"}
@@ -38,6 +39,7 @@ HOST_UID=$(id -u) HOST_GID=$(id -g) \
 _reset_mounterest  || true
 
 # https://github.com/asyrjasalo/rfdocker
-BUILD_NAME="$BUILD_NAME" RUN_ARGS="--network=$MR_NETWORK" \
+BUILD_NAME="$BUILD_NAME" \
+RUN_ARGS="--network=$MR_NETWORK -e MB_PORT=$MB_PORT -e MR_PORT=$MR_PORT" \
   "$root_path/rfdocker" \
     $RF_ARGS "${@:-tests}"

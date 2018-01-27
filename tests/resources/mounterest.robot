@@ -2,7 +2,8 @@
 Library         REST                http://mounterest:${api_port}
 
 *** Variables ***
-${api_port}=                        8273
+${api_port}=                          %{MR_PORT}
+${mb_port}=                           %{MB_PORT}
 
 *** Keywords ***
 Reset state
