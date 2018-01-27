@@ -23,12 +23,19 @@ cleanup_mounterest() {
   docker rm --force mounterest 1>/dev/null
 }
 
+_reset_mounterest() {
+  docker run --rm -t -i --network="$MR_NETWORK" \
+    alpine/httpie delete http://mounterest:$MR_PORT/state 1>/dev/null && \
+  echo "### Mounterest state cleaned"
+}
+
 ### main #######################################################################
 
 # https://github.com/asyrjasalo/mounterest
 trap "cleanup_mounterest &" SIGINT SIGTERM
 HOST_UID=$(id -u) HOST_GID=$(id -g) \
   docker-compose up -d
+_reset_mounterest  || true
 
 # https://github.com/asyrjasalo/rfdocker
 BUILD_NAME="$BUILD_NAME" RUN_ARGS="--network=$MR_NETWORK" \
