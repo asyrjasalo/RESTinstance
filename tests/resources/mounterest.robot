@@ -10,7 +10,7 @@ Reset state
     DELETE    http://mounterest:${api_port}/state                   spec=null
 
 Create mountebank proxy
-    &{response}=    POST   http://mounterest:${mb_port}/imposters
+    &{response}=    POST    http://mounterest:${mb_port}/imposters
     ...                     ${CURDIR}/imposter.json                 spec=null
     Set suite variable      ${MR_TOKEN}    ${response.body['port']}
     Set headers             { "X-Mounterest-Token": "${MR_TOKEN}" }
