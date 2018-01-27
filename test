@@ -22,32 +22,43 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 ### helpers ####################################################################
 
-check_docker_installed() {
+exit_docker_not_installed() {
   if ! which docker >/dev/null ; then
-    echo "Please install Docker for testenv:"
+    echo "### Please install Docker for the testenv:"
     echo "https://www.docker.com/community-edition#/download"
     exit 1
   fi
 }
 
 cleanup_mounterest() {
-  docker rm --force mounterest 1>/dev/null
+  docker rm --force mounterest 1>/dev/null && \
+  echo "### Mounterest container removed"
 }
 
-start_mounterest() {
+start_or_reset_mounterest() {
   docker network create --driver bridge $MR_NETWORK 2>/dev/null || true
 
-  docker run -d -t --name mounterest \
-    -e HOST_UID=$(id -u) -e HOST_GID=$(id -g) \
-    --network=$MR_NETWORK -p $MB_PORT:2525 -p $MR_PORT:8273 \
-    "$MR_IMAGE_LABEL:$MR_IMAGE_TAG" $MR_ARGS
+  if docker exec mounterest true 2>/dev/null ; then
+    _reset_mounterest
+  else
+    docker run -d -t --name mounterest \
+      -e HOST_UID=$(id -u) -e HOST_GID=$(id -g) \
+      --network=$MR_NETWORK -p $MB_PORT:2525 -p $MR_PORT:8273 \
+      "$MR_IMAGE_LABEL:$MR_IMAGE_TAG" $MR_ARGS
 
-    echo "### Waiting for the background API to start"
-    if ! _portable_timeout 60 bash -c _wait_mounterest_ready 2>/dev/null; then
-      echo "Error: Test API starting timeouted, exiting."
-      exit 124  # same as GNU coreutils `timeout` exit status
-    fi
-    echo "... ready for tests"
+      echo "### Waiting for the API to start"
+      if ! _portable_timeout 60 bash -c _wait_mounterest_ready 2>/dev/null; then
+        echo "Error: API starting timeouted, exiting."
+        exit 124  # same as GNU coreutils `timeout` exit status
+      fi
+      echo "... ready for the tests"
+  fi
+}
+
+_reset_mounterest() {
+  curl -X "DELETE" http://localhost:$MR_PORT/state 1>/dev/null ||
+  wget --method=DELETE http://localhost:$MR_PORT/state 1>/dev/null && \
+  echo "### Mounterest state cleaned"
 }
 
 _portable_timeout() {
@@ -65,12 +76,11 @@ export -f _wait_mounterest_ready
 
 ### main #######################################################################
 
-check_docker_installed
+exit_docker_not_installed
 
 # https://github.com/asyrjasalo/mounterest
-cleanup_mounterest || true
 trap "cleanup_mounterest &" SIGINT SIGTERM
-start_mounterest
+start_or_reset_mounterest
 
 # https://github.com/asyrjasalo/rfdocker
 BUILD_NAME="$BUILD_NAME" RUN_ARGS="--network=$MR_NETWORK" \
