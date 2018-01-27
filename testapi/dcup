@@ -1,16 +1,28 @@
 #!/usr/bin/env bash
 
+# https://github.com/asyrjasalo/restinstance
+# https://hub.docker.com/r/asyrjasalo/restinstance
+
 set -e
+
+### globals ####################################################################
 
 this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root_path="$this_path/.."
 
+### settings ###################################################################
+
+: ${BUILD_NAME="restinstance"}
+: ${MR_NETWORK:="testapi_default"}
+: ${RF_ARGS:="--randomize all"}
+
+### main #######################################################################
+
 # https://github.com/asyrjasalo/mounterest
-docker rm --force mounterest 1>/dev/null
 HOST_UID=$(id -u) HOST_GID=$(id -g) \
   docker-compose up -d
 
 # https://github.com/asyrjasalo/rfdocker
-RUN_ARGS="--network=testapi_default" \
+BUILD_NAME="$BUILD_NAME" RUN_ARGS="--network=$MR_NETWORK" \
   "$root_path/rfdocker" \
-    --randomize all "${@:-tests}"
+    $RF_ARGS "${@:-tests}"
