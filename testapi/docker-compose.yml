@@ -3,7 +3,8 @@ version: '2'
 services:
   mounterest:
     container_name: mounterest
-    image: asyrjasalo/mounterest
+    image: asyrjasalo/mounterest:0.1.1
+    command: --loglevel info
     environment:
       - HOST_UID
       - HOST_GID
