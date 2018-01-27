@@ -55,8 +55,8 @@ start_or_reset_mounterest() {
 }
 
 _reset_mounterest() {
-  curl -X "DELETE" http://localhost:$MR_PORT/state 1>/dev/null ||
-  wget --method=DELETE http://localhost:$MR_PORT/state 1>/dev/null && \
+  docker run --rm -t -i --network=$MR_NETWORK \
+    alpine/httpie delete http://mounterest:$MR_PORT/state 1>/dev/null && \
   echo "### Mounterest state cleaned"
 }
 
