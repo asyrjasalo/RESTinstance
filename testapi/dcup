@@ -13,7 +13,8 @@ root_path="$this_path/.."
 ### settings ###################################################################
 
 : ${BUILD_NAME="restinstance"}
-: ${MR_NETWORK:="testapi_default"}
+: ${MR_NETWORK:=${PWD##*/}_default}
+: ${MR_PORT:=8273}
 : ${RF_ARGS:="--randomize all"}
 
 ### helpers ####################################################################
