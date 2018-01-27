@@ -14,6 +14,7 @@ Create mountebank proxy
     ...                     ${CURDIR}/imposter.json                 spec=null
     Set suite variable      ${MR_TOKEN}    ${response.body['port']}
     Set headers             { "X-Mounterest-Token": "${MR_TOKEN}" }
+    Set headers             { "X-Mounterest-Property-ID": "id" }
 
 Delete mountebank proxy
     DELETE    http://mounterest:${mb_port}/imposters/${MR_TOKEN}    spec=null
