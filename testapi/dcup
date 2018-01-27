@@ -16,9 +16,16 @@ root_path="$this_path/.."
 : ${MR_NETWORK:="testapi_default"}
 : ${RF_ARGS:="--randomize all"}
 
+### helpers ####################################################################
+
+cleanup_mounterest() {
+  docker rm --force mounterest 1>/dev/null
+}
+
 ### main #######################################################################
 
 # https://github.com/asyrjasalo/mounterest
+trap "cleanup_mounterest &" SIGINT SIGTERM
 HOST_UID=$(id -u) HOST_GID=$(id -g) \
   docker-compose up -d
 
