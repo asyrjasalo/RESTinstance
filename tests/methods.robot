@@ -1,7 +1,8 @@
 *** Settings ***
 Resource        resources/mounterest.robot
-Suite setup     Reset state
-
+Suite setup     Create mountebank proxy
+Suite teardown  Delete mountebank proxy
+Test setup      Reset state
 
 *** Variables ***
 &{invalid}=     name=John Galt

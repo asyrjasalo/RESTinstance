@@ -1,0 +1,30 @@
+{
+  "name": "https://jsonplaceholder.typicode.com",
+  "protocol": "http",
+  "stubs": [
+    {
+      "responses": [
+        {
+          "proxy": {
+            "to": "https://jsonplaceholder.typicode.com",
+            "mode": "proxyAlways",
+            "injectHeaders": {
+                "Accept-Encoding": "identity"
+            },
+            "predicateGenerators": [
+              {
+                "matches": {
+                  "method": true,
+                  "path": true,
+                  "body": true,
+                  "query": true
+                },
+                "caseSensitive": true
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
