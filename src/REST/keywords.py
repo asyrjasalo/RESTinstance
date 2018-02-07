@@ -172,7 +172,6 @@ class Keywords(object):
     @keyword
     def boolean(self, field, value=None, **validations):
         found = self._find_by_field(field)
-        keys = found['keys']
         reality = found['reality']
         schema = { "type": "boolean" }
         if value is not None:
@@ -185,7 +184,6 @@ class Keywords(object):
     @keyword
     def integer(self, field, *enum, **validations):
         found = self._find_by_field(field)
-        keys = found['keys']
         schema = found['schema']
         reality = found['reality']
         skip = self._input_boolean(validations.pop('skip', False))
@@ -200,7 +198,6 @@ class Keywords(object):
     @keyword
     def number(self, field, *enum, **validations):
         found = self._find_by_field(field)
-        keys = found['keys']
         schema = found['schema']
         reality = found['reality']
         skip = self._input_boolean(validations.pop('skip', False))
@@ -215,7 +212,6 @@ class Keywords(object):
     @keyword
     def string(self, field, *enum, **validations):
         found = self._find_by_field(field)
-        keys = found['keys']
         schema = found['schema']
         reality = found['reality']
         skip = self._input_boolean(validations.pop('skip', False))
@@ -230,7 +226,6 @@ class Keywords(object):
     @keyword
     def object(self, field, *enum, **validations):
         found = self._find_by_field(field)
-        keys = found['keys']
         schema = found['schema']
         reality = found['reality']
         skip = self._input_boolean(validations.pop('skip', False))
@@ -245,7 +240,6 @@ class Keywords(object):
     @keyword
     def array(self, field, *enum, **validations):
         found = self._find_by_field(field)
-        keys = found['keys']
         schema = found['schema']
         reality = found['reality']
         skip = self._input_boolean(validations.pop('skip', False))
