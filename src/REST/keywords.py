@@ -359,12 +359,9 @@ class Keywords(object):
             self._validate_schema(schema['request'], request)
         if schema['response']:
             self._validate_schema(schema['response'], response)
-        if 'body' in response:
-            schema['response']['body'] = self._new_schema(response['body'])
-        if 'body' in request:
-            schema['request']['body'] = self._new_schema(request['body'])
-        if 'query' in request:
-            schema['request']['query'] = self._new_schema(request['query'])
+        schema['request']['body'] = self._new_schema(request['body'])
+        schema['request']['query'] = self._new_schema(request['query'])
+        schema['response']['body'] = self._new_schema(response['body'])
         if 'exampled' in schema and schema['exampled']:
             self._generate_schema_examples(schema, response)
         instance = {
