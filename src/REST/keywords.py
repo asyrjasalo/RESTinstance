@@ -71,7 +71,7 @@ class Keywords(object):
         request = {}
         request['method'] = "HEAD"
         request['endpoint'] = endpoint
-        if allow_redirects:
+        if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
@@ -82,7 +82,7 @@ class Keywords(object):
         request = {}
         request['method'] = "OPTIONS"
         request['endpoint'] = endpoint
-        if allow_redirects:
+        if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
@@ -101,7 +101,7 @@ class Keywords(object):
         if query:
             request['query'].update(self._input_object(query))
         request['endpoint'] = endpoint
-        if allow_redirects:
+        if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
@@ -114,7 +114,7 @@ class Keywords(object):
         request['method'] = "POST"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        if allow_redirects:
+        if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
@@ -127,7 +127,7 @@ class Keywords(object):
         request['method'] = "PUT"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        if allow_redirects:
+        if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
@@ -140,7 +140,7 @@ class Keywords(object):
         request['method'] = "PATCH"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        if allow_redirects:
+        if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
@@ -152,7 +152,7 @@ class Keywords(object):
         request = {}
         request['method'] = "DELETE"
         request['endpoint'] = endpoint
-        if allow_redirects:
+        if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)

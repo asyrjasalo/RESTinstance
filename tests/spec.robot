@@ -5,16 +5,16 @@ Suite teardown  Rest instances                  ${OUTPUTDIR}/instances.json
 
 *** Test Cases ***
 GET to existing
-    GET         /users/1
+    GET         /users/1                        allow_redirects=${None}
 
 GET to non-existing
-    GET         /users/404
+    GET         /users/404                      allow_redirects=true
 
 GET many
-    GET         /users
+    GET         /users                          allow_redirects=false
 
 GET many with query "_limit"
-    GET         /users?_limit=10
+    GET         /users?_limit=10                allow_redirects=${False}
 
 GET many with invalid query
     GET         /users?_invalid=query
