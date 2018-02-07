@@ -67,27 +67,30 @@ class Keywords(object):
     ### HTTP methods
 
     @keyword
-    def head(self, endpoint, timeout=None, spec=None, allow_redirects=True):
+    def head(self, endpoint, timeout=None, spec=None, allow_redirects=None):
         request = {}
         request['method'] = "HEAD"
         request['endpoint'] = endpoint
-        request['allowRedirects'] = self._input_boolean(allow_redirects)
+        if allow_redirects:
+            request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(spec, **request)['response']
 
     @keyword
-    def options(self, endpoint, timeout=None, spec=None, allow_redirects=True):
+    def options(self, endpoint, timeout=None, spec=None, allow_redirects=None):
         request = {}
         request['method'] = "OPTIONS"
         request['endpoint'] = endpoint
-        request['allowRedirects'] = self._input_boolean(allow_redirects)
+        if allow_redirects:
+            request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(spec, **request)['response']
 
     @keyword
-    def get(self, endpoint, query=None, timeout=None, spec=None, allow_redirects=True):
+    def get(self, endpoint, query=None, timeout=None, spec=None,
+            allow_redirects=None):
         request = {}
         request['method'] = "GET"
         request['query'] = {}
@@ -98,50 +101,59 @@ class Keywords(object):
         if query:
             request['query'].update(self._input_object(query))
         request['endpoint'] = endpoint
-        request['allowRedirects'] = self._input_boolean(allow_redirects)
+        if allow_redirects:
+            request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(spec, **request)['response']
 
     @keyword
-    def post(self, endpoint, body=None, timeout=None, spec=None, allow_redirects=True):
+    def post(self, endpoint, body=None, timeout=None, spec=None,
+             allow_redirects=None):
         request = {}
         request['method'] = "POST"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        request['allowRedirects'] = self._input_boolean(allow_redirects)
+        if allow_redirects:
+            request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(spec, **request)['response']
 
     @keyword
-    def put(self, endpoint, body=None, timeout=None, spec=None, allow_redirects=True):
+    def put(self, endpoint, body=None, timeout=None, spec=None,
+            allow_redirects=None):
         request = {}
         request['method'] = "PUT"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        request['allowRedirects'] = self._input_boolean(allow_redirects)
+        if allow_redirects:
+            request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(spec, **request)['response']
 
     @keyword
-    def patch(self, endpoint, body=None, timeout=None, spec=None, allow_redirects=True):
+    def patch(self, endpoint, body=None, timeout=None, spec=None,
+              allow_redirects=None):
         request = {}
         request['method'] = "PATCH"
         request['endpoint'] = endpoint
         request['body'] = self.input(body)
-        request['allowRedirects'] = self._input_boolean(allow_redirects)
+        if allow_redirects:
+            request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(spec, **request)['response']
 
     @keyword
-    def delete(self, endpoint, timeout=None, spec=None, allow_redirects=True):
+    def delete(self, endpoint, timeout=None, spec=None,
+               allow_redirects=None):
         request = {}
         request['method'] = "DELETE"
         request['endpoint'] = endpoint
-        request['allowRedirects'] = self._input_boolean(allow_redirects)
+        if allow_redirects:
+            request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(spec, **request)['response']
