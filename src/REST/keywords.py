@@ -24,12 +24,7 @@ class Keywords(object):
         return [name for name in dir(self) if hasattr(getattr(self, name),
             'robot_name')]
 
-    ### Settings
-
-    @keyword
-    def set_basic_auth(self, auth):
-        self.request['auth'] = self._input_list(auth)
-        return self.request['auth']
+    # Settings
 
     @keyword
     def set_client_cert(self, cert):
@@ -73,7 +68,7 @@ class Keywords(object):
         request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
-        if timeout:
+        if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(spec, **request)['response']
 
@@ -84,7 +79,7 @@ class Keywords(object):
         request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
-        if timeout:
+        if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         return self._request(spec, **request)['response']
 
@@ -335,19 +330,14 @@ class Keywords(object):
             if not request['endpoint'].startswith('/'):
                 request['endpoint'] = '/' + request['endpoint']
             full_url = self.url + request['endpoint']
-        if not request['sslVerify']:
-            disable_warnings()
-        auth = tuple(request['auth']) if request['auth'] else None
-        timeout = tuple(request['timeout']) if request['timeout'] else None
         try:
             response = client(request['method'], full_url,
                               params=request['query'],
                               json=request['body'],
                               headers=request['headers'],
                               proxies=request['proxies'],
-                              auth=auth,
                               cert=request['cert'],
-                              timeout=timeout,
+                              timeout=tuple(request['timeout']),
                               allow_redirects=request['allowRedirects'],
                               verify=request['sslVerify'])
         except Timeout as e:

@@ -48,8 +48,7 @@ class REST(Keywords):
                 'User-Agent': user_agent
             },
             'proxies': REST._input_object(proxies),
-            'timeout': None,
-            'auth': [],
+            'timeout': [None, None],
             'cert': None,
             'sslVerify': REST._input_boolean(ssl_verify),
             'allowRedirects': True

@@ -17,7 +17,7 @@ GET many with query "_limit"
     GET         /users?_limit=10                allow_redirects=${False}
 
 GET many with invalid query
-    GET         /users?_invalid=query
+    GET         /users?_invalid=query           timeout=2.0
 
 POST with invalid params
     POST        /users          { "name": "Alexander James Murphy" }
