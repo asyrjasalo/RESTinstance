@@ -64,7 +64,7 @@ class Keywords(object):
         self.schema['response'] = {}
         return self.schema
 
-    ### HTTP methods
+    # Requests
 
     @keyword
     def head(self, endpoint, timeout=None, spec=None, allow_redirects=None):
@@ -268,6 +268,9 @@ class Keywords(object):
             self._assert_schema(schema, reality)
         return reality
 
+    # IO keywords
+
+    # Is stateless
     @keyword
     def input(self, what):
         if what is None:
@@ -281,14 +284,16 @@ class Keywords(object):
         except ValueError:
             return self._input_string(what)
 
+    # Operates on the (last) request state
     @keyword
     def output(self, what=None, file_path=None):
         if not what:
             try:
                 json = self.instances[-1]
             except IndexError:
-                raise RuntimeError("No instance to output " +
-                    "before a request is made.")
+                raise RuntimeError("No instance to output: " +
+                    "No requests done thus no responses gotten yet, " +
+                    "and no previous instances loaded in the library settings.")
             if not file_path:
                 return self.print(json, "\n\nJSON for the instance is:\n")
         else:
@@ -303,6 +308,7 @@ class Keywords(object):
                 file_path, e))
         return json
 
+    # Operates on the suite level state
     @keyword
     def rest_instances(self, file_path):
         instances = {

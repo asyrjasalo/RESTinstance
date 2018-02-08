@@ -54,6 +54,8 @@ class REST(Keywords):
             'sslVerify': REST._input_boolean(ssl_verify),
             'allowRedirects': True
         }
+        if not self.request['sslVerify']:
+            disable_warnings()
         self.schema = {
             "exampled": True,
             "version": "draft04",
