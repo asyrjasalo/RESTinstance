@@ -14,6 +14,7 @@ from requests.packages.urllib3 import disable_warnings
 
 from robot.api import logger
 from robot.api.deco import keyword
+from robot.libraries.BuiltIn import BuiltIn
 
 from .schema_keywords import SCHEMA_KEYWORDS
 
@@ -290,7 +291,7 @@ class Keywords(object):
 
     # Operates on the (last) request state
     @keyword
-    def output(self, what=None, file_path=None):
+    def output(self, what=None, file_path=None, append=False):
         if not what:
             try:
                 json = self.instances[-1]
@@ -304,8 +305,9 @@ class Keywords(object):
             json = self._find_by_field(what, also_schema=False)['reality']
             if not file_path:
                 return self.print(json, "\n\nJSON for '{}' is:\n".format(what))
+        write_mode = 'a' if self._input_boolean(append) else 'w'
         try:
-            with open(path.join(getcwd(), file_path), 'w') as file:
+            with open(path.join(getcwd(), file_path), write_mode) as file:
                 dump(json, file, ensure_ascii=False, indent=4)
         except IOError as e:
             raise RuntimeError("Error outputting to file '{}':\n{}".format(
@@ -321,8 +323,8 @@ class Keywords(object):
             "spec": self.spec
         }
         try:
-            with open(path.join(getcwd(), file_path), 'w') as file:
-                dump(instances, file, ensure_ascii=False, indent=4)
+            with open(file_path, 'w') as file:
+                dump(self.instances, file, ensure_ascii=False, indent=4)
         except IOError as e:
             raise RuntimeError("Error exporting instances " +
                 "to file '{}':\n{}".format(file_path, e))
