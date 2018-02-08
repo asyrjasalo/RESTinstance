@@ -29,7 +29,8 @@ class REST(Keywords):
                  user_agent="RESTinstance/{}".format(__version__),
                  proxies={},
                  schema={},
-                 spec={}):
+                 spec={},
+                 instances=[]):
 
         if not url.startswith(("http://", "https://")):
             url = "http://" + url
@@ -60,8 +61,9 @@ class REST(Keywords):
             "response": {}
         }
         self.schema.update(self._input_object(schema))
-        self.spec = self._input_noneness_or_object(spec)
-        self.instances = []
+        self.spec = {}
+        self.spec.update(self._input_object(spec))
+        self.instances = self._input_array(instances)
 
 
     @staticmethod

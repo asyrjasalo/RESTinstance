@@ -428,7 +428,12 @@ class Keywords(object):
 
     def _find_by_field(self, field, also_schema=True, show_found=True):
         keys = field.split()
-        value = self.instances[-1]
+        try:
+            value = self.instances[-1]
+        except IndexError:
+            raise RuntimeError("Nothing to validate against: " +
+                "No requests done thus no responses gotten yet, " +
+                "and no previous instances loaded in the library settings.")
         schema = value['schema']
         if 'exampled' in schema and schema['exampled']:
             add_example = True
