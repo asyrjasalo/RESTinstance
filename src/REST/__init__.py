@@ -169,14 +169,6 @@ class REST(Keywords):
         return json_value
 
     @staticmethod
-    def _input_noneness_or_object(value):
-        if value is None:
-            return None
-        if isinstance(value, str) and value.lower() == "null":
-            return None
-        return REST._input_object(value)
-
-    @staticmethod
     def _input_json_from_file(path):
         try:
             with open(path) as file:

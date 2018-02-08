@@ -39,18 +39,27 @@ class Keywords(object):
     # Expectations
 
     @keyword
-    def expect_request(self, schema):
-        self.schema['request'].update(self._input_object(schema))
+    def expect_request(self, schema, replace=False):
+        if self._input_boolean(replace):
+            self.schema['response'] = self._input_object(schema)
+        else:
+            self.schema['request'].update(self._input_object(schema))
         return self.schema['request']
 
     @keyword
-    def expect_response(self, schema):
-        self.schema['response'].update(self._input_object(schema))
+    def expect_response(self, schema, replace=False):
+        if self._input_boolean(replace):
+            self.schema['response'] = self._input_object(schema)
+        else:
+            self.schema['response'].update(self._input_object(schema))
         return self.schema['response']
 
     @keyword
-    def expect_spec(self, spec):
-        self.spec = self._input_noneness_or_object(spec)
+    def expect_spec(self, spec, replace=False):
+        if self._input_boolean(replace):
+            self.spec = self._input_object(spec)
+        else:
+            self.spec.update(self._input_object(spec))
         return self.spec
 
     @keyword
