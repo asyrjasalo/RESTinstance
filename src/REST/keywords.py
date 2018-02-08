@@ -277,17 +277,18 @@ class Keywords(object):
 
     # Is stateless
     @keyword
-    def input(self, what):
-        if what is None:
+    def input(self, value_or_jsonfile):
+        if value_or_jsonfile is None:
             return None
-        if not isinstance(what, str):
-            return self._input_json_from_non_string(what)
-        if path.isfile(what):
-            return self._input_json_from_file(what)
+        if not isinstance(value_or_jsonfile, str):
+            return self._input_json_from_non_string(value_or_jsonfile)
+        if path.isfile(value_or_jsonfile):
+            return self._input_json_from_file(value_or_jsonfile)
+        value = value_or_jsonfile
         try:
-            return self._input_json_as_string(what)
+            return self._input_json_as_string(value)
         except ValueError:
-            return self._input_string(what)
+            return self._input_string(value)
 
     # Operates on the (last) request state
     @keyword
