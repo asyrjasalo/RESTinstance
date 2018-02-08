@@ -316,19 +316,18 @@ class Keywords(object):
 
     # Operates on the suite level state
     @keyword
-    def rest_instances(self, file_path):
-        instances = {
-            "url": self.url,
-            "instances": self.instances,
-            "spec": self.spec
-        }
+    def rest_instances(self, file_path=None):
+        if not file_path:
+            outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
+            hostname = urlparse(self.url).netloc
+            file_path = path.join(outputdir_path, hostname) + '.json'
         try:
             with open(file_path, 'w') as file:
                 dump(self.instances, file, ensure_ascii=False, indent=4)
         except IOError as e:
             raise RuntimeError("Error exporting instances " +
                 "to file '{}':\n{}".format(file_path, e))
-        return instances
+        return self.instances
 
     def _request(self, spec=None, **fields):
         request = deepcopy(self.request)
