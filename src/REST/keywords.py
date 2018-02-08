@@ -72,31 +72,34 @@ class Keywords(object):
     # Requests
 
     @keyword
-    def head(self, endpoint, timeout=None, spec=None, allow_redirects=None):
-        request = {}
+    def head(self, endpoint, timeout=None, allow_redirects=None, validate=True):
+        request = deepcopy(self.request)
         request['method'] = "HEAD"
         request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
-        return self._request(spec, **request)['response']
+        validate = self._input_boolean(validate)
+        return self._request(request, validate)['response']
 
     @keyword
-    def options(self, endpoint, timeout=None, spec=None, allow_redirects=None):
-        request = {}
+    def options(self, endpoint, timeout=None, allow_redirects=None,
+                validate=True):
+        request = deepcopy(self.request)
         request['method'] = "OPTIONS"
         request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
-        return self._request(spec, **request)['response']
+        validate = self._input_boolean(validate)
+        return self._request(request, validate)['response']
 
     @keyword
-    def get(self, endpoint, query=None, timeout=None, spec=None,
-            allow_redirects=None):
-        request = {}
+    def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
+            validate=True):
+        request = deepcopy(self.request)
         request['method'] = "GET"
         request['query'] = {}
         query_in_url = parse_qs(urlparse(endpoint).query)
@@ -330,9 +333,9 @@ class Keywords(object):
                 "to file '{}':\n{}".format(file_path, e))
         return self.instances
 
-    def _request(self, spec=None, **fields):
-        request = deepcopy(self.request)
-        request.update(fields)
+    ### Internal methods
+
+    def _request(self, request, validate=True):
         if request['endpoint'].endswith('/'):
             request['endpoint'] = request['endpoint'][:-1]
         if request['endpoint'].startswith(('http://', 'https://')):
@@ -354,20 +357,18 @@ class Keywords(object):
         except Timeout as e:
             raise AssertionError("{} request to {} timed out:\n{}".format(
                 request['method'], full_url, e))
-        if spec:
-            spec = self._input_noneness_or_object(spec)
-            if spec:
-                self._assert_spec(spec, response)
-        elif self.spec:
-            self._assert_spec(self.spec, response)
         utc_datetime = datetime.now(timezone.utc)
         request['timestamp'] = {
             'utc': utc_datetime.isoformat(),
             'local': utc_datetime.astimezone().isoformat()
         }
-        return self._instantiate(request, response, spec)
+        if validate and self.spec:
+            self._assert_spec(self.spec, response)
+        instance = self._instantiate(request, response, validate)
+        self.instances.append(instance)
+        return instance
 
-    def _instantiate(self, request, response, spec=None):
+    def _instantiate(self, request, response, validate_schema=True):
         try:
             response_body = response.json()
         except ValueError:
@@ -379,23 +380,22 @@ class Keywords(object):
             'headers': dict(response.headers)
         }
         schema = deepcopy(self.schema)
-        if schema['request']:
-            self._validate_schema(schema['request'], request)
-        if schema['response']:
-            self._validate_schema(schema['response'], response)
+        if validate_schema:
+            if schema['request']:
+                self._validate_schema(schema['request'], request)
+            if schema['response']:
+                self._validate_schema(schema['response'], response)
         schema['request']['body'] = self._new_schema(request['body'])
         schema['request']['query'] = self._new_schema(request['query'])
         schema['response']['body'] = self._new_schema(response['body'])
         if 'exampled' in schema and schema['exampled']:
             self._generate_schema_examples(schema, response)
-        instance = {
+        return {
             'request': request,
             'response': response,
             'schema': schema,
-            'spec': spec if spec else {}
+            'spec': self.spec
         }
-        self.instances.append(instance)
-        return instance
 
     def _assert_spec(self, spec, response):
         request = response.request

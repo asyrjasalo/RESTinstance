@@ -58,5 +58,5 @@ DELETE to non-existing
 DELETE to existing
     DELETE      /users/100
 
-DELETE to invalid but with no spec
-    DELETE      /invalid         spec=null
+DELETE to invalid, but with no validations
+    DELETE      /invalid         validate=false
