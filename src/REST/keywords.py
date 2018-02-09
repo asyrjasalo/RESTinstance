@@ -305,7 +305,7 @@ class Keywords(object):
             if not file_path:
                 return self.print(json, "\n\nJSON for the instance is:\n")
         else:
-            json = self._find_by_field(what, also_schema=False)['reality']
+            json = self._find_by_field(what, return_schema=False)['reality']
             if not file_path:
                 return self.print(json, "\n\nJSON for '{}' is:\n".format(what))
         write_mode = 'a' if self._input_boolean(append) else 'w'
@@ -432,7 +432,7 @@ class Keywords(object):
         elif isinstance(body, list):
             schema['example'] = body
 
-    def _find_by_field(self, field, also_schema=True, print_found=True):
+    def _find_by_field(self, field, return_schema=True, print_found=True):
         keys = field.split()
         try:
             value = self.instances[-1]
@@ -460,13 +460,13 @@ class Keywords(object):
                         "\n\nIndex '{}' does not exist in:\n".format(key))
                 raise AssertionError(
                     "\nExpected index '{}' did not exist.".format(field))
-            if also_schema:
+            if return_schema:
                 schema = self._schema_by_key(schema, key, value, add_example)
         found = {
             'keys': keys,
             'reality': value
         }
-        if also_schema:
+        if return_schema:
             found.update({ 'schema': schema })
         return found
 
