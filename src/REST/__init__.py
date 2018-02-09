@@ -2,6 +2,7 @@ from json import dumps, load, loads
 from os import path
 
 from pygments import highlight, lexers, formatters
+from requests.packages.urllib3 import disable_warnings
 
 from robot.api import logger
 

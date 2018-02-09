@@ -10,8 +10,6 @@ from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
 from requests.exceptions import Timeout
-from requests.packages.urllib3 import disable_warnings
-
 from robot.api import logger
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
