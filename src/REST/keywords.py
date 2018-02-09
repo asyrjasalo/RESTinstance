@@ -10,6 +10,7 @@ from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
 from requests.exceptions import Timeout
+
 from robot.api import logger
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
@@ -174,7 +175,7 @@ class Keywords(object):
     @keyword
     def missing(self, field):
         try:
-            found = self._find_by_field(field, show_found=False)
+            found = self._find_by_field(field, print_found=False)
         except AssertionError:
             return None
         self.print(found['reality'],
@@ -431,7 +432,7 @@ class Keywords(object):
         elif isinstance(body, list):
             schema['example'] = body
 
-    def _find_by_field(self, field, also_schema=True, show_found=True):
+    def _find_by_field(self, field, also_schema=True, print_found=True):
         keys = field.split()
         try:
             value = self.instances[-1]
@@ -448,13 +449,13 @@ class Keywords(object):
             try:
                 value = self._value_by_key(value, key)
             except (KeyError, TypeError):
-                if show_found:
+                if print_found:
                     self.print(value,
                         "\n\nProperty '{}' does not exist in:\n".format(key))
                 raise AssertionError(
                     "\nExpected property '{}' was not found.".format(field))
             except IndexError:
-                if show_found:
+                if print_found:
                     self.print(value,
                         "\n\nIndex '{}' does not exist in:\n".format(key))
                 raise AssertionError(
