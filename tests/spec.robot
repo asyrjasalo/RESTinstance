@@ -1,7 +1,7 @@
 *** Settings ***
 Resource        resources/mounterest.robot
 Suite setup     Expect spec                     ${CURDIR}/spec/users_api.json
-Suite teardown  Rest instances
+Suite teardown  Rest instances                  ${OUTPUTDIR}/spec.json
 
 *** Test Cases ***
 GET to existing
