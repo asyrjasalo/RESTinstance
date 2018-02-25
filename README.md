@@ -18,7 +18,7 @@
 
 ## Why?
 
-1. **RESTinstance bases from Robot Framework's language-agnostic, keyword-driven
+1. **RESTinstance bases on Robot Framework's language-agnostic, keyword-driven
 syntax** for API tests. As with Robot Framework, using it is not tied
 to any programming language nor development framework.
 RESTinstance rather keeps things simple and the language humane, also for
