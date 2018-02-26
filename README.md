@@ -14,8 +14,8 @@ such as HTTP, JSON (Schema), OpenAPI and Robot Framework.
 
 2. **It validates JSON using JSON Schema, guiding you to write API tests
 to base on constraints** rather than on specific values
-(e.g. "email must be valid" vs "email is foo@bar.com).
-This approach reduces test maintenance when values responded by the API
+(e.g. "email must be valid" vs "email is foo@bar.com").
+This approach reduces test maintenance when the values responded by the API
 are prone to change.
 Although values are not required, you can still test whenever they make
 sense (e.g. GET response body from one endpoint, then POST some of its values
