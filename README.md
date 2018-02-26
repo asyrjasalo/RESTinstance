@@ -103,12 +103,9 @@ In the scope of library's tests, mounterest acts as a HTTP proxy to
 [Typicode's live JSON server](jsonplaceholder.typicode.com) and uses
 mountebank's injections to enrich responses slightly, so that they better
 match to this library's testing needs. Particularly, it allows us to test
-the library also with non-safe HTTP methods (POST, PUT, PATCH, DELETE).
-Otherwise they would have no effect, as the live server is read-only.
-
-These injectors share a state and intercept non-safe HTTP requests,
-mimicking their changes in the state only, instead of trying to do
-them on the live-server. This state is cleared between the test runs.
+the library with non-safe HTTP methods (POST, PUT, PATCH, DELETE)
+by mimicking their changes in the state only, instead of trying to issue
+them on the live server. The state is cleared between the test runs.
 
 
 ## Credits
@@ -117,8 +114,6 @@ RESTinstance is licensed under Apache License 2.0.
 
 RESTinstance was originally written by Anssi Syrjäsalo, and was initially
 presented at [RoboCon 2018](https://robocon.io).
-
-RESTinstance 1.0.0 was released at xxxx-xx-xxxx.
 
 ### Python libraries
 
