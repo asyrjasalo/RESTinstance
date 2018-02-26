@@ -1,19 +1,6 @@
+# RESTinstance
 
-    ██████╗ ███████╗███████╗████████╗
-    ██╔══██╗██╔════╝██╔════╝╚══██╔══╝
-    ██████╔╝█████╗  ███████╗   ██║
-    ██╔══██╗██╔══╝  ╚════██║   ██║
-    ██║  ██║███████╗███████║   ██║
-    ╚═╝  ╚═╝╚══════╝╚══════╝   ╚═╝
-
-    ██╗███╗   ██╗███████╗████████╗ █████╗ ███╗   ██╗ ██████╗███████╗
-    ██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗████╗  ██║██╔════╝██╔════╝
-    ██║██╔██╗ ██║███████╗   ██║   ███████║██╔██╗ ██║██║     █████╗
-    ██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║╚██╗██║██║     ██╔══╝
-    ██║██║ ╚████║███████║   ██║   ██║  ██║██║ ╚████║╚██████╗███████╗
-    ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝
-
-    Robot Framework test library for (RESTful) JSON APIs
+Robot Framework test library for (RESTful) JSON APIs
 
 
 ## Why?
@@ -60,8 +47,8 @@ If you have Docker available, prefer
 [rfdocker](https://github.com/asyrjasalo/rfdocker) and just add
 `RESTinstance` to your `requirements.txt`.
 
-Alternatively, a ready made image is available at
-[DockerHub](https://hub.docker.com/r/asyrjasalo/restinstance/)
+Alternatively, a ready image is available at
+[DockerHub](https://hub.docker.com/r/asyrjasalo/restinstance/).
 
 ## Usage
 
