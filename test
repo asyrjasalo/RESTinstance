@@ -48,6 +48,7 @@ start_or_reset_mounterest() {
       echo "### Waiting for the API to start"
       if ! _portable_timeout 60 bash -c _wait_mounterest_ready 2>/dev/null; then
         echo "Error: API starting timeouted, exiting."
+        cleanup_mounterest
         exit 124  # same as GNU coreutils `timeout` exit status
       fi
       echo "... ready for the tests"
