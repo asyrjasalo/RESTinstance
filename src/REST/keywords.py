@@ -223,8 +223,7 @@ class Keywords(object):
         skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("integer", schema, validations)
         if enum:
-            enum = [self._input_integer(value) for value in enum]
-            schema['enum'] = [value for value in enum]
+            schema['enum'] = [self._input_integer(value) for value in enum]
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -237,8 +236,7 @@ class Keywords(object):
         skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("number", schema, validations)
         if enum:
-            enum = [self._input_number(value) for value in enum]
-            schema['enum'] = [value for value in enum]
+            schema['enum'] = [self._input_number(value) for value in enum]
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -251,8 +249,7 @@ class Keywords(object):
         skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("string", schema, validations)
         if enum:
-            enum = [self._input_string(value) for value in enum]
-            schema['enum'] = [value for value in enum]
+            schema['enum'] = [self._input_string(value) for value in enum]
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -265,8 +262,7 @@ class Keywords(object):
         skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("object", schema, validations)
         if enum:
-            enum = [self._input_object(value) for value in enum]
-            schema['enum'] = [value for value in enum]
+            schema['enum'] = [self._input_object(value) for value in enum]
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -279,8 +275,7 @@ class Keywords(object):
         skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("array", schema, validations)
         if enum:
-            enum = [self._input_array(value) for value in enum]
-            schema['enum'] = [value for value in enum]
+            schema['enum'] = [self._input_array(value) for value in enum]
         if not skip:
             self._assert_schema(schema, reality)
         return reality
