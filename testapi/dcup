@@ -14,6 +14,9 @@ root_path="$this_path/.."
 
 : ${BUILD_NAME="restinstance"}
 : ${MB_PORT:=2525}
+: ${MR_ARGS:="--loglevel info"}
+: ${MR_IMAGE_LABEL:="asyrjasalo/mounterest"}
+: ${MR_IMAGE_TAG:="0.1.2"}
 : ${MR_NETWORK:=${PWD##*/}_default}
 : ${MR_PORT:=8273}
 : ${RF_ARGS:="--randomize all"}
@@ -35,6 +38,8 @@ _reset_mounterest() {
 # https://github.com/asyrjasalo/mounterest
 trap "cleanup_mounterest &" SIGINT SIGTERM
 HOST_UID=$(id -u) HOST_GID=$(id -g) \
+MB_PORT=$MB_PORT MR_ARGS=$MR_ARGS MR_IMAGE_LABEL=$MR_IMAGE_LABEL \
+MR_IMAGE_TAG=$MR_IMAGE_TAG MR_NETWORK=$MR_NETWORK MR_PORT=$MR_PORT \
   docker-compose up -d
 _reset_mounterest  || true
 

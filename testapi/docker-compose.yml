@@ -3,11 +3,11 @@ version: '2'
 services:
   mounterest:
     container_name: mounterest
-    image: asyrjasalo/mounterest:0.1.2
-    command: --loglevel info
+    image: $MR_IMAGE_LABEL:$MR_IMAGE_TAG
+    command: $MR_ARGS
     environment:
       - HOST_UID
       - HOST_GID
     ports:
-      - 2525:2525
-      - 8273:8273
+      - $MB_PORT:2525
+      - $MR_PORT:8273
