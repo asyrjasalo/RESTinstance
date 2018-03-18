@@ -3,6 +3,7 @@ RESTinstance
 
 `Robot Framework <https://robotframework.org>`__ test library for (RESTful) JSON APIs
 
+
 Why?
 ----
 
@@ -29,14 +30,16 @@ Why?
    the tests to define how the API should work - then the schema also
    acts as a design. The schema can be further extended to an OpenAPI
    specification (manually for now, generating also this is planned),
-   which RESTinstance can also test requests and responses against. This
-   leads to very clean looking tests.
+   which RESTinstance can also test requests and responses against.
+   This leads to very clean looking tests.
+
 
 Installation
 ------------
 
 Python:
 ~~~~~~~
+On Python 3 series and Python 2.7 you can install it using ``pip``:
 
 ::
 
@@ -45,15 +48,27 @@ Python:
 The package is hosted in
 `PyPi <https://pypi.python.org/pypi/RESTinstance>`__.
 
-Using Docker
-~~~~~~~~~~~~
+Docker:
+~~~~~~~
 
-If you have Docker available, prefer
-`rfdocker <https://github.com/asyrjasalo/rfdocker>`__ and just add
-``RESTinstance`` to your ``requirements.txt``.
+The image is hosted at
+`DockerHub <https://hub.docker.com/r/asyrjasalo/restinstance/tags/>`__:
 
-Alternatively, a ready image is available at
-`DockerHub <https://hub.docker.com/r/asyrjasalo/restinstance/>`__.
+::
+
+   docker pull asyrjasalo/restinstance
+   docker run --rm -ti --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
+     --volume "$PWD/tests":/home/robot/tests \
+     --volume "$PWD/results":/home/robot/results \
+     asyrjasalo/restinstance "$PWD/tests"
+
+rfdocker:
+~~~~~~~~~
+If you are using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
+just add `RESTinstance`` to your ``requirements.txt`` and remove the
+commented lines in ``Dockerfile``. It will be then installed automatically
+the next time you run ``./rfdocker``.
+
 
 Usage
 -----
@@ -76,24 +91,28 @@ The most common use cases for RESTinstances are:
 
 (TODO: embed examples here)
 
+
 Development
 -----------
 
 The issues and requests are tracked in
-`GitHub <https://github.com/asyrjasalo/RESTinstance/issues>`__. We
-kindly do take pull requests (please mention if you do not want to be
+`GitHub <https://github.com/asyrjasalo/RESTinstance/issues>`__.
+We kindly do take pull requests (please mention if you do not want to be
 listed as contributors).
 
-Running tests
-~~~~~~~~~~~~~
+Library's own tests
+~~~~~~~~~~~~~~~~~~~
 
-Docker is mandatory for running the library's own tests:
+For development environment simplicity, Docker is required for running
+the library's own tests.
+
+To spin up the environment and run the tests:
 
 ::
 
     ./test
 
-To run on python 2:
+To run them on Python 2:
 
 ::
 
@@ -104,7 +123,7 @@ System under test
 
 The test API is implemented by
 `mounterest <https://github.com/asyrjasalo/mounterest>`__, which in turn
-builds on `mountebank <http://www.mbtest.org>`__.
+bases on `mountebank <http://www.mbtest.org>`__.
 
 In the scope of library's tests, mounterest acts as a HTTP proxy to
 `Typicode's live JSON server <jsonplaceholder.typicode.com>`__ and uses
@@ -114,6 +133,7 @@ to test the library with non-safe HTTP methods (POST, PUT, PATCH,
 DELETE) by mimicking their changes in the state only, instead of trying
 to issue them on the live server. The state is cleared between the test
 runs.
+
 
 Credits
 -------
@@ -129,13 +149,12 @@ Python libraries
 We use the following Python libraries and tools under the hood:
 
 -  `GenSON <https://github.com/wolverdude/GenSON>`__, by Jon
-   "wolverdude" Wolverton, for JSON Schema generation
+   "wolverdude" Wolverton, for JSON Schema draft-04 creation
 -  `Flex <https://github.com/pipermerriam/flex>`__, by Piper Merriam,
    for Swagger 2.0 validation
 -  `jsonschema <https://github.com/Julian/jsonschema>`__, by Julian
    Berman, for JSON Schema draft-04 validation
 -  `requests <https://github.com/requests/requests>`__, by Kenneth
-   Reitz, for Python HTTP requests
+   Reitz, for making HTTP requests
 
-See ``requirements.txt`` for a full list of all the (direct)
-dependencies.
+See ``requirements.txt`` for all the direct dependencies.
