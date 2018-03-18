@@ -51,8 +51,7 @@ The package is hosted in
 Docker:
 ~~~~~~~
 
-The image is hosted at
-`DockerHub <https://hub.docker.com/r/asyrjasalo/restinstance/tags/>`__:
+The Python 3 based image including the latest Robot Framework final version is hosted at `DockerHub <https://hub.docker.com/r/asyrjasalo/restinstance/tags/>`__:
 
 ::
 
