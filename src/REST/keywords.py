@@ -1,9 +1,8 @@
-# required for Python 2 series
-from __future__ import unicode_literals
-from io import open
+from io import open  # required for Python 2
+from .compat import IS_PYTHON_2, STRING_TYPES
+
 from pytz import utc
 from tzlocal import get_localzone
-from .compat import IS_PYTHON_2, STRING_TYPES
 
 from copy import deepcopy
 from datetime import datetime
@@ -326,9 +325,8 @@ class Keywords(object):
             with open(path.join(getcwd(), file_path), write_mode,
                       encoding="utf-8") as file:
                 if IS_PYTHON_2:
-                    file.write(unicode(content))
-                else:
-                    file.write(content)
+                    content = unicode(content)
+                file.write(content)
         except IOError as e:
             raise RuntimeError("Error outputting to file '{}':\n{}".format(
                 file_path, e))
@@ -346,9 +344,8 @@ class Keywords(object):
         try:
             with open(file_path, 'w', encoding="utf-8") as file:
                 if IS_PYTHON_2:
-                    file.write(unicode(content))
-                else:
-                    file.write(content)
+                    content = unicode(content)
+                file.write(content)
         except IOError as e:
             raise RuntimeError("Error exporting instances " +
                 "to file '{}':\n{}".format(file_path, e))

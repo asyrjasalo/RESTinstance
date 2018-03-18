@@ -1,6 +1,4 @@
-# required for Python 2 series
-from __future__ import unicode_literals
-from io import open
+from io import open  # required for Python 2
 
 from json import dumps, load, loads
 from os import path
@@ -10,7 +8,7 @@ from requests.packages.urllib3 import disable_warnings
 
 from robot.api import logger
 
-from .compat import IS_PYTHON_2, STRING_TYPES
+from .compat import STRING_TYPES
 from .keywords import Keywords
 from .version import __version__
 
