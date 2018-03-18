@@ -60,7 +60,7 @@ The image is hosted at
    docker run --rm -ti --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
      --volume "$PWD/tests":/home/robot/tests \
      --volume "$PWD/results":/home/robot/results \
-     asyrjasalo/restinstance "$PWD/tests"
+     asyrjasalo/restinstance tests
 
 rfdocker:
 ~~~~~~~~~
