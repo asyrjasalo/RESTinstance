@@ -63,7 +63,7 @@ To run on Python 3 and the latest Robot Framework final version:
      asyrjasalo/restinstance tests
 
 The image is hosted in
-`DockerHub <https://hub.docker.com/r/asyrjasalo/restinstance/tags/>`__.
+`DockerHub <https://hub.docker.com/r/asyrjasalo/restinstance/tags/>`__ and built using rfdocker.
 
 rfdocker:
 ~~~~~~~~~
