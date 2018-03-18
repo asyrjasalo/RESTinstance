@@ -1,8 +1,19 @@
+# required for Python 2 series
+from __future__ import unicode_literals
+from io import open
+from pytz import utc
+from tzlocal import get_localzone
+from .compat import IS_PYTHON_2, STRING_TYPES
+
 from copy import deepcopy
-from datetime import datetime, timezone
-from json import dump
+from datetime import datetime
+from json import dumps
 from os import path, getcwd
-from urllib.parse import parse_qs, urlparse
+
+if IS_PYTHON_2:
+    from urlparse import parse_qs, urlparse
+else:
+    from urllib.parse import parse_qs, urlparse
 
 from flex.core import validate_api_call
 from genson import Schema
@@ -178,7 +189,7 @@ class Keywords(object):
             found = self._find_by_field(field, print_found=False)
         except AssertionError:
             return None
-        self.print(found['reality'],
+        self.log_json(found['reality'],
             "\n\nExpected '{}' to not exist, but it is:\n{}".format(field))
         raise AssertionError("Expected '{}' to not exist, but it does.".format(
             field))
@@ -282,7 +293,7 @@ class Keywords(object):
     def input(self, value_or_jsonfile):
         if value_or_jsonfile is None:
             return None
-        if not isinstance(value_or_jsonfile, str):
+        if not isinstance(value_or_jsonfile, STRING_TYPES):
             return self._input_json_from_non_string(value_or_jsonfile)
         if path.isfile(value_or_jsonfile):
             return self._input_json_from_file(value_or_jsonfile)
@@ -303,15 +314,21 @@ class Keywords(object):
                     "No requests done thus no responses gotten yet, " +
                     "and no previous instances loaded in the library settings.")
             if not file_path:
-                return self.print(json, "\n\nJSON for the instance is:\n")
+                return self.log_json(json, "\n\nJSON for the instance is:\n")
         else:
             json = self._find_by_field(what, return_schema=False)['reality']
             if not file_path:
-                return self.print(json, "\n\nJSON for '{}' is:\n".format(what))
+                return self.log_json(json, "\n\nJSON for '{}' is:\n".format(what))
+        content = dumps(json, ensure_ascii=False, indent=4,
+                        separators=(',', ':' ))
         write_mode = 'a' if self._input_boolean(append) else 'w'
         try:
-            with open(path.join(getcwd(), file_path), write_mode) as file:
-                dump(json, file, ensure_ascii=False, indent=4)
+            with open(path.join(getcwd(), file_path), write_mode,
+                      encoding="utf-8") as file:
+                if IS_PYTHON_2:
+                    file.write(unicode(content))
+                else:
+                    file.write(content)
         except IOError as e:
             raise RuntimeError("Error outputting to file '{}':\n{}".format(
                 file_path, e))
@@ -324,9 +341,14 @@ class Keywords(object):
             outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
             hostname = urlparse(self.url).netloc
             file_path = path.join(outputdir_path, hostname) + '.json'
+        content = dumps(self.instances, ensure_ascii=False, indent=4,
+                        separators=(',', ': '))
         try:
-            with open(file_path, 'w') as file:
-                dump(self.instances, file, ensure_ascii=False, indent=4)
+            with open(file_path, 'w', encoding="utf-8") as file:
+                if IS_PYTHON_2:
+                    file.write(unicode(content))
+                else:
+                    file.write(content)
         except IOError as e:
             raise RuntimeError("Error exporting instances " +
                 "to file '{}':\n{}".format(file_path, e))
@@ -356,10 +378,10 @@ class Keywords(object):
         except Timeout as e:
             raise AssertionError("{} request to {} timed out:\n{}".format(
                 request['method'], full_url, e))
-        utc_datetime = datetime.now(timezone.utc)
+        utc_datetime = datetime.now(tz=utc)
         request['timestamp'] = {
             'utc': utc_datetime.isoformat(),
-            'local': utc_datetime.astimezone().isoformat()
+            'local': utc_datetime.astimezone(get_localzone()).isoformat()
         }
         if validate and self.spec:
             self._assert_spec(self.spec, response)
@@ -426,10 +448,10 @@ class Keywords(object):
     def _generate_schema_examples(self, schema, response):
         body = response['body']
         schema = schema['response']['body']
-        if isinstance(body, dict):
+        if isinstance(body, (dict)):
             for field in body:
                 schema['properties'][field]['example'] = body[field]
-        elif isinstance(body, list):
+        elif isinstance(body, (list)):
             schema['example'] = body
 
     def _find_by_field(self, field, return_schema=True, print_found=True):
@@ -450,13 +472,13 @@ class Keywords(object):
                 value = self._value_by_key(value, key)
             except (KeyError, TypeError):
                 if print_found:
-                    self.print(value,
+                    self.log_json(value,
                         "\n\nProperty '{}' does not exist in:\n".format(key))
                 raise AssertionError(
                     "\nExpected property '{}' was not found.".format(field))
             except IndexError:
                 if print_found:
-                    self.print(value,
+                    self.log_json(value,
                         "\n\nIndex '{}' does not exist in:\n".format(key))
                 raise AssertionError(
                     "\nExpected index '{}' did not exist.".format(field))

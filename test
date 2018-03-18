@@ -11,6 +11,7 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 ### settings ###################################################################
 
+: ${BUILD_ARGS=""}
 : ${BUILD_NAME="restinstance"}
 : ${MB_PORT:=2525}                    # this is your host machine's port
 : ${MR_ARGS:="--loglevel info"}
@@ -84,6 +85,7 @@ start_or_reset_mounterest
 
 # https://github.com/asyrjasalo/rfdocker
 BUILD_NAME="$BUILD_NAME" \
+BUILD_ARGS="$BUILD_ARGS" \
 RUN_ARGS="--network=$MR_NETWORK -e MB_PORT=$MB_PORT -e MR_PORT=$MR_PORT" \
   "$this_path/rfdocker" \
     $RF_ARGS "${@:-tests}"

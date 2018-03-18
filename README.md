@@ -35,7 +35,7 @@ test requests and responses against. This leads to very clean looking tests.
 
 ## Installation
 
-### Python (3 only):
+### Python:
 
     pip install --upgrade RESTinstance
 
@@ -79,6 +79,10 @@ pull requests (please mention if you do not want to be listed as contributors).
 Docker is mandatory for running the library's own tests:
 
     ./test
+
+To run on python 2:
+
+    BUILD_ARGS="-f Dockerfile.python2" ./test
 
 ### System under test
 

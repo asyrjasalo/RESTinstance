@@ -53,7 +53,7 @@ PATCH with valid params
     String      response body name          Julie Langford
 
 DELETE existing
-    DELETE      /users/8
+    DELETE      /users/9
     Integer     response status             200     204
-    GET         /users/8
+    GET         /users/9
     Integer     response status             404
