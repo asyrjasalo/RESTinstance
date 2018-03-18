@@ -64,7 +64,7 @@ The Python 3 based image including the latest Robot Framework final version is h
 rfdocker:
 ~~~~~~~~~
 If you are using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
-just add `RESTinstance`` to your ``requirements.txt`` and remove the
+just add ``RESTinstance`` to your ``requirements.txt`` and remove the
 commented lines in ``Dockerfile``. It will be then installed automatically
 the next time you run ``./rfdocker``.
 
