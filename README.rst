@@ -51,7 +51,7 @@ The package is hosted in
 Docker:
 ~~~~~~~
 
-The Python 3 based image including the latest Robot Framework final version is hosted at `DockerHub <https://hub.docker.com/r/asyrjasalo/restinstance/tags/>`__:
+To run on Python 3 and the latest Robot Framework final version:
 
 ::
 
@@ -60,6 +60,9 @@ The Python 3 based image including the latest Robot Framework final version is h
      --volume "$PWD/tests":/home/robot/tests \
      --volume "$PWD/results":/home/robot/results \
      asyrjasalo/restinstance tests
+
+The image is hosted in
+`DockerHub <https://hub.docker.com/r/asyrjasalo/restinstance/tags/>`__.
 
 rfdocker:
 ~~~~~~~~~
