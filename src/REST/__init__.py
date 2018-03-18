@@ -1,3 +1,7 @@
+# required for Python 2 series
+from __future__ import unicode_literals
+from io import open
+
 from json import dumps, load, loads
 from os import path
 
@@ -6,6 +10,7 @@ from requests.packages.urllib3 import disable_warnings
 
 from robot.api import logger
 
+from .compat import IS_PYTHON_2, STRING_TYPES
 from .keywords import Keywords
 from .version import __version__
 
@@ -91,7 +96,7 @@ class REST(Keywords):
 
 
     @staticmethod
-    def print(json, header="", also_console=True):
+    def log_json(json, header="", also_console=True):
         json = dumps(json, ensure_ascii=False, indent=4)
         logger.info("{}{}".format(header, json))    # no coloring for log.html
         if also_console:
@@ -103,11 +108,11 @@ class REST(Keywords):
 
     @staticmethod
     def _input_boolean(value):
-        if isinstance(value, bool):
+        if isinstance(value, (bool)):
             return value
         try:
             json_value = loads(value)
-            if not isinstance(json_value, bool):
+            if not isinstance(json_value, (bool)):
                 raise TypeError("This is not a Python boolean: {}".format(
                     json_value))
         except (ValueError, TypeError):
@@ -116,11 +121,11 @@ class REST(Keywords):
 
     @staticmethod
     def _input_integer(value):
-        if isinstance(value, int):
+        if isinstance(value, (int)):
             return value
         try:
             json_value = loads(value)
-            if not isinstance(json_value, int):
+            if not isinstance(json_value, (int)):
                 raise TypeError("This is not a Python integer: {}".format(
                     json_value))
         except (ValueError, TypeError):
@@ -129,11 +134,11 @@ class REST(Keywords):
 
     @staticmethod
     def _input_number(value):
-        if isinstance(value, float):
+        if isinstance(value, (float)):
             return value
         try:
             json_value = loads(value)
-            if not isinstance(json_value, float):
+            if not isinstance(json_value, (float)):
                 raise TypeError("This is not a Python float: {}".format(
                     json_value))
         except (ValueError, TypeError):
@@ -150,7 +155,7 @@ class REST(Keywords):
             value = value + '"'
         try:
             json_value = loads(value)
-            if not isinstance(json_value, str):
+            if not isinstance(json_value, STRING_TYPES):
                 raise TypeError("This is not a Python string: {}".format(
                     json_value))
         except (ValueError, TypeError):
@@ -159,14 +164,14 @@ class REST(Keywords):
 
     @staticmethod
     def _input_object(value):
-        if isinstance(value, dict):
+        if isinstance(value, (dict)):
             return value
         if path.isfile(value):
             json_value = REST._input_json_from_file(value)
         else:
             try:
                 json_value = loads(value)
-                if not isinstance(json_value, dict):
+                if not isinstance(json_value, (dict)):
                     raise TypeError("This is not a Python dict: {}".format(
                         json_value))
             except (ValueError, TypeError):
@@ -176,14 +181,14 @@ class REST(Keywords):
 
     @staticmethod
     def _input_array(value):
-        if isinstance(value, list):
+        if isinstance(value, (list)):
             return value
         if path.isfile(value):
             json_value = REST._input_json_from_file(value)
         else:
             try:
                 json_value = loads(value)
-                if not isinstance(json_value, list):
+                if not isinstance(json_value, (list)):
                     raise TypeError("This is not a Python list: {}".format(
                         json_value))
             except (ValueError, TypeError):
@@ -194,7 +199,7 @@ class REST(Keywords):
     @staticmethod
     def _input_json_from_file(path):
         try:
-            with open(path) as file:
+            with open(path, encoding="utf-8") as file:
                 return load(file)
         except IOError as e:
             raise RuntimeError("File '{}' cannot be opened:\n{}".format(
@@ -217,22 +222,22 @@ class REST(Keywords):
 
     @staticmethod
     def _input_client_cert(value):
-        if isinstance(value, str):
+        if isinstance(value, STRING_TYPES):
             return value
-        if isinstance(value, list):
+        if isinstance(value, (list)):
             if len(value) != 2:
                 raise RuntimeError("This cert, given as a Python list, " +
                     "must have length of 2:\n{}".format(value))
             return value
         try:
             value = loads(value)
-            if not isinstance(value, (str, list)):
+            if not isinstance(value, STRING_TYPES + (list)):
                 raise TypeError("This is not a Python string " +
                     "or a list:\n{}".format(value))
         except (ValueError, TypeError):
             raise RuntimeError("This cert must be either " +
                 "a JSON string or an array:\n{}".format(value))
-        if isinstance(value, list):
+        if isinstance(value, (list)):
             if len(value) != 2:
                 raise RuntimeError("This cert, given as a JSON array, " +
                     "must have length of 2:\n{}".format(value))
@@ -242,7 +247,7 @@ class REST(Keywords):
     def _input_timeout(value):
         if isinstance(value, (int, float)):
             return [value, value]
-        if isinstance(value, list):
+        if isinstance(value, (list)):
             if len(value) != 2:
                 raise RuntimeError("This timeout, given as a Python list, " +
                     "must have length of 2:\n{}".format(value))
@@ -255,7 +260,7 @@ class REST(Keywords):
         except (ValueError, TypeError):
             raise RuntimeError("This timeout must be either a JSON integer, " +
                 "number or an array:\n{}".format(value))
-        if isinstance(value, list):
+        if isinstance(value, (list)):
             if len(value) != 2:
                 raise RuntimeError("This timeout, given as a JSON array, " +
                     "must have length of 2:\n{}".format(value))

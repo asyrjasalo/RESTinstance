@@ -78,7 +78,7 @@ DELETE to non-existing
     DELETE      /users/2043
 
 DELETE to existing
-    DELETE      /users/7
+    DELETE      /users/10
 
 DELETE to invalid, but with no validations
     DELETE      /invalid            validate=${False}
