@@ -55,6 +55,7 @@ To run on Python 3 and the latest Robot Framework final version:
 
 ::
 
+   mkdir -p tests results
    docker pull asyrjasalo/restinstance
    docker run --rm -ti --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
      --volume "$PWD/tests":/home/robot/tests \
