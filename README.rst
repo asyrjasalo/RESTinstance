@@ -1,13 +1,12 @@
 RESTinstance
 ============
 
-Robot Framework test library for (RESTful) JSON APIs
+`Robot Framework <https://robotframework.org>`__ test library for (RESTful) JSON APIs
 
 Why?
 ----
 
-1. **RESTinstance relies on `Robot
-   Framework <http://robotframework.org/>`__'s language-agnostic,
+1. **RESTinstance relies on Robot Framework's language-agnostic,
    natural language syntax for API tests.** It is not tied to any
    particular programming language nor development framework. Using
    RESTinstance requires little, if any, programming knowledge. It
