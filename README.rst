@@ -131,12 +131,12 @@ Credits
 
 RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__ and was originally written by Anssi Syrjäsalo.
 
-It was initially presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
+It was presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
 
 Python libraries
 ~~~~~~~~~~~~~~~~
 
-We use the following Python libraries and tools under the hood:
+We use the following Python excellence under the hood:
 
 -  `GenSON <https://github.com/wolverdude/GenSON>`__, by Jon
    "wolverdude" Wolverton, for JSON Schema draft-04 creation
