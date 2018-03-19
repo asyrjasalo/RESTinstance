@@ -39,31 +39,26 @@ Installation
 
 Python:
 ~~~~~~~
-On Python 3 series and Python 2.7 you can install it using ``pip``:
+On 3.x and 2.7, you can install `the package from PyPi <https://pypi.python.org/pypi/RESTinstance>`__:
 
 ::
 
     pip install --upgrade RESTinstance
 
-The package is hosted in
-`PyPi <https://pypi.python.org/pypi/RESTinstance>`__.
-
 Docker:
 ~~~~~~~
 
-To run on Python 3 and the latest Robot Framework final version:
+`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and the latest Robot Framework:
 
 ::
 
-   mkdir -p tests results
    docker pull asyrjasalo/restinstance
    docker run --rm -ti --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
      --volume "$PWD/tests":/home/robot/tests \
      --volume "$PWD/results":/home/robot/results \
      asyrjasalo/restinstance tests
 
-The image is hosted in
-`DockerHub <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ and built using rfdocker.
+It is built using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__.
 
 rfdocker:
 ~~~~~~~~~
@@ -87,15 +82,15 @@ The most common use cases for RESTinstances are:
    `See examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/methods.robot>`__
 
 3. **Testing API requests and responses against a schema or a specification.**
-   `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/methods.robot>`__ and `examples for testing against Swagger 2.0 specification <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/spec.robot>`__
+   `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/schema.robot>`__ and `examples for testing against Swagger 2.0 specification <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/spec.robot>`__
 
 
 Development
 -----------
 
-The issues and requests are tracked in
+Bug reports and feature requests are tracked in
 `GitHub <https://github.com/asyrjasalo/RESTinstance/issues>`__.
-We kindly do take pull requests (please mention if you do not want to be
+We do kindly take pull requests (please mention if you do not want to be
 listed as contributors).
 
 Library's own tests
@@ -155,4 +150,4 @@ We use the following Python libraries and tools under the hood:
 -  `requests <https://github.com/requests/requests>`__, by Kenneth
    Reitz, for making HTTP requests
 
-See ``requirements.txt`` for all the direct dependencies.
+See `requirements.txt <https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt`__ for all the direct dependencies.
