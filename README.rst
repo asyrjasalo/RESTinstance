@@ -71,7 +71,7 @@ Usage
 
 The most common use cases are:
 
-1. **Testing for JSON types and formats using JSON Schema validations.**
+1. **Testing for JSON types, formats and values using JSON Schema validations.**
    `Examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/validations.robot>`__.
 
 2. **Flow-driven API tests, i.e. multiple APIs are called for the result.**
