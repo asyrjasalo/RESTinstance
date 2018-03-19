@@ -69,8 +69,6 @@ the next time you run ``./rfdocker``.
 Usage
 -----
 
-See `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
-
 The most common use cases for RESTinstances are:
 
 1. **Testing for JSON types and formats using JSON Schema validations.**
@@ -81,6 +79,8 @@ The most common use cases for RESTinstances are:
 
 3. **Testing API requests and responses against a schema or a specification.**
    `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/schema.robot>`__ and `examples for testing against Swagger 2.0 specification <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/spec.robot>`__.
+
+See `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
 
 
 Development
