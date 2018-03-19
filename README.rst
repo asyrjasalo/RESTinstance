@@ -133,9 +133,6 @@ RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasal
 
 It was presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
 
-Python libraries
-~~~~~~~~~~~~~~~~
-
 We use the following Python excellence under the hood:
 
 -  `GenSON <https://github.com/wolverdude/GenSON>`__, by Jon
