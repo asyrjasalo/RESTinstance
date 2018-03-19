@@ -16,7 +16,7 @@ Why?
 
 2. **It validates JSON using JSON Schema, guiding you to write API tests
    to base on constraints** rather than on specific values (e.g. "email
-   must be valid" vs "email is foo@bar.com"). This approach reduces test
+   must be valid" vs "email is foo\@bar.com"). This approach reduces test
    maintenance when the values responded by the API are prone to change.
    Although values are not required, you can still test whenever they
    make sense (e.g. GET response body from one endpoint, then POST some
@@ -60,7 +60,7 @@ Docker:
 
 rfdocker:
 ~~~~~~~~~
-If you are using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
+If you are already using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
 just add ``RESTinstance`` to your ``requirements.txt`` and remove the
 commented lines in ``Dockerfile``. It will be installed automatically
 the next time you run ``./rfdocker``.
@@ -88,14 +88,14 @@ Development
 
 Bug reports and feature requests are tracked in
 `GitHub <https://github.com/asyrjasalo/RESTinstance/issues>`__.
-We do kindly take pull requests, please mention if you do not want to be
-listed as contributors.
+We do kindly take pull requests. Please mention if you do not want to be
+listed below as contributors.
 
 Library's own tests
 ~~~~~~~~~~~~~~~~~~~
 
 For development environment simplicity, `Docker <https://docs.docker.com/install>`__ is required for running
-`the library's own tests <https://github.com/asyrjasalo/RESTinstance/tree/master/tests>`__.
+`the library's own tests <https://github.com/asyrjasalo/RESTinstance/tree/master/tests>`__. No other requirements are needed.
 
 To spin up the environment and run the tests:
 
