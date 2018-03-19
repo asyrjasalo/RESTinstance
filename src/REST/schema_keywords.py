@@ -1,26 +1,26 @@
 SCHEMA_KEYWORDS = {
     "common": {
-        "draft04": ["enum", "type", "allOf", "anyOf", "oneOf", "not",
-                   "definitions"]
+        "draft04": ("enum", "type", "allOf", "anyOf", "oneOf", "not",
+                   "definitions")
     },
     "integer": {
-        "draft04": ["multipleOf", "maximum", "exclusiveMaximum", "minimum",
-                   "exclusiveMinimum"]
+        "draft04": ("multipleOf", "maximum", "exclusiveMaximum", "minimum",
+                   "exclusiveMinimum")
     },
     "number": {
-        "draft04": ["multipleOf", "maximum", "exclusiveMaximum", "minimum",
-                   "exclusiveMinimum"]
+        "draft04": ("multipleOf", "maximum", "exclusiveMaximum", "minimum",
+                   "exclusiveMinimum")
     },
     "string": {
-        "draft04": ["format", "maxLength", "minLength", "pattern"]
+        "draft04": ("format", "maxLength", "minLength", "pattern")
     },
     "object": {
-        "draft04": ["maxProperties", "minProperties", "required",
+        "draft04": ("maxProperties", "minProperties", "required",
                    "additionalProperties", "properties",
-                   "patternProperties", "dependencies"]
+                   "patternProperties", "dependencies")
     },
     "array": {
-        "draft04": ["additionalItems", "items", "maxItems", "minItems",
-                   "uniqueItems"]
+        "draft04": ("additionalItems", "items", "maxItems", "minItems",
+                   "uniqueItems")
     }
 }
