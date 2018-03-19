@@ -40,4 +40,3 @@ PATCH with invalid params
 
 DELETE existing
     DELETE      /users/6
-
