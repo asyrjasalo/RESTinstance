@@ -48,7 +48,7 @@ On 3.x and 2.7, you can install `the package from PyPi <https://pypi.python.org/
 Docker:
 ~~~~~~~
 
-`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and `the latest Robot Framework <https://pypi.python.org/pypi/robotframework/3.0.2`>__:
+`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and `the latest Robot Framework <https://pypi.python.org/pypi/robotframework/3.0.2>`__:
 
 ::
 
@@ -148,4 +148,4 @@ We use the following Python libraries and tools under the hood:
 -  `requests <https://github.com/requests/requests>`__, by Kenneth
    Reitz, for making HTTP requests
 
-See `requirements.txt <https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt`__ for all the direct dependencies.
+See `requirements.txt <https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt>`__ for all the direct dependencies.
