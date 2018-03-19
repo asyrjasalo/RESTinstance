@@ -94,8 +94,7 @@ listed below as contributors.
 Library's own tests
 ~~~~~~~~~~~~~~~~~~~
 
-For development environment simplicity, `Docker <https://docs.docker.com/install>`__ is required for running
-`the library's own tests <https://github.com/asyrjasalo/RESTinstance/tree/master/tests>`__. No other requirements are needed.
+For simplicity, `Docker <https://docs.docker.com/install>`__ is required for running `the library's own tests <https://github.com/asyrjasalo/RESTinstance/tree/master/tests>`__. No other requirements are needed.
 
 To spin up the environment and run the tests:
 
