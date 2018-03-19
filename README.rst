@@ -103,7 +103,7 @@ To spin up the environment and run the tests:
 
     ./test
 
-To run them on Python 2:
+To run them on Python 2.7:
 
 ::
 
