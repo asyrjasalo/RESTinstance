@@ -63,7 +63,7 @@ To run on Python 3 and the latest Robot Framework final version:
      asyrjasalo/restinstance tests
 
 The image is hosted in
-`DockerHub <https://hub.docker.com/r/asyrjasalo/restinstance/tags/>`__ and built using rfdocker.
+`DockerHub <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ and built using rfdocker.
 
 rfdocker:
 ~~~~~~~~~
@@ -81,17 +81,13 @@ See `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
 The most common use cases for RESTinstances are:
 
 1. **Testing for JSON types and formats using JSON Schema validations.**
-   For examples, see ``tests/validations.robot``.
+   `See examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/validations.robot>`__
 
-2. **Flow-driven API tests, i.e. multiple APIs are called for the
-   result.** For examples, see ``tests/methods.robot``.
+2. **Flow-driven API tests, i.e. multiple APIs are called for the result.**
+   `See examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/methods.robot>`__
 
-3. **Testing API requests and responses against a schema or a
-   specification.** For examples testing against JSON schemas, see
-   ``tests/schema.robot`` and for testing against Swagger 2.0
-   specification, see ``tests/spec.robot``.
-
-(TODO: embed examples here)
+3. **Testing API requests and responses against a schema or a specification.**
+   `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/methods.robot>`__ and `examples for testing against Swagger 2.0 specification <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/spec.robot>`__
 
 
 Development
