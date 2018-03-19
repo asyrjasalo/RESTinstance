@@ -129,10 +129,9 @@ runs.
 Credits
 -------
 
-RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__.
+RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__ and was originally written by Anssi Syrjäsalo.
 
-RESTinstance was originally written by Anssi Syrjäsalo, and was
-initially presented at `RoboCon 2018 <https://robocon.io>`__.
+It was initially presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
 
 Python libraries
 ~~~~~~~~~~~~~~~~
