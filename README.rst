@@ -76,8 +76,7 @@ the next time you run ``./rfdocker``.
 Usage
 -----
 
-See `keyword
-documentation <https://github.com/asyrjasalo/RESTinstance/tree/master/docs/REST.html>`__.
+See `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
 
 The most common use cases for RESTinstances are:
 
