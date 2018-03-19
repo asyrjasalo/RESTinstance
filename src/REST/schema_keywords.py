@@ -1,3 +1,5 @@
+GENSON_GENERATED_KEYWORDS = ("items", "properties", "required", "type")
+
 SCHEMA_KEYWORDS = {
     "common": {
         "draft04": ("enum", "type", "allOf", "anyOf", "oneOf", "not",
