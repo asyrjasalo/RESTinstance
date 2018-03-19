@@ -119,10 +119,10 @@ bases on `mountebank <https://www.mbtest.org>`__.
 In the scope of library's tests, mounterest acts as a HTTP proxy to
 `Typicode's live JSON server <jsonplaceholder.typicode.com>`__ and uses
 mountebank's injections to enrich responses slightly, so that they
-better match to this library's testing needs. Particularly, it allows us
+better match to this library's testing needs. Particularly, it allows
 to test the library with non-safe HTTP methods (POST, PUT, PATCH,
-DELETE) by mimicking their changes in the state only, instead of trying
-to issue them on the live server. The state is cleared between the test
+DELETE) by mimicking their changes, instead of trying
+to issue them on the live server. The changes are cleared between the test
 runs.
 
 
