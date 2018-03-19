@@ -58,8 +58,6 @@ Docker:
      --volume "$PWD/results":/home/robot/results \
      asyrjasalo/restinstance tests
 
-It is built using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__.
-
 rfdocker:
 ~~~~~~~~~
 If you are using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
