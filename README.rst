@@ -89,7 +89,7 @@ Development
 Bug reports and feature requests are tracked in
 `GitHub <https://github.com/asyrjasalo/RESTinstance/issues>`__.
 
-We do kindly take pull requests. Please mention if you do not want to be
+We do respect pull request(er)s. Please mention if you do not want to be
 listed below as contributors.
 
 Library's own tests
