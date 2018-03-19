@@ -94,8 +94,8 @@ listed as contributors.
 Library's own tests
 ~~~~~~~~~~~~~~~~~~~
 
-For development environment simplicity, Docker is required for running
-`the library's own tests <https://github.com/asyrjasalo/RESTinstance/tree/master/tests`__.
+For development environment simplicity, `Docker <https://docs.docker.com/install>`__ is required for running
+`the library's own tests <https://github.com/asyrjasalo/RESTinstance/tree/master/tests>`__.
 
 To spin up the environment and run the tests:
 
@@ -129,7 +129,7 @@ runs.
 Credits
 -------
 
-RESTinstance is licensed under Apache License 2.0.
+RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__.
 
 RESTinstance was originally written by Anssi Syrjäsalo, and was
 initially presented at `RoboCon 2018 <https://robocon.io>`__.
