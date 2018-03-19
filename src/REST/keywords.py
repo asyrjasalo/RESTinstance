@@ -189,8 +189,8 @@ class Keywords(object):
         except AssertionError:
             return None
         self.log_json(found['reality'],
-            "\n\nExpected '{}' to not exist, but it is:\n{}".format(field))
-        raise AssertionError("Expected '{}' to not exist, but it does.".format(
+            "\n\nExpected '%s' to not exist, but it is:\n%s" % (field))
+        raise AssertionError("Expected '%s' to not exist, but it does." % (
             field))
 
     @keyword
@@ -312,7 +312,7 @@ class Keywords(object):
         else:
             json = self._find_by_field(what, return_schema=False)['reality']
             if not file_path:
-                return self.log_json(json, "\n\nJSON for '{}' is:\n".format(what))
+                return self.log_json(json, "\n\nJSON for '%s' is:\n" % (what))
         content = dumps(json, ensure_ascii=False, indent=4,
                         separators=(',', ':' ))
         write_mode = 'a' if self._input_boolean(append) else 'w'
@@ -323,7 +323,7 @@ class Keywords(object):
                     content = unicode(content)
                 file.write(content)
         except IOError as e:
-            raise RuntimeError("Error outputting to file '{}':\n{}".format(
+            raise RuntimeError("Error outputting to file '%s':\n%s" % (
                 file_path, e))
         return json
 
@@ -343,7 +343,7 @@ class Keywords(object):
                 file.write(content)
         except IOError as e:
             raise RuntimeError("Error exporting instances " +
-                "to file '{}':\n{}".format(file_path, e))
+                "to file '%s':\n%s" % (file_path, e))
         return self.instances
 
     ### Internal methods
@@ -368,7 +368,7 @@ class Keywords(object):
                               allow_redirects=request['allowRedirects'],
                               verify=request['sslVerify'])
         except Timeout as e:
-            raise AssertionError("{} request to {} timed out:\n{}".format(
+            raise AssertionError("%s request to %s timed out:\n%s" % (
                 request['method'], full_url, e))
         utc_datetime = datetime.now(tz=utc)
         request['timestamp'] = {
@@ -429,7 +429,7 @@ class Keywords(object):
                     format_checker=FormatChecker())
             else:
                 raise RuntimeError("Unknown JSON Schema version " +
-                    "was given:\n{}".format(schema_version))
+                    "was given:\n%s" % (schema_version))
             validator.validate(reality)
         except ValidationError as e:
             raise AssertionError(e)
@@ -465,15 +465,15 @@ class Keywords(object):
             except (KeyError, TypeError):
                 if print_found:
                     self.log_json(value,
-                        "\n\nProperty '{}' does not exist in:\n".format(key))
+                        "\n\nProperty '%s' does not exist in:\n" % (key))
                 raise AssertionError(
-                    "\nExpected property '{}' was not found.".format(field))
+                    "\nExpected property '%s' was not found." % (field))
             except IndexError:
                 if print_found:
                     self.log_json(value,
-                        "\n\nIndex '{}' does not exist in:\n".format(key))
+                        "\n\nIndex '%s' does not exist in:\n" % (key))
                 raise AssertionError(
-                    "\nExpected index '{}' did not exist.".format(field))
+                    "\nExpected index '%s' did not exist." % (field))
             if return_schema:
                 schema = self._schema_by_key(schema, key, value, add_example)
         found = {
@@ -508,8 +508,8 @@ class Keywords(object):
             kws.extend(SCHEMA_KEYWORDS[json_type][self.schema['version']])
         for validation in validations:
             if validation not in kws:
-                raise RuntimeError("Unknown JSON Schema ({})".format(
+                raise RuntimeError("Unknown JSON Schema (%s)" % (
                     self.schema['version']) + " validation keyword " +
-                "for {}:\n{}".format(json_type, validation))
+                "for %s:\n%s" % (json_type, validation))
             schema[validation] = self.input(validations[validation])
         schema.update({ "type": json_type })

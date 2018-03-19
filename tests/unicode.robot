@@ -11,11 +11,13 @@ POST and GET with unicode in payload
     String      response body name      "Anssi Syrjäsalo"
     GET         /users/13
     String      response body name      Anssi Syrjäsalo
+    Output
 
 PUT with unicode in payload
     PUT         /users/7                ${CURDIR}/payloads/unicode.json
     String      request body name       "❤❤❤"
     String      response body name      ❤❤❤
+    Output      response body name
 
 PATCH with unicode in payload
     PATCH       /users/9                { "name": "🤖🤖🤖" }
