@@ -25,7 +25,7 @@ Why?
 3. **It generates JSON Schema for requests and responses automatically,
    and the schema gets more accurate by you writing tests.** The schema
    is a contract between different teams, or functions (backend,
-   frontend, partners), to agree on what kind of data the API handles.
+   frontend, testers), to agree on what kind of data the API handles.
    Additionally, you can mark validations to be skipped and rather use
    the tests to define how the API should work - then the schema also
    acts as a design. The schema can be further extended to an OpenAPI
