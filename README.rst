@@ -48,7 +48,7 @@ On 3.x and 2.7, you can install `the package from PyPi <https://pypi.python.org/
 Docker:
 ~~~~~~~
 
-`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and the latest Robot Framework:
+`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and `the latest Robot Framework <https://pypi.python.org/pypi/robotframework/3.0.2`>__:
 
 ::
 
@@ -62,7 +62,7 @@ rfdocker:
 ~~~~~~~~~
 If you are using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
 just add ``RESTinstance`` to your ``requirements.txt`` and remove the
-commented lines in ``Dockerfile``. It will be then installed automatically
+commented lines in ``Dockerfile``. It will be installed automatically
 the next time you run ``./rfdocker``.
 
 
@@ -74,13 +74,13 @@ See `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
 The most common use cases for RESTinstances are:
 
 1. **Testing for JSON types and formats using JSON Schema validations.**
-   `See examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/validations.robot>`__
+   `Examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/validations.robot>`__.
 
 2. **Flow-driven API tests, i.e. multiple APIs are called for the result.**
-   `See examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/methods.robot>`__
+   `Examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/methods.robot>`__.
 
 3. **Testing API requests and responses against a schema or a specification.**
-   `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/schema.robot>`__ and `examples for testing against Swagger 2.0 specification <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/spec.robot>`__
+   `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/schema.robot>`__ and `examples for testing against Swagger 2.0 specification <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/spec.robot>`__.
 
 
 Development
@@ -88,14 +88,14 @@ Development
 
 Bug reports and feature requests are tracked in
 `GitHub <https://github.com/asyrjasalo/RESTinstance/issues>`__.
-We do kindly take pull requests (please mention if you do not want to be
-listed as contributors).
+We do kindly take pull requests, please mention if you do not want to be
+listed as contributors.
 
 Library's own tests
 ~~~~~~~~~~~~~~~~~~~
 
 For development environment simplicity, Docker is required for running
-the library's own tests.
+`the library's own tests <https://github.com/asyrjasalo/RESTinstance/tree/master/tests`__.
 
 To spin up the environment and run the tests:
 
