@@ -15,7 +15,7 @@ else:
     from urllib.parse import parse_qs, urlparse
 
 from flex.core import validate_api_call
-from genson import Schema
+from genson import SchemaBuilder
 from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
@@ -435,7 +435,9 @@ class Keywords(object):
             raise AssertionError(e)
 
     def _new_schema(self, value):
-        return Schema().add_object(value).to_dict()
+        builder = SchemaBuilder(schema_uri=False)
+        builder.add_object(value)
+        return builder.to_schema()
 
     def _generate_schema_examples(self, schema, response):
         body = response['body']
