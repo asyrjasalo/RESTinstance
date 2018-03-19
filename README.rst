@@ -125,7 +125,7 @@ System under test
 
 The test API is implemented by
 `mounterest <https://github.com/asyrjasalo/mounterest>`__, which in turn
-bases on `mountebank <http://www.mbtest.org>`__.
+bases on `mountebank <https://www.mbtest.org>`__.
 
 In the scope of library's tests, mounterest acts as a HTTP proxy to
 `Typicode's live JSON server <jsonplaceholder.typicode.com>`__ and uses
