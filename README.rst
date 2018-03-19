@@ -37,7 +37,7 @@ Why?
 Installation
 ------------
 
-Python:
+Python
 ~~~~~~~
 On 3.x and 2.7, you can install `the package from PyPi <https://pypi.python.org/pypi/RESTinstance>`__:
 
@@ -45,7 +45,7 @@ On 3.x and 2.7, you can install `the package from PyPi <https://pypi.python.org/
 
     pip install --upgrade RESTinstance
 
-Docker:
+Docker
 ~~~~~~~
 
 `The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and `the latest Robot Framework <https://pypi.python.org/pypi/robotframework/3.0.2>`__:
@@ -58,8 +58,8 @@ Docker:
      --volume "$PWD/results":/home/robot/results \
      asyrjasalo/restinstance tests
 
-rfdocker:
-~~~~~~~~~
+rfdocker
+~~~~~~~~
 If you are already using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
 just add ``RESTinstance`` to your ``requirements.txt`` and remove the
 commented lines in ``Dockerfile``. It will be installed automatically
