@@ -23,7 +23,7 @@ Why?
    of its values to another endpoint).
 
 3. **It generates JSON Schema for requests and responses automatically,
-   and the schema gets more accurate by you writing tests.** The schema
+   and the schema gets more accurate by your tests.** The schema
    is a contract between different teams, or functions (backend,
    frontend, test developers), to agree on what kind of data the API handles.
    Additionally, you can mark validations to be skipped and rather use
