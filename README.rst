@@ -69,13 +69,62 @@ the next time you run ``./rfdocker``.
 Usage
 -----
 
-The most common use cases are:
+The most common use cases for library are:
 
-1. **Testing for JSON types, formats and values using JSON Schema validations.**
+1. **Writing the classic value based API tests**
+
+.. code:: robotframework
+
+    *** Settings ***
+    Library         REST              https://jsonplaceholder.typicode.com
+
+    *** Variables ***
+    ${json}=        { "id": 11, "name": "Gil Alexander" }
+    &{dict}=        name=Julie Langford
+
+    *** Test Cases ***
+    GET existing users
+        GET         /users?limit=5
+        Array       response body
+        Object      response body 0
+        Integer     response body 0 id        1
+        [Teardown]  Output  response body 0
+
+    GET an existing user
+        GET         /users/1
+        Integer     response body id          1
+        String      response body name        Leanne Graham
+
+    POST new with valid params
+        POST        /users                    ${json}
+        Integer     response status           201
+
+    PUT to existing with valid params
+        PUT         /users/2                  { "isCoding": true }
+        Boolean     response body isCoding    true
+        PUT         /users/2                  { "sleep": null }
+        Null        response body sleep
+        PUT         /users/2                  { "pockets": "", "money": 0.02 }
+        String      response body pockets     ${EMPTY}
+        Number      response body money       0.02
+        Missing     response body moving
+
+    PATCH to existing with valid params
+        &{res}=     GET   /users/3
+        String      response body name        Clementine Bauch
+        PATCH       /users/4                  { "name": "${res.body['name']}" }
+        String      response body name        Clementine Bauch
+        PATCH       /users/5                  ${dict}
+        String      response body name        ${dict.name}
+
+    DELETE existing succssfully
+        DELETE      /users/6
+        Integer     response status           200    202     204
+
+
+2. **Testing for JSON types and constraints using JSON Schema validations.**
    `Examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/validations.robot>`__.
 
-2. **Flow-driven API tests, i.e. multiple APIs are called for the result.**
-   `Examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/methods.robot>`__.
 
 3. **Testing API requests and responses against a schema or a specification.**
    `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/schema.robot>`__ and `examples for testing against Swagger 2.0 specification <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/spec.robot>`__.
