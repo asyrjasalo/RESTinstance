@@ -69,6 +69,8 @@ the next time you run ``./rfdocker``.
 Usage
 -----
 
+Tip: You can run this README.rst as a test with Robot Framework.
+
 The most common use cases for library are:
 
 1. **Writing the classic value based API tests**
