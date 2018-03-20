@@ -97,11 +97,11 @@ The most common use cases for library are:
         Integer     response body id          1
         String      response body name        Leanne Graham
 
-    POST new with valid params
+    POST with valid params to create an user
         POST        /users                    ${json}
         Integer     response status           201
 
-    PUT to existing with valid params
+    PUT with valid params to update existing
         PUT         /users/2                  { "isCoding": true }
         Boolean     response body isCoding    true
         PUT         /users/2                  { "sleep": null }
@@ -111,7 +111,7 @@ The most common use cases for library are:
         Number      response body money       0.02
         Missing     response body moving
 
-    PATCH to existing with valid params
+    PATCH with valid params and using response as the new payload
         &{res}=     GET   /users/3
         String      response body name        Clementine Bauch
         PATCH       /users/4                  { "name": "${res.body['name']}" }
@@ -119,7 +119,7 @@ The most common use cases for library are:
         PATCH       /users/5                  ${dict}
         String      response body name        ${dict.name}
 
-    DELETE existing succssfully
+    DELETE existing successfully
         DELETE      /users/6
         Integer     response status           200    202     204
 
