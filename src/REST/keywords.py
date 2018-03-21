@@ -314,7 +314,7 @@ class Keywords(object):
             if not file_path:
                 return self.log_json(json, "\n\nJSON for '%s' is:\n" % (what))
         content = dumps(json, ensure_ascii=False, indent=4,
-                        separators=(',', ':' ))
+                        separators=(',', ': ' ))
         write_mode = 'a' if self._input_boolean(append) else 'w'
         try:
             with open(path.join(getcwd(), file_path), write_mode,
