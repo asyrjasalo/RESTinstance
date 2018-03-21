@@ -520,6 +520,8 @@ class Keywords(object):
     def _schema_by_key(self, schema, key, value, add_example=False):
         if 'properties' in schema:
             schema = schema['properties']
+            if add_example:
+                schema[key]['example'] = value
         elif 'items' in schema:
             schema = schema['items']
             try:
@@ -529,8 +531,6 @@ class Keywords(object):
                 pass
         if key not in schema:
             schema[key] = self._new_schema(value)
-        if add_example:
-            schema[key]['example'] = value
         return schema[key]
 
     def _set_type_validations(self, json_type, schema, validations):
