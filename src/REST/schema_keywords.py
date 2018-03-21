@@ -1,4 +1,5 @@
-GENSON_GENERATED_KEYWORDS = ("items", "properties", "required", "type")
+GENSON_GENERATED_KEYWORDS = ("$schema", "anyOf", "items", "patternProperties",
+                             "properties", "required", "type")
 
 SCHEMA_KEYWORDS = {
     "common": {
