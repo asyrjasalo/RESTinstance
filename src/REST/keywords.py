@@ -522,6 +522,11 @@ class Keywords(object):
             schema = schema['properties']
         elif 'items' in schema:
             schema = schema['items']
+            try:
+                int(key)
+                return schema
+            except:
+                pass
         if key not in schema:
             schema[key] = self._new_schema(value)
         if add_example:
