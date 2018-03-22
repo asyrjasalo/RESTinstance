@@ -325,31 +325,32 @@ class Keywords(object):
     # Operates on the (last) request state
     @keyword
     def output(self, what=None, file_path=None, append=False):
+        try:
+            json = self.instances[-1]
+        except IndexError:
+            raise RuntimeError("No instance to output: " +
+                "No requests done thus no responses gotten yet, " +
+                "and no previous instances loaded in the library settings.")
         if not what:
-            try:
-                json = self.instances[-1]
-            except IndexError:
-                raise RuntimeError("No instance to output: " +
-                    "No requests done thus no responses gotten yet, " +
-                    "and no previous instances loaded in the library settings.")
-            if not file_path:
-                return self.log_json(json, "\n\nJSON for the instance is:\n")
+            message = "\n\nJSON for the instance is:\n"
         else:
             json = self._find_by_field(what, return_schema=False)['reality']
-            if not file_path:
-                return self.log_json(json, "\n\nJSON for '%s' is:\n" % (what))
-        content = dumps(json, ensure_ascii=False, indent=4,
-                        separators=(',', ': ' ))
-        write_mode = 'a' if self._input_boolean(append) else 'w'
-        try:
-            with open(path.join(getcwd(), file_path), write_mode,
-                      encoding="utf-8") as file:
-                if IS_PYTHON_2:
-                    content = unicode(content)
-                file.write(content)
-        except IOError as e:
-            raise RuntimeError("Error outputting to file '%s':\n%s" % (
-                file_path, e))
+            message = "\n\nJSON for '%s' is:\n" % (what)
+        if not file_path:
+            self.log_json(json, message)
+        else:
+            content = dumps(json, ensure_ascii=False, indent=4,
+                            separators=(',', ': ' ))
+            write_mode = 'a' if self._input_boolean(append) else 'w'
+            try:
+                with open(path.join(getcwd(), file_path), write_mode,
+                          encoding="utf-8") as file:
+                    if IS_PYTHON_2:
+                        content = unicode(content)
+                    file.write(content)
+            except IOError as e:
+                raise RuntimeError("Error outputting to file '%s':\n%s" % (
+                    file_path, e))
         return json
 
     # Operates on the suite level state
