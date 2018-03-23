@@ -4,6 +4,7 @@ Suite setup     Create mountebank proxy
 Suite teardown  Delete mountebank proxy
 Test setup      Reset state
 
+
 *** Variables ***
 &{invalid}=     name=John Galt
 ${valid}=       { "name": "Julie Langford" }

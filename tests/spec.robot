@@ -3,6 +3,7 @@ Resource        resources/mounterest.robot
 Suite setup     Expect spec                     ${CURDIR}/spec/users_api.json
 Suite teardown  Rest instances                  ${OUTPUTDIR}/spec.json
 
+
 *** Test Cases ***
 GET to existing
     GET         /users/1                        allow_redirects=${None}
