@@ -190,9 +190,10 @@ To release the Python package:
 
 ::
 
-    pip install --upgrade wheel
+    pip install --upgrade twine wheel
     rm -rf dist build src/RESTinstance.egg-info
-    python setup.py sdist bdist_wheel upload
+    python setup.py sdist bdist_wheel
+    twine upload dist/*
 
 To release the Docker image to private Docker registry:
 
