@@ -176,8 +176,15 @@ DELETE) by mimicking their changes, instead of trying
 to issue them on the live server. The changes are cleared between the test
 runs.
 
-Release
-~~~~~~~
+Releasing
+~~~~~~~~~
+
+To generate the `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__:
+
+::
+
+    ./genlibdoc
+
 
 To release the Python package:
 
