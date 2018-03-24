@@ -176,6 +176,28 @@ DELETE) by mimicking their changes, instead of trying
 to issue them on the live server. The changes are cleared between the test
 runs.
 
+Release
+~~~~~~~
+
+To release the Python package:
+
+::
+
+    pip install --upgrade wheel
+    python setup.py sdist bdist_wheel upload
+
+To release the Docker image to private Docker registry:
+
+::
+
+    ./release https://your.private.registry.com:5000/restinstance
+
+To release the Docker image to DockerHub:
+
+::
+
+    ./release {{organization}}/restinstance
+
 
 Credits
 -------
