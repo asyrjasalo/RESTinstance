@@ -158,7 +158,7 @@ To run them on Python 2.7:
 
 ::
 
-    BUILD_ARGS="-f Dockerfile.python2" ./test
+    BUILD_ARGS="-f Dockerfile.python2" BUILD_NAME="restinstance-python2" ./test
 
 System under test
 ~~~~~~~~~~~~~~~~~
