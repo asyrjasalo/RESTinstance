@@ -1,0 +1,49 @@
+{
+    "exampled": true,
+    "version": "draft04",
+    "request": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "enum": [
+                        11
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "enum": [
+                        "Gil Alexander"
+                    ]
+                }
+            },
+            "required": [
+                "id",
+                "name"
+            ]
+        },
+        "query": {
+            "type": "object"
+        }
+    },
+    "response": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 11
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Gil Alexander"
+                }
+            },
+            "required": [
+                "id",
+                "name"
+            ]
+        }
+    }
+}
