@@ -1,4 +1,7 @@
-from io import open  # required for Python 2
+# For Python 2
+from __future__ import unicode_literals
+from __future__ import division
+from io import open
 from .compat import IS_PYTHON_2, STRING_TYPES
 
 from pytz import utc
