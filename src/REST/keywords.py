@@ -416,8 +416,8 @@ class Keywords(object):
         except ValueError:
             response_body = response.text
         response = {
-            'status': response.status_code,
             'seconds': response.elapsed.microseconds / 1000 / 1000,
+            'status': response.status_code,
             'body': response_body,
             'headers': dict(response.headers)
         }
