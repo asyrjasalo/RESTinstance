@@ -348,8 +348,6 @@ class Keywords(object):
             try:
                 with open(path.join(getcwd(), file_path), write_mode,
                           encoding="utf-8") as file:
-                    if IS_PYTHON_2:
-                        content = unicode(content)
                     file.write(content)
             except IOError as e:
                 raise RuntimeError("Error outputting to file '%s':\n%s" % (
@@ -367,8 +365,6 @@ class Keywords(object):
                         separators=(',', ': '))
         try:
             with open(file_path, 'w', encoding="utf-8") as file:
-                if IS_PYTHON_2:
-                    content = unicode(content)
                 file.write(content)
         except IOError as e:
             raise RuntimeError("Error exporting instances " +
