@@ -1,7 +1,7 @@
 RESTinstance
 ============
 
-`Robot Framework <https://robotframework.org>`__ test library for (RESTful) JSON APIs
+`Robot Framework <http://robotframework.org>`__ test library for (RESTful) JSON APIs
 
 
 Why?
