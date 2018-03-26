@@ -214,13 +214,15 @@ It was presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
 
 We use the following Python excellence under the hood:
 
--  `GenSON <https://github.com/wolverdude/GenSON>`__, by Jon
-   "wolverdude" Wolverton, for JSON Schema draft-04 creation
 -  `Flex <https://github.com/pipermerriam/flex>`__, by Piper Merriam,
    for Swagger 2.0 validation
+-  `GenSON <https://github.com/wolverdude/GenSON>`__, by Jon
+   "wolverdude" Wolverton, for JSON Schema generator
 -  `jsonschema <https://github.com/Julian/jsonschema>`__, by Julian
    Berman, for JSON Schema draft-04 validation
+-  `pygments <http://pygments.org>`__, by Georg Brandl et al., for JSON syntax
+   coloring, in console `Output`
 -  `requests <https://github.com/requests/requests>`__, by Kenneth
-   Reitz, for making HTTP requests
+   Reitz et al., for making HTTP requests
 
 See `requirements.txt <https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt>`__ for all the direct dependencies.
