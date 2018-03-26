@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+### consts #####################################################################
+
+this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+### release ####################################################################
+
+pip install --upgrade twine wheel
+rm -rf "$this_path/dist" "$this_path/build" \
+    "$this_path/src/RESTinstance.egg-info"
+python setup.py sdist bdist_wheel
+twine upload "$this_path/dist/*"

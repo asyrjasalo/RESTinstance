@@ -186,14 +186,11 @@ To generate the `keyword documentation <https://asyrjasalo.github.io/RESTinstanc
     ./genlibdoc
 
 
-To release the Python package:
+To release the Python package to PyPi:
 
 ::
 
-    pip install --upgrade twine wheel
-    rm -rf dist build src/RESTinstance.egg-info
-    python setup.py sdist bdist_wheel
-    twine upload dist/*
+    ./release_pypi
 
 To release the Docker image to private Docker registry:
 
