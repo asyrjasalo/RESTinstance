@@ -8,12 +8,14 @@ Responding JSON object
     GET         /users/1
     String      response body email     format=email
     Output      schema response body    ${CURDIR}/schemagen/body_object.json
+    ...                                 sort_keys=true
 
 Responding JSON array
     GET         /users
     String      response body 0 name    Leanne Graham   minLength=3
     String      response body 0 name    Ervin Howell    Leanne Graham
     Output      schema response body    ${CURDIR}/schemagen/body_array.json
+    ...                                 sort_keys=true
 
 Method with query parameters
     GET         /users?_limit=10
@@ -22,12 +24,14 @@ Method with query parameters
     String      response body 0 name    Leanne Graham   minLength=3
     String      response body 1 name    "Ervin Howell"  pattern="[A-Za-z]+"
     Output      schema                  ${CURDIR}/schemagen/request_query.json
+    ...                                 sort_keys=true
 
 Method with body parameters
     POST        /users                  { "id": 11, "name": "Gil Alexander" }
     Integer     request body id         11
     String      request body name       Gil Alexander
     Output      schema                  ${CURDIR}/schemagen/request_body.json
+    ...                                 sort_keys=true
 
 # GenSON 0.2.3
 With 'type' as payload property

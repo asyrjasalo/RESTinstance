@@ -327,7 +327,7 @@ class Keywords(object):
 
     # Operates on the (last) request state
     @keyword
-    def output(self, what=None, file_path=None, append=False):
+    def output(self, what=None, file_path=None, append=False, sort_keys=False):
         try:
             json = self.instances[-1]
         except IndexError:
@@ -339,11 +339,12 @@ class Keywords(object):
         else:
             json = self._find_by_field(what, return_schema=False)['reality']
             message = "\n\nJSON for '%s' is:\n" % (what)
+        sort_keys = self._input_boolean(sort_keys)
         if not file_path:
-            self.log_json(json, message)
+            self.log_json(json, message, sort_keys=sort_keys)
         else:
             content = dumps(json, ensure_ascii=False, indent=4,
-                            separators=(',', ': ' ))
+                            separators=(',', ': ' ), sort_keys=sort_keys)
             write_mode = 'a' if self._input_boolean(append) else 'w'
             try:
                 with open(path.join(getcwd(), file_path), write_mode,
@@ -356,13 +357,14 @@ class Keywords(object):
 
     # Operates on the suite level state
     @keyword
-    def rest_instances(self, file_path=None):
+    def rest_instances(self, file_path=None, sort_keys=False):
         if not file_path:
             outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
             hostname = urlparse(self.url).netloc
             file_path = path.join(outputdir_path, hostname) + '.json'
+        sort_keys = self._input_boolean(sort_keys)
         content = dumps(self.instances, ensure_ascii=False, indent=4,
-                        separators=(',', ': '))
+                        separators=(',', ': '), sort_keys=sort_keys)
         try:
             with open(file_path, 'w', encoding="utf-8") as file:
                 file.write(content)

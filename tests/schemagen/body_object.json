@@ -1,40 +1,21 @@
 {
-    "type": "object",
     "properties": {
-        "id": {
-            "type": "integer",
-            "example": 1
-        },
-        "name": {
-            "type": "string",
-            "example": "Leanne Graham"
-        },
-        "username": {
-            "type": "string",
-            "example": "Bret"
-        },
-        "email": {
-            "type": "string",
-            "example": "Sincere@april.biz",
-            "format": "email"
-        },
         "address": {
-            "type": "object",
+            "example": {
+                "city": "Gwenborough",
+                "geo": {
+                    "lat": "-37.3159",
+                    "lng": "81.1496"
+                },
+                "street": "Kulas Light",
+                "suite": "Apt. 556",
+                "zipcode": "92998-3874"
+            },
             "properties": {
-                "street": {
-                    "type": "string"
-                },
-                "suite": {
-                    "type": "string"
-                },
                 "city": {
                     "type": "string"
                 },
-                "zipcode": {
-                    "type": "string"
-                },
                 "geo": {
-                    "type": "object",
                     "properties": {
                         "lat": {
                             "type": "string"
@@ -46,7 +27,17 @@
                     "required": [
                         "lat",
                         "lng"
-                    ]
+                    ],
+                    "type": "object"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "suite": {
+                    "type": "string"
+                },
+                "zipcode": {
+                    "type": "string"
                 }
             },
             "required": [
@@ -56,35 +47,22 @@
                 "suite",
                 "zipcode"
             ],
-            "example": {
-                "street": "Kulas Light",
-                "suite": "Apt. 556",
-                "city": "Gwenborough",
-                "zipcode": "92998-3874",
-                "geo": {
-                    "lat": "-37.3159",
-                    "lng": "81.1496"
-                }
-            }
-        },
-        "phone": {
-            "type": "string",
-            "example": "1-770-736-8031 x56442"
-        },
-        "website": {
-            "type": "string",
-            "example": "hildegard.org"
+            "type": "object"
         },
         "company": {
-            "type": "object",
+            "example": {
+                "bs": "harness real-time e-markets",
+                "catchPhrase": "Multi-layered client-server neural-net",
+                "name": "Romaguera-Crona"
+            },
             "properties": {
-                "name": {
+                "bs": {
                     "type": "string"
                 },
                 "catchPhrase": {
                     "type": "string"
                 },
-                "bs": {
+                "name": {
                     "type": "string"
                 }
             },
@@ -93,11 +71,32 @@
                 "catchPhrase",
                 "name"
             ],
-            "example": {
-                "name": "Romaguera-Crona",
-                "catchPhrase": "Multi-layered client-server neural-net",
-                "bs": "harness real-time e-markets"
-            }
+            "type": "object"
+        },
+        "email": {
+            "example": "Sincere@april.biz",
+            "format": "email",
+            "type": "string"
+        },
+        "id": {
+            "example": 1,
+            "type": "integer"
+        },
+        "name": {
+            "example": "Leanne Graham",
+            "type": "string"
+        },
+        "phone": {
+            "example": "1-770-736-8031 x56442",
+            "type": "string"
+        },
+        "username": {
+            "example": "Bret",
+            "type": "string"
+        },
+        "website": {
+            "example": "hildegard.org",
+            "type": "string"
         }
     },
     "required": [
@@ -109,5 +108,6 @@
         "phone",
         "username",
         "website"
-    ]
+    ],
+    "type": "object"
 }

@@ -97,8 +97,9 @@ class REST(Keywords):
 
 
     @staticmethod
-    def log_json(json, header="", also_console=True):
-        json = dumps(json, ensure_ascii=False, indent=4)
+    def log_json(json, header="", also_console=True, sort_keys=False):
+        json = dumps(json, ensure_ascii=False, indent=4,
+                     separators=(',', ': ' ), sort_keys=sort_keys)
         logger.info("%s%s" % (header, json))    # no coloring for log.html
         if also_console:
             json_data = highlight(json,
