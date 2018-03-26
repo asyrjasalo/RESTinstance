@@ -179,7 +179,7 @@ runs.
 Releasing
 ~~~~~~~~~
 
-To generate the `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__:
+To generate `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__:
 
 ::
 
