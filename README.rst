@@ -186,7 +186,7 @@ To generate the `keyword documentation <https://asyrjasalo.github.io/RESTinstanc
     ./genlibdoc
 
 
-To release the Python package to PyPi:
+To build and release Python package to PyPi:
 
 ::
 
