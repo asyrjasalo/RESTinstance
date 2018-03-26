@@ -61,6 +61,7 @@ class REST(Keywords):
                  spec={},
                  instances=[]):
         if url:
+            url = REST._input_string(url)
             if not url.startswith(("http://", "https://")):
                 url = "http://" + url
             if url.endswith('/'):
