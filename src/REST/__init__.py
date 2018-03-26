@@ -51,7 +51,7 @@ class REST(Keywords):
     # 3 IO keywords                 see the respective KWs
     # -----------------------------------------------------
 
-    def __init__(self, url,
+    def __init__(self, url=None,
                  ssl_verify=True,
                  accept="application/json, */*",
                  content_type="application/json",
@@ -60,11 +60,11 @@ class REST(Keywords):
                  schema={},
                  spec={},
                  instances=[]):
-
-        if not url.startswith(("http://", "https://")):
-            url = "http://" + url
-        if url.endswith('/'):
-            url = url[:-1]
+        if url:
+            if not url.startswith(("http://", "https://")):
+                url = "http://" + url
+            if url.endswith('/'):
+                url = url[:-1]
         self.url = url
         self.request = {
             'method': None,

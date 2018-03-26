@@ -360,8 +360,11 @@ class Keywords(object):
     def rest_instances(self, file_path=None, sort_keys=False):
         if not file_path:
             outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
-            hostname = urlparse(self.url).netloc
-            file_path = path.join(outputdir_path, hostname) + '.json'
+            if self.url:
+                hostname = urlparse(self.url).netloc
+                file_path = path.join(outputdir_path, hostname) + '.json'
+            else:
+                file_path = path.join(outputdir_path, "instances") + '.json'
         sort_keys = self._input_boolean(sort_keys)
         content = dumps(self.instances, ensure_ascii=False, indent=4,
                         separators=(',', ': '), sort_keys=sort_keys)
@@ -383,7 +386,10 @@ class Keywords(object):
         else:
             if not request['endpoint'].startswith('/'):
                 request['endpoint'] = '/' + request['endpoint']
-            full_url = self.url + request['endpoint']
+            if self.url:
+                full_url = self.url + request['endpoint']
+            else:
+                full_url = request['endpoint']
         try:
             response = client(request['method'], full_url,
                               params=request['query'],

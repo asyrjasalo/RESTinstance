@@ -9,4 +9,4 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ### run libdoc in docker #######################################################
 
 RUN_ARGS="--entrypoint entrypoint -v $this_path/docs:/home/robot/docs" \
-  "$this_path/rfdocker" python -m robot.libdoc REST:: docs/index.html
+  "$this_path/rfdocker" python -m robot.libdoc REST docs/index.html
