@@ -85,6 +85,12 @@ exit_docker_not_installed
 trap "cleanup_mounterest &" SIGINT SIGTERM
 start_or_reset_mounterest
 
+if [ "$(uname -s)" == 'Darwin' ]; then
+    RF_ARGS="$RF_ARGS --variable PROXY_URL:host.docker.internal"
+else
+    RF_ARGS="$RF_ARGS --variable PROXY_URL:localhost"
+fi
+
 # https://github.com/asyrjasalo/rfdocker
 BUILD_NAME="$BUILD_NAME" \
 BUILD_ARGS="$BUILD_ARGS" \
