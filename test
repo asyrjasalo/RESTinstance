@@ -36,7 +36,9 @@ cleanup_mounterest() {
 }
 
 start_or_reset_mounterest() {
-  docker network create --driver bridge $MR_NETWORK 2>/dev/null || true
+  if [ "$MR_NETWORK" != "host" ]; then
+    docker network create --driver bridge $MR_NETWORK 2>/dev/null || true
+  fi
 
   if docker exec mounterest true 2>/dev/null ; then
     _reset_mounterest
@@ -59,7 +61,7 @@ start_or_reset_mounterest() {
 _reset_mounterest() {
   docker run --rm -t -i --network=$MR_NETWORK \
     alpine/httpie delete http://mounterest:$MR_PORT/state 1>/dev/null && \
-  echo "### Mounterest state cleaned"
+  echo "### Mounterest state cleaned" || true
 }
 
 _portable_timeout() {
