@@ -19,7 +19,6 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 : ${MR_IMAGE_TAG:="0.1.2"}
 : ${MR_NETWORK:="testapi_default"}
 : ${MR_PORT:=8273}                    # this is your host machine's port
-: ${MR_PRIVILEGED:=false}             # certain machines require privileged access
 : ${RF_ARGS:="--randomize all"}
 
 ### helpers ####################################################################
@@ -95,6 +94,6 @@ fi
 # https://github.com/asyrjasalo/rfdocker
 BUILD_NAME="$BUILD_NAME" \
 BUILD_ARGS="$BUILD_ARGS" \
-RUN_ARGS="--network=$MR_NETWORK -e MB_PORT=$MB_PORT -e MR_PORT=$MR_PORT --privileged=$MR_PRIVILEGED" \
+RUN_ARGS="--network=$MR_NETWORK -e MB_PORT=$MB_PORT -e MR_PORT=$MR_PORT" \
   "$this_path/rfdocker" \
     $RF_ARGS "${@:-tests}"
