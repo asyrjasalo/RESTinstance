@@ -111,6 +111,15 @@ class Keywords(object):
     @keyword
     def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
             validate=True):
+        """ Make a ``GET`` request call to a specified ``endpoint``. ``endpoint`` is required.
+
+        Example Usage
+
+        GET users from site and ensure status code is 200
+        | `GET`     | /users?limit=2  |     |
+        | `Integer` | response status | 200 |
+
+        """
         request = deepcopy(self.request)
         request['method'] = "GET"
         request['query'] = {}
@@ -131,6 +140,15 @@ class Keywords(object):
     @keyword
     def post(self, endpoint, body=None, timeout=None, allow_redirects=None,
              validate=True):
+        """ Make a ``POST`` request call to a specified ``endpoint``. ``endpoint`` and ``body`` are required.
+
+            Example Usage
+
+            POST "Mr Potato" to endpoint and ensure status code is 201
+            | `POST`    | /users          | { "id": 11, "name": "Mr Potato" } |
+            | `Integer` | response status | 201                               |
+
+        """
         request = deepcopy(self.request)
         request['method'] = "POST"
         request['endpoint'] = endpoint
@@ -145,6 +163,14 @@ class Keywords(object):
     @keyword
     def put(self, endpoint, body=None, timeout=None, allow_redirects=None,
             validate=True):
+        """ Make a ``PUT`` request call to a specified ``endpoint``. ``endpoint`` and ``body`` are required.
+
+            Example Usage
+
+            PUT existing record with new name to endpoint
+            | `PUT`  | /users/11  | { "name": "Albus Potter" }  |
+
+        """
         request = deepcopy(self.request)
         request['method'] = "PUT"
         request['endpoint'] = endpoint
@@ -173,6 +199,16 @@ class Keywords(object):
     @keyword
     def delete(self, endpoint, timeout=None, allow_redirects=None,
                validate=True):
+        """ Make a ``DELETE`` request call to a specified ``endpoint``. ``endpoint`` is required.
+
+            Example Usage
+
+            DELETE user 4 from endpoint and ensure status code is 200, 202, or 204.
+            | `DELETE`  | /users/4        |     |     |     |
+            | `Integer` | response status | 200 | 202 | 204 |
+
+        """
+
         request = deepcopy(self.request)
         request['method'] = "DELETE"
         request['endpoint'] = endpoint
@@ -292,6 +328,16 @@ class Keywords(object):
 
     @keyword
     def array(self, field, *enum, **validations):
+        """ Verify a returned response is an array with specific validations.
+
+        Example Usage
+
+        Verify the returned response is an array and has a maximum of 100 items. If more than 100 items, fail.
+        | `GET`   | /users?limit=100 |                |
+        | `Array` | response body    | maxItems = 100 |
+
+        """
+
         found = self._find_by_field(field)
         schema = found['schema']
         reality = found['reality']
