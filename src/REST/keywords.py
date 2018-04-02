@@ -1,4 +1,7 @@
-from io import open  # required for Python 2
+# For Python 2
+from __future__ import unicode_literals
+from __future__ import division
+from io import open
 from .compat import IS_PYTHON_2, STRING_TYPES
 
 from pytz import utc
@@ -223,7 +226,12 @@ class Keywords(object):
         skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("integer", schema, validations)
         if enum:
-            schema['enum'] = [self._input_integer(value) for value in enum]
+            if 'enum' not in schema:
+                schema['enum'] = []
+            for value in enum:
+                value = self._input_integer(value)
+                if value not in schema['enum']:
+                    schema['enum'].append(value)
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -236,7 +244,12 @@ class Keywords(object):
         skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("number", schema, validations)
         if enum:
-            schema['enum'] = [self._input_number(value) for value in enum]
+            if 'enum' not in schema:
+                schema['enum'] = []
+            for value in enum:
+                value = self._input_number(value)
+                if value not in schema['enum']:
+                    schema['enum'].append(value)
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -249,7 +262,12 @@ class Keywords(object):
         skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("string", schema, validations)
         if enum:
-            schema['enum'] = [self._input_string(value) for value in enum]
+            if 'enum' not in schema:
+                schema['enum'] = []
+            for value in enum:
+                value = self._input_string(value)
+                if value not in schema['enum']:
+                    schema['enum'].append(value)
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -262,7 +280,12 @@ class Keywords(object):
         skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("object", schema, validations)
         if enum:
-            schema['enum'] = [self._input_object(value) for value in enum]
+            if 'enum' not in schema:
+                schema['enum'] = []
+            for value in enum:
+                value = self._input_object(value)
+                if value not in schema['enum']:
+                    schema['enum'].append(value)
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -275,7 +298,12 @@ class Keywords(object):
         skip = self._input_boolean(validations.pop('skip', False))
         self._set_type_validations("array", schema, validations)
         if enum:
-            schema['enum'] = [self._input_array(value) for value in enum]
+            if 'enum' not in schema:
+                schema['enum'] = []
+            for value in enum:
+                value = self._input_array(value)
+                if value not in schema['enum']:
+                    schema['enum'].append(value)
         if not skip:
             self._assert_schema(schema, reality)
         return reality
@@ -299,47 +327,49 @@ class Keywords(object):
 
     # Operates on the (last) request state
     @keyword
-    def output(self, what=None, file_path=None, append=False):
+    def output(self, what=None, file_path=None, append=False, sort_keys=False):
+        try:
+            json = self.instances[-1]
+        except IndexError:
+            raise RuntimeError("No instance to output: " +
+                "No requests done thus no responses gotten yet, " +
+                "and no previous instances loaded in the library settings.")
         if not what:
-            try:
-                json = self.instances[-1]
-            except IndexError:
-                raise RuntimeError("No instance to output: " +
-                    "No requests done thus no responses gotten yet, " +
-                    "and no previous instances loaded in the library settings.")
-            if not file_path:
-                return self.log_json(json, "\n\nJSON for the instance is:\n")
+            message = "\n\nJSON for the instance is:\n"
         else:
             json = self._find_by_field(what, return_schema=False)['reality']
-            if not file_path:
-                return self.log_json(json, "\n\nJSON for '%s' is:\n" % (what))
-        content = dumps(json, ensure_ascii=False, indent=4,
-                        separators=(',', ':' ))
-        write_mode = 'a' if self._input_boolean(append) else 'w'
-        try:
-            with open(path.join(getcwd(), file_path), write_mode,
-                      encoding="utf-8") as file:
-                if IS_PYTHON_2:
-                    content = unicode(content)
-                file.write(content)
-        except IOError as e:
-            raise RuntimeError("Error outputting to file '%s':\n%s" % (
-                file_path, e))
+            message = "\n\nJSON for '%s' is:\n" % (what)
+        sort_keys = self._input_boolean(sort_keys)
+        if not file_path:
+            self.log_json(json, message, sort_keys=sort_keys)
+        else:
+            content = dumps(json, ensure_ascii=False, indent=4,
+                            separators=(',', ': ' ), sort_keys=sort_keys)
+            write_mode = 'a' if self._input_boolean(append) else 'w'
+            try:
+                with open(path.join(getcwd(), file_path), write_mode,
+                          encoding="utf-8") as file:
+                    file.write(content)
+            except IOError as e:
+                raise RuntimeError("Error outputting to file '%s':\n%s" % (
+                    file_path, e))
         return json
 
     # Operates on the suite level state
     @keyword
-    def rest_instances(self, file_path=None):
+    def rest_instances(self, file_path=None, sort_keys=False):
         if not file_path:
             outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
-            hostname = urlparse(self.url).netloc
-            file_path = path.join(outputdir_path, hostname) + '.json'
+            if self.url:
+                hostname = urlparse(self.url).netloc
+                file_path = path.join(outputdir_path, hostname) + '.json'
+            else:
+                file_path = path.join(outputdir_path, "instances") + '.json'
+        sort_keys = self._input_boolean(sort_keys)
         content = dumps(self.instances, ensure_ascii=False, indent=4,
-                        separators=(',', ': '))
+                        separators=(',', ': '), sort_keys=sort_keys)
         try:
             with open(file_path, 'w', encoding="utf-8") as file:
-                if IS_PYTHON_2:
-                    content = unicode(content)
                 file.write(content)
         except IOError as e:
             raise RuntimeError("Error exporting instances " +
@@ -356,7 +386,10 @@ class Keywords(object):
         else:
             if not request['endpoint'].startswith('/'):
                 request['endpoint'] = '/' + request['endpoint']
-            full_url = self.url + request['endpoint']
+            if self.url:
+                full_url = self.url + request['endpoint']
+            else:
+                full_url = request['endpoint']
         try:
             response = client(request['method'], full_url,
                               params=request['query'],
@@ -387,8 +420,8 @@ class Keywords(object):
         except ValueError:
             response_body = response.text
         response = {
-            'status': response.status_code,
             'seconds': response.elapsed.microseconds / 1000 / 1000,
+            'status': response.status_code,
             'body': response_body,
             'headers': dict(response.headers)
         }
@@ -497,10 +530,15 @@ class Keywords(object):
             schema = schema['properties']
         elif 'items' in schema:
             schema = schema['items']
+            try:
+                int(key)
+                return schema
+            except:
+                pass
         if key not in schema:
             schema[key] = self._new_schema(value)
-        if add_example:
-            schema[key]['example'] = value
+            if add_example:
+                schema[key]['example'] = value
         return schema[key]
 
     def _set_type_validations(self, json_type, schema, validations):

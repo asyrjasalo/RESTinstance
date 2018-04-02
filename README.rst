@@ -1,7 +1,7 @@
 RESTinstance
 ============
 
-`Robot Framework <https://robotframework.org>`__ test library for (RESTful) JSON APIs
+`Robot Framework <http://robotframework.org>`__ test library for (RESTful) JSON APIs
 
 
 Why?
@@ -39,7 +39,7 @@ Installation
 
 Python
 ~~~~~~~
-On 3.x and 2.7, you can install `the package from PyPi <https://pypi.python.org/pypi/RESTinstance>`__:
+On 3.x and 2.7, you can install `the package from PyPi <https://pypi.org/project/RESTinstance>`__:
 
 ::
 
@@ -48,7 +48,7 @@ On 3.x and 2.7, you can install `the package from PyPi <https://pypi.python.org/
 Docker
 ~~~~~~~
 
-`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and `the latest Robot Framework <https://pypi.python.org/pypi/robotframework/3.0.2>`__:
+`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.0.2>`__:
 
 ::
 
@@ -69,13 +69,64 @@ the next time you run ``./rfdocker``.
 Usage
 -----
 
-The most common use cases are:
+Tip: You can run this README.rst as a test with Robot Framework.
 
-1. **Testing for JSON types, formats and values using JSON Schema validations.**
+The most common use cases for library are:
+
+1. **Writing the classic value based API tests**
+
+.. code:: robotframework
+
+    *** Settings ***
+    Library         REST              https://jsonplaceholder.typicode.com
+
+    *** Variables ***
+    ${json}=        { "id": 11, "name": "Gil Alexander" }
+    &{dict}=        name=Julie Langford
+
+    *** Test Cases ***
+    GET existing users
+        GET         /users?limit=5
+        Array       response body
+        Object      response body 0
+        Integer     response body 0 id        1
+        [Teardown]  Output  response body 0
+
+    GET an existing user
+        GET         /users/1
+        Integer     response body id          1
+        String      response body name        Leanne Graham
+
+    POST with valid params to create an user
+        POST        /users                    ${json}
+        Integer     response status           201
+
+    PUT with valid params to update existing
+        PUT         /users/2                  { "isCoding": true }
+        Boolean     response body isCoding    true
+        PUT         /users/2                  { "sleep": null }
+        Null        response body sleep
+        PUT         /users/2                  { "pockets": "", "money": 0.02 }
+        String      response body pockets     ${EMPTY}
+        Number      response body money       0.02
+        Missing     response body moving
+
+    PATCH with valid params and using response as the new payload
+        &{res}=     GET   /users/3
+        String      response body name        Clementine Bauch
+        PATCH       /users/4                  { "name": "${res.body['name']}" }
+        String      response body name        Clementine Bauch
+        PATCH       /users/5                  ${dict}
+        String      response body name        ${dict.name}
+
+    DELETE existing successfully
+        DELETE      /users/6
+        Integer     response status           200    202     204
+
+
+2. **Testing for JSON types and constraints using JSON Schema validations.**
    `Examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/validations.robot>`__.
 
-2. **Flow-driven API tests, i.e. multiple APIs are called for the result.**
-   `Examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/methods.robot>`__.
 
 3. **Testing API requests and responses against a schema or a specification.**
    `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/schema.robot>`__ and `examples for testing against Swagger 2.0 specification <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/spec.robot>`__.
@@ -107,7 +158,7 @@ To run them on Python 2.7:
 
 ::
 
-    BUILD_ARGS="-f Dockerfile.python2" ./test
+    BUILD_ARGS="-f Dockerfile.python2" BUILD_NAME="restinstance-python2" ./test
 
 System under test
 ~~~~~~~~~~~~~~~~~
@@ -125,6 +176,34 @@ DELETE) by mimicking their changes, instead of trying
 to issue them on the live server. The changes are cleared between the test
 runs.
 
+Releasing
+~~~~~~~~~
+
+To generate `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__:
+
+::
+
+    ./genlibdoc
+
+
+To build and release Python package to PyPi:
+
+::
+
+    ./release_pypi
+
+To release the Docker image to private Docker registry:
+
+::
+
+    ./release https://your.private.registry.com:5000/restinstance
+
+To release the Docker image to DockerHub:
+
+::
+
+    ./release {{organization}}/restinstance
+
 
 Credits
 -------
@@ -135,13 +214,15 @@ It was presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
 
 We use the following Python excellence under the hood:
 
--  `GenSON <https://github.com/wolverdude/GenSON>`__, by Jon
-   "wolverdude" Wolverton, for JSON Schema draft-04 creation
 -  `Flex <https://github.com/pipermerriam/flex>`__, by Piper Merriam,
    for Swagger 2.0 validation
+-  `GenSON <https://github.com/wolverdude/GenSON>`__, by Jon
+   "wolverdude" Wolverton, for JSON Schema generator
 -  `jsonschema <https://github.com/Julian/jsonschema>`__, by Julian
    Berman, for JSON Schema draft-04 validation
+-  `pygments <http://pygments.org>`__, by Georg Brandl et al., for JSON syntax
+   coloring, in console `Output`
 -  `requests <https://github.com/requests/requests>`__, by Kenneth
-   Reitz, for making HTTP requests
+   Reitz et al., for making HTTP requests
 
 See `requirements.txt <https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt>`__ for all the direct dependencies.

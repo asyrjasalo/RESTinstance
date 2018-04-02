@@ -1,4 +1,8 @@
-from io import open  # required for Python 2
+# For Python 2
+from __future__ import unicode_literals
+from __future__ import division
+from io import open
+from .compat import STRING_TYPES
 
 from json import dumps, load, loads
 from os import path
@@ -8,7 +12,6 @@ from requests.packages.urllib3 import disable_warnings
 
 from robot.api import logger
 
-from .compat import STRING_TYPES
 from .keywords import Keywords
 from .version import __version__
 
@@ -48,7 +51,7 @@ class REST(Keywords):
     # 3 IO keywords                 see the respective KWs
     # -----------------------------------------------------
 
-    def __init__(self, url,
+    def __init__(self, url=None,
                  ssl_verify=True,
                  accept="application/json, */*",
                  content_type="application/json",
@@ -57,11 +60,12 @@ class REST(Keywords):
                  schema={},
                  spec={},
                  instances=[]):
-
-        if not url.startswith(("http://", "https://")):
-            url = "http://" + url
-        if url.endswith('/'):
-            url = url[:-1]
+        if url:
+            url = REST._input_string(url)
+            if not url.startswith(("http://", "https://")):
+                url = "http://" + url
+            if url.endswith('/'):
+                url = url[:-1]
         self.url = url
         self.request = {
             'method': None,
@@ -94,8 +98,9 @@ class REST(Keywords):
 
 
     @staticmethod
-    def log_json(json, header="", also_console=True):
-        json = dumps(json, ensure_ascii=False, indent=4)
+    def log_json(json, header="", also_console=True, sort_keys=False):
+        json = dumps(json, ensure_ascii=False, indent=4,
+                     separators=(',', ': ' ), sort_keys=sort_keys)
         logger.info("%s%s" % (header, json))    # no coloring for log.html
         if also_console:
             json_data = highlight(json,

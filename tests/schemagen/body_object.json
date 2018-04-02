@@ -1,0 +1,113 @@
+{
+    "properties": {
+        "address": {
+            "example": {
+                "city": "Gwenborough",
+                "geo": {
+                    "lat": "-37.3159",
+                    "lng": "81.1496"
+                },
+                "street": "Kulas Light",
+                "suite": "Apt. 556",
+                "zipcode": "92998-3874"
+            },
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "geo": {
+                    "properties": {
+                        "lat": {
+                            "type": "string"
+                        },
+                        "lng": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "lat",
+                        "lng"
+                    ],
+                    "type": "object"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "suite": {
+                    "type": "string"
+                },
+                "zipcode": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "city",
+                "geo",
+                "street",
+                "suite",
+                "zipcode"
+            ],
+            "type": "object"
+        },
+        "company": {
+            "example": {
+                "bs": "harness real-time e-markets",
+                "catchPhrase": "Multi-layered client-server neural-net",
+                "name": "Romaguera-Crona"
+            },
+            "properties": {
+                "bs": {
+                    "type": "string"
+                },
+                "catchPhrase": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "bs",
+                "catchPhrase",
+                "name"
+            ],
+            "type": "object"
+        },
+        "email": {
+            "example": "Sincere@april.biz",
+            "format": "email",
+            "type": "string"
+        },
+        "id": {
+            "example": 1,
+            "type": "integer"
+        },
+        "name": {
+            "example": "Leanne Graham",
+            "type": "string"
+        },
+        "phone": {
+            "example": "1-770-736-8031 x56442",
+            "type": "string"
+        },
+        "username": {
+            "example": "Bret",
+            "type": "string"
+        },
+        "website": {
+            "example": "hildegard.org",
+            "type": "string"
+        }
+    },
+    "required": [
+        "address",
+        "company",
+        "email",
+        "id",
+        "name",
+        "phone",
+        "username",
+        "website"
+    ],
+    "type": "object"
+}

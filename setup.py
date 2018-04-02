@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+from io import open  # required for Python 2
 from os.path import abspath, dirname, join
 from setuptools import setup, find_packages
 
@@ -19,11 +20,11 @@ Topic :: Software Development :: Testing
 Framework :: Robot Framework
 Framework :: Robot Framework :: Library
 '''.strip().splitlines()
-with open(join(CURDIR, 'src', 'REST', 'version.py')) as f:
+with open(join(CURDIR, 'src', 'REST', 'version.py'), encoding="utf-8") as f:
     VERSION = re.search("__version__ = '(.*)'", f.read()).group(1)
-with open(join(CURDIR, 'README.rst')) as f:
+with open(join(CURDIR, 'README.rst'), encoding="utf-8") as f:
     DESCRIPTION = f.read()
-with open(join(CURDIR, 'requirements.txt')) as f:
+with open(join(CURDIR, 'requirements.txt'), encoding="utf-8") as f:
     REQUIREMENTS = f.read().splitlines()
 
 setup(
