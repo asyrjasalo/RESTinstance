@@ -382,16 +382,16 @@ class Keywords(object):
         if request['endpoint'].endswith('/'):
             request['endpoint'] = request['endpoint'][:-1]
         if request['endpoint'].startswith(('http://', 'https://')):
-            full_url = request['endpoint']
+            request['url'] = request['endpoint']
         else:
             if not request['endpoint'].startswith('/'):
                 request['endpoint'] = '/' + request['endpoint']
             if self.url:
-                full_url = self.url + request['endpoint']
+                request['url'] = self.url + request['endpoint']
             else:
-                full_url = request['endpoint']
+                request['url'] = request['endpoint']
         try:
-            response = client(request['method'], full_url,
+            response = client(request['method'], request['url'],
                               params=request['query'],
                               json=request['body'],
                               headers=request['headers'],
@@ -402,7 +402,7 @@ class Keywords(object):
                               verify=request['sslVerify'])
         except Timeout as e:
             raise AssertionError("%s request to %s timed out:\n%s" % (
-                request['method'], full_url, e))
+                request['method'], request['url'], e))
         utc_datetime = datetime.now(tz=utc)
         request['timestamp'] = {
             'utc': utc_datetime.isoformat(),
