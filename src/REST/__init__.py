@@ -67,7 +67,7 @@ class REST(Keywords):
                  instances=[]):
         self.request = {
             'method': None,
-            'url': "",
+            'url': None,
             'scheme': "",
             'netloc': "",
             'path': "",
