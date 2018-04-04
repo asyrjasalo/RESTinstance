@@ -386,12 +386,13 @@ class Keywords(object):
             if not endpoint.startswith('/'):
                 endpoint = "/" + endpoint
             endpoint = urljoin(base_url, self.request['path']) + endpoint
-        url_parts = urlparse(endpoint)
+        request['url'] = endpoint
+        url_parts = urlparse(request['url'])
         request['scheme'] = url_parts.scheme
         request['netloc'] = url_parts.netloc
         request['path'] = url_parts.path
         try:
-            response = client(request['method'], endpoint,
+            response = client(request['method'], request['url'],
                               params=request['query'],
                               json=request['body'],
                               headers=request['headers'],

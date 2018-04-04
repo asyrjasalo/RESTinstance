@@ -67,7 +67,8 @@ class REST(Keywords):
                  instances=[]):
         self.request = {
             'method': None,
-            'scheme': "http",
+            'url': "",
+            'scheme': "",
             'netloc': "",
             'path': "",
             'query': {},
@@ -88,7 +89,7 @@ class REST(Keywords):
             if url.endswith('/'):
                 url = url[:-1]
             if not url.startswith(("http://", "https://")):
-                url = self.request['scheme'] + "://" + url
+                url = "http://" + url
             url_parts = urlparse(url)
             self.request['scheme'] = url_parts.scheme
             self.request['netloc'] = url_parts.netloc
