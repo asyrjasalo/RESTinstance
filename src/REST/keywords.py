@@ -403,7 +403,7 @@ class Keywords(object):
                               verify=request['sslVerify'])
         except Timeout as e:
             raise AssertionError("%s request to %s timed out:\n%s" % (
-                request['method'], endpoint, e))
+                request['method'], request['url'], e))
         utc_datetime = datetime.now(tz=utc)
         request['timestamp'] = {
             'utc': utc_datetime.isoformat(),
