@@ -2,13 +2,18 @@
 from __future__ import unicode_literals
 from __future__ import division
 from io import open
-from .compat import STRING_TYPES
+from .compat import IS_PYTHON_2, STRING_TYPES
 
 from json import dumps, load, loads
 from os import path
 
 from pygments import highlight, lexers, formatters
 from requests.packages.urllib3 import disable_warnings
+
+if IS_PYTHON_2:
+    from urlparse import parse_qs, urljoin, urlparse
+else:
+    from urllib.parse import parse_qs, urljoin, urlparse
 
 from robot.api import logger
 
@@ -60,22 +65,17 @@ class REST(Keywords):
                  schema={},
                  spec={},
                  instances=[]):
-        if url:
-            url = REST._input_string(url)
-            if not url.startswith(("http://", "https://")):
-                url = "http://" + url
-            if url.endswith('/'):
-                url = url[:-1]
-        self.url = url
         self.request = {
             'method': None,
-            'endpoint': None,
+            'scheme': "http",
+            'netloc': "",
+            'path': "",
             'query': {},
             'body': None,
             'headers': {
-                'Accept': accept,
-                'Content-Type': content_type,
-                'User-Agent': user_agent
+                'Accept': REST._input_string(accept),
+                'Content-Type': REST._input_string(content_type),
+                'User-Agent': REST._input_string(user_agent)
             },
             'proxies': REST._input_object(proxies),
             'timeout': [None, None],
@@ -83,6 +83,16 @@ class REST(Keywords):
             'sslVerify': REST._input_boolean(ssl_verify),
             'allowRedirects': True
         }
+        if url:
+            url = REST._input_string(url)
+            if url.endswith('/'):
+                url = url[:-1]
+            if not url.startswith(("http://", "https://")):
+                url = self.request['scheme'] + "://" + url
+            url_parts = urlparse(url)
+            self.request['scheme'] = url_parts.scheme
+            self.request['netloc'] = url_parts.netloc
+            self.request['path'] = url_parts.path
         if not self.request['sslVerify']:
             disable_warnings()
         self.schema = {

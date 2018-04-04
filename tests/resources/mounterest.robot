@@ -1,5 +1,5 @@
 *** Settings ***
-Library         REST        http://mounterest:${api_port}
+Library         REST        mounterest:${api_port}/
 
 
 *** Variables ***

@@ -12,17 +12,17 @@ from datetime import datetime
 from json import dumps
 from os import path, getcwd
 
-if IS_PYTHON_2:
-    from urlparse import parse_qs, urlparse
-else:
-    from urllib.parse import parse_qs, urlparse
-
 from flex.core import validate_api_call
 from genson import SchemaBuilder
 from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
 from requests.exceptions import Timeout
+
+if IS_PYTHON_2:
+    from urlparse import parse_qs, urljoin, urlparse
+else:
+    from urllib.parse import parse_qs, urljoin, urlparse
 
 from robot.api import logger
 from robot.api.deco import keyword
@@ -85,32 +85,33 @@ class Keywords(object):
 
     @keyword
     def head(self, endpoint, timeout=None, allow_redirects=None, validate=True):
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "HEAD"
-        request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def options(self, endpoint, timeout=None, allow_redirects=None,
                 validate=True):
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "OPTIONS"
-        request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
             validate=True):
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "GET"
         request['query'] = {}
@@ -120,68 +121,67 @@ class Keywords(object):
             endpoint = endpoint.rsplit('?', 1)[0]
         if query:
             request['query'].update(self._input_object(query))
-        request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def post(self, endpoint, body=None, timeout=None, allow_redirects=None,
              validate=True):
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "POST"
-        request['endpoint'] = endpoint
         request['body'] = self.input(body)
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def put(self, endpoint, body=None, timeout=None, allow_redirects=None,
             validate=True):
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "PUT"
-        request['endpoint'] = endpoint
         request['body'] = self.input(body)
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def patch(self, endpoint, body=None, timeout=None, allow_redirects=None,
               validate=True):
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "PATCH"
-        request['endpoint'] = endpoint
         request['body'] = self.input(body)
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def delete(self, endpoint, timeout=None, allow_redirects=None,
                validate=True):
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "DELETE"
-        request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     # Assertions
 
@@ -360,9 +360,9 @@ class Keywords(object):
     def rest_instances(self, file_path=None, sort_keys=False):
         if not file_path:
             outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
-            if self.url:
-                hostname = urlparse(self.url).netloc
-                file_path = path.join(outputdir_path, hostname) + '.json'
+            if self.request['netloc']:
+                file_path = path.join(outputdir_path,
+                    self.request['netloc']) + '.json'
             else:
                 file_path = path.join(outputdir_path, "instances") + '.json'
         sort_keys = self._input_boolean(sort_keys)
@@ -378,20 +378,20 @@ class Keywords(object):
 
     ### Internal methods
 
-    def _request(self, request, validate=True):
-        if request['endpoint'].endswith('/'):
-            request['endpoint'] = request['endpoint'][:-1]
-        if request['endpoint'].startswith(('http://', 'https://')):
-            request['url'] = request['endpoint']
-        else:
-            if not request['endpoint'].startswith('/'):
-                request['endpoint'] = '/' + request['endpoint']
-            if self.url:
-                request['url'] = self.url + request['endpoint']
-            else:
-                request['url'] = request['endpoint']
+    def _request(self, endpoint, request, validate=True):
+        if endpoint.endswith('/'):
+            endpoint = endpoint[:-1]
+        if not endpoint.startswith(('http://', 'https://')):
+            base_url = self.request['scheme'] + "://" + self.request['netloc']
+            if not endpoint.startswith('/'):
+                endpoint = "/" + endpoint
+            endpoint = urljoin(base_url, self.request['path']) + endpoint
+        url_parts = urlparse(endpoint)
+        request['scheme'] = url_parts.scheme
+        request['netloc'] = url_parts.netloc
+        request['path'] = url_parts.path
         try:
-            response = client(request['method'], request['url'],
+            response = client(request['method'], endpoint,
                               params=request['query'],
                               json=request['body'],
                               headers=request['headers'],
@@ -402,7 +402,7 @@ class Keywords(object):
                               verify=request['sslVerify'])
         except Timeout as e:
             raise AssertionError("%s request to %s timed out:\n%s" % (
-                request['method'], request['url'], e))
+                request['method'], endpoint, e))
         utc_datetime = datetime.now(tz=utc)
         request['timestamp'] = {
             'utc': utc_datetime.isoformat(),
