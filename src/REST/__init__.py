@@ -81,7 +81,7 @@ class REST(Keywords):
             'proxies': REST._input_object(proxies),
             'timeout': [None, None],
             'cert': None,
-            'sslVerify': REST._input_boolean(ssl_verify),
+            'sslVerify': REST._input_ssl_verify(ssl_verify),
             'allowRedirects': True
         }
         if url:
@@ -256,6 +256,18 @@ class REST(Keywords):
                 raise RuntimeError("This cert, given as a JSON array, " +
                     "must have length of 2:\n%s" % (value))
         return value
+
+    @staticmethod
+    def _input_ssl_verify(value):
+        try:
+            return REST._input_boolean(value)
+        except RuntimeError:
+            value = REST._input_string(value)
+            if not path.isfile(value):
+                raise RuntimeError("This SSL verify option is neither " +
+                    "a Python or JSON boolean, nor a path to an existing " +
+                    "CA bundle file:\n%s" % (value))
+            return value
 
     @staticmethod
     def _input_timeout(value):

@@ -17,7 +17,7 @@ from genson import SchemaBuilder
 from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
-from requests.exceptions import Timeout
+from requests.exceptions import SSLError, Timeout
 
 if IS_PYTHON_2:
     from urlparse import parse_qs, urljoin, urlparse
@@ -401,8 +401,11 @@ class Keywords(object):
                               timeout=tuple(request['timeout']),
                               allow_redirects=request['allowRedirects'],
                               verify=request['sslVerify'])
+        except SSLError as e:
+            raise AssertionError("%s to %s SSL certificate verify failed:\n%s" %
+                (request['method'], request['url'], e))
         except Timeout as e:
-            raise AssertionError("%s request to %s timed out:\n%s" % (
+            raise AssertionError("%s to %s timed out:\n%s" % (
                 request['method'], request['url'], e))
         utc_datetime = datetime.now(tz=utc)
         request['timestamp'] = {
