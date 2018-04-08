@@ -258,103 +258,198 @@
                     "website": "ambrose.net"
                 }
             ],
-            "items": {
-                "properties": {
-                    "address": {
-                        "properties": {
-                            "city": {
-                                "type": "string"
-                            },
-                            "geo": {
-                                "properties": {
-                                    "lat": {
-                                        "type": "string"
-                                    },
-                                    "lng": {
-                                        "type": "string"
-                                    }
+            "items": [
+                {
+                    "properties": {
+                        "address": {
+                            "properties": {
+                                "city": {
+                                    "type": "string"
                                 },
-                                "required": [
-                                    "lat",
-                                    "lng"
-                                ],
-                                "type": "object"
+                                "geo": {
+                                    "properties": {
+                                        "lat": {
+                                            "type": "string"
+                                        },
+                                        "lng": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "lat",
+                                        "lng"
+                                    ],
+                                    "type": "object"
+                                },
+                                "street": {
+                                    "type": "string"
+                                },
+                                "suite": {
+                                    "type": "string"
+                                },
+                                "zipcode": {
+                                    "type": "string"
+                                }
                             },
-                            "street": {
-                                "type": "string"
-                            },
-                            "suite": {
-                                "type": "string"
-                            },
-                            "zipcode": {
-                                "type": "string"
-                            }
+                            "required": [
+                                "city",
+                                "geo",
+                                "street",
+                                "suite",
+                                "zipcode"
+                            ],
+                            "type": "object"
                         },
-                        "required": [
-                            "city",
-                            "geo",
-                            "street",
-                            "suite",
-                            "zipcode"
-                        ],
-                        "type": "object"
-                    },
-                    "company": {
-                        "properties": {
-                            "bs": {
-                                "type": "string"
+                        "company": {
+                            "properties": {
+                                "bs": {
+                                    "type": "string"
+                                },
+                                "catchPhrase": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
                             },
-                            "catchPhrase": {
-                                "type": "string"
-                            },
-                            "name": {
-                                "type": "string"
-                            }
+                            "required": [
+                                "bs",
+                                "catchPhrase",
+                                "name"
+                            ],
+                            "type": "object"
                         },
-                        "required": [
-                            "bs",
-                            "catchPhrase",
-                            "name"
-                        ],
-                        "type": "object"
+                        "email": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "integer"
+                        },
+                        "name": {
+                            "enum": [
+                                "Leanne Graham"
+                            ],
+                            "minLength": 3,
+                            "type": "string"
+                        },
+                        "phone": {
+                            "type": "string"
+                        },
+                        "username": {
+                            "type": "string"
+                        },
+                        "website": {
+                            "type": "string"
+                        }
                     },
-                    "email": {
-                        "type": "string"
-                    },
-                    "id": {
-                        "type": "integer"
-                    },
-                    "name": {
-                        "enum": [
-                            "Leanne Graham",
-                            "Ervin Howell"
-                        ],
-                        "minLength": 3,
-                        "pattern": "[A-Za-z]+",
-                        "type": "string"
-                    },
-                    "phone": {
-                        "type": "string"
-                    },
-                    "username": {
-                        "type": "string"
-                    },
-                    "website": {
-                        "type": "string"
-                    }
+                    "required": [
+                        "address",
+                        "company",
+                        "email",
+                        "id",
+                        "name",
+                        "phone",
+                        "username",
+                        "website"
+                    ],
+                    "type": "object"
                 },
-                "required": [
-                    "address",
-                    "company",
-                    "email",
-                    "id",
-                    "name",
-                    "phone",
-                    "username",
-                    "website"
-                ],
-                "type": "object"
-            },
+                {
+                    "properties": {
+                        "address": {
+                            "properties": {
+                                "city": {
+                                    "type": "string"
+                                },
+                                "geo": {
+                                    "properties": {
+                                        "lat": {
+                                            "type": "string"
+                                        },
+                                        "lng": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "lat",
+                                        "lng"
+                                    ],
+                                    "type": "object"
+                                },
+                                "street": {
+                                    "type": "string"
+                                },
+                                "suite": {
+                                    "type": "string"
+                                },
+                                "zipcode": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "city",
+                                "geo",
+                                "street",
+                                "suite",
+                                "zipcode"
+                            ],
+                            "type": "object"
+                        },
+                        "company": {
+                            "properties": {
+                                "bs": {
+                                    "type": "string"
+                                },
+                                "catchPhrase": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "bs",
+                                "catchPhrase",
+                                "name"
+                            ],
+                            "type": "object"
+                        },
+                        "email": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "integer"
+                        },
+                        "name": {
+                            "enum": [
+                                "Ervin Howell"
+                            ],
+                            "pattern": "[A-Za-z]+",
+                            "type": "string"
+                        },
+                        "phone": {
+                            "type": "string"
+                        },
+                        "username": {
+                            "type": "string"
+                        },
+                        "website": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "address",
+                        "company",
+                        "email",
+                        "id",
+                        "name",
+                        "phone",
+                        "username",
+                        "website"
+                    ],
+                    "type": "object"
+                }
+            ],
             "type": "array"
         }
     },

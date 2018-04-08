@@ -533,12 +533,14 @@ class Keywords(object):
         if 'properties' in schema:
             schema = schema['properties']
         elif 'items' in schema:
-            schema = schema['items']
+            if isinstance(schema['items'], (dict)):
+                schema['items'] = [schema['items']]
+            new_schema = self._new_schema(value)
             try:
-                int(key)
-                return schema
-            except:
-                pass
+                return schema['items'][schema['items'].index(new_schema)]
+            except ValueError:
+                schema['items'].append(new_schema)
+                return schema['items'][-1]
         if key not in schema:
             schema[key] = self._new_schema(value)
             if add_example:
