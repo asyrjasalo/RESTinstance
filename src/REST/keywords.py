@@ -9,7 +9,7 @@ from tzlocal import get_localzone
 
 from copy import deepcopy
 from datetime import datetime
-from json import dumps
+from json import dumps, loads
 from os import path, getcwd
 
 from flex.core import validate_api_call
@@ -328,17 +328,32 @@ class Keywords(object):
     # Operates on the (last) request state
     @keyword
     def output(self, what=None, file_path=None, append=False, sort_keys=False):
-        try:
-            json = self.instances[-1]
-        except IndexError:
-            raise RuntimeError("No instance to output: " +
-                "No requests done thus no responses gotten yet, " +
-                "and no previous instances loaded in the library settings.")
+        no_instances_error = "No instance to output: " \
+        "No requests done thus no responses yet, " \
+        "and no previous instances loaded in the library settings."
         if not what:
+            try:
+                json = self.instances[-1]
+            except IndexError:
+                raise RuntimeError(no_instances_error)
             message = "\n\nJSON for the instance is:\n"
+        elif isinstance(what, (dict)):
+            json = what
+            message = "\n\nJSON for the Python dict is:\n"
+        elif isinstance(what, (STRING_TYPES)):
+            try:
+                json = loads(what)
+                message = "\n\nJSON for the Python string is:\n"
+            except ValueError:
+                try:
+                    self.instances[-1]
+                except IndexError:
+                    raise RuntimeError(no_instances_error)
+                json = self._find_by_field(what, return_schema=False)['reality']
+                message = "\n\nJSON for '%s' is:\n" % (what)
+
         else:
-            json = self._find_by_field(what, return_schema=False)['reality']
-            message = "\n\nJSON for '%s' is:\n" % (what)
+            raise RuntimeError("This is not a string or dict:\n%s" % (what))
         sort_keys = self._input_boolean(sort_keys)
         if not file_path:
             self.log_json(json, message, sort_keys=sort_keys)
