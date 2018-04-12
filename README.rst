@@ -8,7 +8,7 @@ Why?
 ----
 
 1. **RESTinstance relies on Robot Framework's language-agnostic,
-   natural language syntax for API tests.** It is not tied to any
+   natural language syntax for API tests.** It is neither tied to any
    particular programming language nor development framework. Using
    RESTinstance requires little, if any, programming knowledge. It
    builts on long-term technologies with well established communities,
@@ -18,7 +18,7 @@ Why?
    to base on constraints** rather than on specific values (e.g. "email
    must be valid" vs "email is foo\@bar.com"). This approach reduces test
    maintenance when the values responded by the API are prone to change.
-   Although values are not required, you can still test whenever they
+   Although values are not required, you can still test them whenever they
    make sense (e.g. GET response body from one endpoint, then POST some
    of its values to another endpoint).
 
