@@ -500,8 +500,8 @@ class Keywords(object):
             value = self.instances[-1]
         except IndexError:
             raise RuntimeError("Nothing to validate against: " +
-                "No requests done thus no responses gotten yet, " +
-                "and no previous instances loaded in the library settings.")
+                "No requests made, and no previous instances loaded in " +
+                "the library settings.")
         schema = value['schema']
         if 'exampled' in schema and schema['exampled']:
             add_example = True
