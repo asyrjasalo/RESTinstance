@@ -48,13 +48,13 @@ class REST(Keywords):
     ROBOT_LIBRARY_SCOPE = 'TEST SUITE'
 
     # Altogether 24 keywords        context:
-    # -----------------------------------------------------
+    # -------------------------------------------------------
     # 2 setting keywords            next instances
     # 4 expectation keywords        next instances
     # 7 request keywords            next instance
     # 8 assertion keywords          last instance's schema
-    # 3 IO keywords                 see the respective KWs
-    # -----------------------------------------------------
+    # 3 IO keywords                 the last instance or none
+    # -------------------------------------------------------
 
     def __init__(self, url=None,
                  ssl_verify=True,
