@@ -379,6 +379,8 @@ class Keywords(object):
                         separators=(',', ': '), sort_keys=sort_keys)
         try:
             with open(file_path, 'w', encoding="utf-8") as file:
+                if IS_PYTHON_2:
+                    content = unicode(content)
                 file.write(content)
         except IOError as e:
             raise RuntimeError("Error exporting instances " +
