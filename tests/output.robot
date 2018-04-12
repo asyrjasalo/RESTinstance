@@ -1,30 +1,35 @@
 *** Settings ***
-Library                 REST
+Library             REST
 
 
 *** Variables ***
-${json_string}=         { "robotframework": "🤖" }
-&{json_dict}=           robotframework=🤖
+${json_string}=     { "robotframework": "❤" }
+&{json_dict}=       robotframework=🤖
 
 
 *** Test Cases ***
-Log JSON to console with string input
-    Output    ${json_string}
-    Output    { "robotframework": "❤" }
+Output string
+    Output          ${json_string}
 
-Log JSON to console with dict input
-    Output    ${json_dict}
+Output dict
+    Output          ${json_dict}
 
-Log JSON to console with file input
-    ${json}=  Input     ${CURDIR}/payloads/unicode.json
-    Output    ${json}
+Output non-string Python value
+    Output          ${1}        file_path=${OUTPUTDIR}/integer.txt
+    Output          ${1.0}
+    Output          ${True}
+    Output          ${False}
+    Output          ${None}
 
-Log JSON to console with instance field input
-    GET       https://jsonplaceholder.typicode.com/users/1
-    Output    response body name
+Output file content
+    ${file}  Input  ${CURDIR}/payloads/unicode.json
+    Output          ${file}
 
-Log JSON to console with invalid input
-    GET       https://jsonplaceholder.typicode.com/users/1
-    Run Keyword And Expect Error
-    ...       This is not a string or dict:\n1
-    ...       Output    ${1}
+Output the last instance
+    GET             https://jsonplaceholder.typicode.com/users/1
+    Output
+
+Output instance field
+    GET             https://jsonplaceholder.typicode.com/users/1
+    Output          response body name
+    Output          response body id

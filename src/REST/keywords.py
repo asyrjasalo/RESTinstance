@@ -310,50 +310,43 @@ class Keywords(object):
 
     # IO keywords
 
-    # Is stateless
     @keyword
-    def input(self, value_or_jsonfile):
-        if value_or_jsonfile is None:
+    def input(self, what):
+        if what is None:
             return None
-        if not isinstance(value_or_jsonfile, STRING_TYPES):
-            return self._input_json_from_non_string(value_or_jsonfile)
-        if path.isfile(value_or_jsonfile):
-            return self._input_json_from_file(value_or_jsonfile)
-        value = value_or_jsonfile
+        if not isinstance(what, STRING_TYPES):
+            return self._input_json_from_non_string(what)
+        if path.isfile(what):
+            return self._input_json_from_file(what)
         try:
-            return self._input_json_as_string(value)
+            return self._input_json_as_string(what)
         except ValueError:
-            return self._input_string(value)
+            return self._input_string(what)
 
-    # Operates on the (last) request state
     @keyword
-    def output(self, what=None, file_path=None, append=False, sort_keys=False):
-        no_instances_error = "No instance to output: " \
-        "No requests done thus no responses yet, " \
-        "and no previous instances loaded in the library settings."
-        if not what:
+    def output(self, what="", file_path=None, append=False, sort_keys=False):
+        no_instances_error = "No instance to output: No requests made, " \
+            "and no previous instances loaded in the library settings."
+        message = "\nValue is (%s):\n" % (what.__class__.__name__)
+        if what is "":
             try:
                 json = self.instances[-1]
             except IndexError:
                 raise RuntimeError(no_instances_error)
-            message = "\n\nJSON for the instance is:\n"
-        elif isinstance(what, (dict)):
-            json = what
-            message = "\n\nJSON for the Python dict is:\n"
+            message = "\n\nThe last instance is:\n"
         elif isinstance(what, (STRING_TYPES)):
             try:
                 json = loads(what)
-                message = "\n\nJSON for the Python string is:\n"
             except ValueError:
                 try:
                     self.instances[-1]
                 except IndexError:
                     raise RuntimeError(no_instances_error)
                 json = self._find_by_field(what, return_schema=False)['reality']
-                message = "\n\nJSON for '%s' is:\n" % (what)
-
+                message = "\n\nThe last instance %s (%s) is:\n" % (
+                    what, json.__class__.__name__)
         else:
-            raise RuntimeError("This is not a string or dict:\n%s" % (what))
+            json = what
         sort_keys = self._input_boolean(sort_keys)
         if not file_path:
             self.log_json(json, message, sort_keys=sort_keys)
@@ -364,13 +357,14 @@ class Keywords(object):
             try:
                 with open(path.join(getcwd(), file_path), write_mode,
                           encoding="utf-8") as file:
+                    if IS_PYTHON_2:
+                        content = unicode(content)
                     file.write(content)
             except IOError as e:
                 raise RuntimeError("Error outputting to file '%s':\n%s" % (
                     file_path, e))
         return json
 
-    # Operates on the suite level state
     @keyword
     def rest_instances(self, file_path=None, sort_keys=False):
         if not file_path:
