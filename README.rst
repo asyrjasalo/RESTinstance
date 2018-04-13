@@ -212,6 +212,17 @@ RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasal
 
 It was presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
 
+
+Contributors:
+
+- `jjwong <https://github.com/jjwong>`__, helping with keyword documentation and
+  examples
+
+- `Przemysław "sqilz" Hendel <https://github.com/sqilz>`__ for using and testing
+  RESTinstance in early phase, and providing
+  `RESTinstance-wrapper <https://github.com/sqilz/RESTinstance-wrapper>`__.
+
+
 We use the following Python excellence under the hood:
 
 -  `Flex <https://github.com/pipermerriam/flex>`__, by Piper Merriam,
