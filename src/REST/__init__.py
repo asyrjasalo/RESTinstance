@@ -6,6 +6,7 @@ from .compat import IS_PYTHON_2, STRING_TYPES
 
 from json import dumps, load, loads
 from os import path
+from yaml import load as load_yaml
 
 from pygments import highlight, lexers, formatters
 from requests.packages.urllib3 import disable_warnings
@@ -219,8 +220,12 @@ class REST(Keywords):
             raise RuntimeError("File '%s' cannot be opened:\n%s" % (
                 path, e))
         except ValueError as e:
-            raise RuntimeError("File '%s' is not valid JSON:\n%s" % (
-                path, e))
+            try:
+                with open(path, encoding="utf-8") as file:
+                    return load_yaml(file)
+            except ValueError:
+                raise RuntimeError("File '%s' is not valid JSON or YAML:\n%s" %
+                    (path, e))
 
     @staticmethod
     def _input_json_as_string(string):
