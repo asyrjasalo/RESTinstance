@@ -111,7 +111,7 @@ class Keywords(object):
     @keyword
     def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
             validate=True):
-        """Make a ``GET`` request call to a specified ``endpoint``. ``endpoint`` is required.
+        """Make a ``GET`` request call to a specified ``endpoint``.
 
         Example:
         GET users from site and ensure status code is 200
@@ -138,7 +138,7 @@ class Keywords(object):
     @keyword
     def post(self, endpoint, body=None, timeout=None, allow_redirects=None,
              validate=True):
-        """Make a ``POST`` request call to a specified ``endpoint``. ``endpoint`` and ``body`` are required.
+        """Make a ``POST`` request call to a specified ``endpoint``.
 
         Example:
         POST "Mr Potato" to endpoint and ensure status code is 201
@@ -159,7 +159,7 @@ class Keywords(object):
     @keyword
     def put(self, endpoint, body=None, timeout=None, allow_redirects=None,
             validate=True):
-        """Make a ``PUT`` request call to a specified ``endpoint``. ``endpoint`` and ``body`` are required.
+        """Make a ``PUT`` request call to a specified ``endpoint``.
 
         Example:
         PUT existing record with new name to endpoint
@@ -193,7 +193,7 @@ class Keywords(object):
     @keyword
     def delete(self, endpoint, timeout=None, allow_redirects=None,
                validate=True):
-        """Make a ``DELETE`` request call to a specified ``endpoint``. ``endpoint`` is required.
+        """Make a ``DELETE`` request call to a specified ``endpoint``.
 
         Example:
         DELETE user 4 from endpoint and ensure status code is 200, 202, or 204.
@@ -322,7 +322,8 @@ class Keywords(object):
         """Verify a returned response is an array with specific validations.
 
         Example:
-        Verify the returned response is an array and has a maximum of 100 items. If more than 100 items, fail.
+        Verify the returned response is an array and has a maximum of 100 items.
+        If more than 100 items, fail.
         | `GET`   | /users?limit=100 |                |
         | `Array` | response body    | maxItems = 100 |
         """
