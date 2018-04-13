@@ -8,7 +8,7 @@ Test teardown   Clear expectations
 
 *** Keywords ***
 Set expectations
-    Expect request                  ${CURDIR}/schemas/valid/request.json
+    Expect request                  ${CURDIR}/schemas/valid/request.yaml
     Expect response                 ${CURDIR}/schemas/valid/response.json
 
 

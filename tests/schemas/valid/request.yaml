@@ -1,0 +1,7 @@
+---
+body:
+  type:
+  - 'null'
+  - object
+query:
+  type: object

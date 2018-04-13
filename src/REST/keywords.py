@@ -9,20 +9,20 @@ from tzlocal import get_localzone
 
 from copy import deepcopy
 from datetime import datetime
-from json import dumps
+from json import dumps, loads
 from os import path, getcwd
-
-if IS_PYTHON_2:
-    from urlparse import parse_qs, urlparse
-else:
-    from urllib.parse import parse_qs, urlparse
 
 from flex.core import validate_api_call
 from genson import SchemaBuilder
 from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
-from requests.exceptions import Timeout
+from requests.exceptions import SSLError, Timeout
+
+if IS_PYTHON_2:
+    from urlparse import parse_qs, urljoin, urlparse
+else:
+    from urllib.parse import parse_qs, urljoin, urlparse
 
 from robot.api import logger
 from robot.api.deco import keyword
@@ -85,28 +85,28 @@ class Keywords(object):
 
     @keyword
     def head(self, endpoint, timeout=None, allow_redirects=None, validate=True):
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "HEAD"
-        request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def options(self, endpoint, timeout=None, allow_redirects=None,
                 validate=True):
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "OPTIONS"
-        request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
@@ -120,6 +120,7 @@ class Keywords(object):
         | `Integer` | response status | 200 |
 
         """
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "GET"
         request['query'] = {}
@@ -129,13 +130,12 @@ class Keywords(object):
             endpoint = endpoint.rsplit('?', 1)[0]
         if query:
             request['query'].update(self._input_object(query))
-        request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def post(self, endpoint, body=None, timeout=None, allow_redirects=None,
@@ -149,16 +149,16 @@ class Keywords(object):
             | `Integer` | response status | 201                               |
 
         """
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "POST"
-        request['endpoint'] = endpoint
         request['body'] = self.input(body)
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def put(self, endpoint, body=None, timeout=None, allow_redirects=None,
@@ -171,30 +171,30 @@ class Keywords(object):
             | `PUT`  | /users/11  | { "name": "Albus Potter" }  |
 
         """
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "PUT"
-        request['endpoint'] = endpoint
         request['body'] = self.input(body)
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def patch(self, endpoint, body=None, timeout=None, allow_redirects=None,
               validate=True):
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "PATCH"
-        request['endpoint'] = endpoint
         request['body'] = self.input(body)
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     @keyword
     def delete(self, endpoint, timeout=None, allow_redirects=None,
@@ -208,16 +208,15 @@ class Keywords(object):
             | `Integer` | response status | 200 | 202 | 204 |
 
         """
-
+        endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "DELETE"
-        request['endpoint'] = endpoint
         if allow_redirects is not None:
             request['allowRedirects'] = self._input_boolean(allow_redirects)
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
-        return self._request(request, validate)['response']
+        return self._request(endpoint, request, validate)['response']
 
     # Assertions
 
@@ -356,35 +355,43 @@ class Keywords(object):
 
     # IO keywords
 
-    # Is stateless
     @keyword
-    def input(self, value_or_jsonfile):
-        if value_or_jsonfile is None:
+    def input(self, what):
+        if what is None:
             return None
-        if not isinstance(value_or_jsonfile, STRING_TYPES):
-            return self._input_json_from_non_string(value_or_jsonfile)
-        if path.isfile(value_or_jsonfile):
-            return self._input_json_from_file(value_or_jsonfile)
-        value = value_or_jsonfile
+        if not isinstance(what, STRING_TYPES):
+            return self._input_json_from_non_string(what)
+        if path.isfile(what):
+            return self._input_json_from_file(what)
         try:
-            return self._input_json_as_string(value)
+            return self._input_json_as_string(what)
         except ValueError:
-            return self._input_string(value)
+            return self._input_string(what)
 
-    # Operates on the (last) request state
     @keyword
-    def output(self, what=None, file_path=None, append=False, sort_keys=False):
-        try:
-            json = self.instances[-1]
-        except IndexError:
-            raise RuntimeError("No instance to output: " +
-                "No requests done thus no responses gotten yet, " +
-                "and no previous instances loaded in the library settings.")
-        if not what:
-            message = "\n\nJSON for the instance is:\n"
+    def output(self, what="", file_path=None, append=False, sort_keys=False):
+        no_instances_error = "No instance to output: No requests made, " \
+            "and no previous instances loaded in the library settings."
+        message = "\nValue is (%s):\n" % (what.__class__.__name__)
+        if what is "":
+            try:
+                json = self.instances[-1]
+            except IndexError:
+                raise RuntimeError(no_instances_error)
+            message = "\n\nThe last instance is:\n"
+        elif isinstance(what, (STRING_TYPES)):
+            try:
+                json = loads(what)
+            except ValueError:
+                try:
+                    self.instances[-1]
+                except IndexError:
+                    raise RuntimeError(no_instances_error)
+                json = self._find_by_field(what, return_schema=False)['reality']
+                message = "\n\nThe last instance %s (%s) is:\n" % (
+                    what, json.__class__.__name__)
         else:
-            json = self._find_by_field(what, return_schema=False)['reality']
-            message = "\n\nJSON for '%s' is:\n" % (what)
+            json = what
         sort_keys = self._input_boolean(sort_keys)
         if not file_path:
             self.log_json(json, message, sort_keys=sort_keys)
@@ -395,20 +402,21 @@ class Keywords(object):
             try:
                 with open(path.join(getcwd(), file_path), write_mode,
                           encoding="utf-8") as file:
+                    if IS_PYTHON_2:
+                        content = unicode(content)
                     file.write(content)
             except IOError as e:
                 raise RuntimeError("Error outputting to file '%s':\n%s" % (
                     file_path, e))
         return json
 
-    # Operates on the suite level state
     @keyword
     def rest_instances(self, file_path=None, sort_keys=False):
         if not file_path:
             outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
-            if self.url:
-                hostname = urlparse(self.url).netloc
-                file_path = path.join(outputdir_path, hostname) + '.json'
+            if self.request['netloc']:
+                file_path = path.join(outputdir_path,
+                    self.request['netloc']) + '.json'
             else:
                 file_path = path.join(outputdir_path, "instances") + '.json'
         sort_keys = self._input_boolean(sort_keys)
@@ -416,6 +424,8 @@ class Keywords(object):
                         separators=(',', ': '), sort_keys=sort_keys)
         try:
             with open(file_path, 'w', encoding="utf-8") as file:
+                if IS_PYTHON_2:
+                    content = unicode(content)
                 file.write(content)
         except IOError as e:
             raise RuntimeError("Error exporting instances " +
@@ -424,18 +434,19 @@ class Keywords(object):
 
     ### Internal methods
 
-    def _request(self, request, validate=True):
-        if request['endpoint'].endswith('/'):
-            request['endpoint'] = request['endpoint'][:-1]
-        if request['endpoint'].startswith(('http://', 'https://')):
-            request['url'] = request['endpoint']
-        else:
-            if not request['endpoint'].startswith('/'):
-                request['endpoint'] = '/' + request['endpoint']
-            if self.url:
-                request['url'] = self.url + request['endpoint']
-            else:
-                request['url'] = request['endpoint']
+    def _request(self, endpoint, request, validate=True):
+        if endpoint.endswith('/'):
+            endpoint = endpoint[:-1]
+        if not endpoint.startswith(('http://', 'https://')):
+            base_url = self.request['scheme'] + "://" + self.request['netloc']
+            if not endpoint.startswith('/'):
+                endpoint = "/" + endpoint
+            endpoint = urljoin(base_url, self.request['path']) + endpoint
+        request['url'] = endpoint
+        url_parts = urlparse(request['url'])
+        request['scheme'] = url_parts.scheme
+        request['netloc'] = url_parts.netloc
+        request['path'] = url_parts.path
         try:
             response = client(request['method'], request['url'],
                               params=request['query'],
@@ -446,8 +457,11 @@ class Keywords(object):
                               timeout=tuple(request['timeout']),
                               allow_redirects=request['allowRedirects'],
                               verify=request['sslVerify'])
+        except SSLError as e:
+            raise AssertionError("%s to %s SSL certificate verify failed:\n%s" %
+                (request['method'], request['url'], e))
         except Timeout as e:
-            raise AssertionError("%s request to %s timed out:\n%s" % (
+            raise AssertionError("%s to %s timed out:\n%s" % (
                 request['method'], request['url'], e))
         utc_datetime = datetime.now(tz=utc)
         request['timestamp'] = {
@@ -533,8 +547,8 @@ class Keywords(object):
             value = self.instances[-1]
         except IndexError:
             raise RuntimeError("Nothing to validate against: " +
-                "No requests done thus no responses gotten yet, " +
-                "and no previous instances loaded in the library settings.")
+                "No requests made, and no previous instances loaded in " +
+                "the library settings.")
         schema = value['schema']
         if 'exampled' in schema and schema['exampled']:
             add_example = True
@@ -575,12 +589,14 @@ class Keywords(object):
         if 'properties' in schema:
             schema = schema['properties']
         elif 'items' in schema:
-            schema = schema['items']
+            if isinstance(schema['items'], (dict)):
+                schema['items'] = [schema['items']]
+            new_schema = self._new_schema(value)
             try:
-                int(key)
-                return schema
-            except:
-                pass
+                return schema['items'][schema['items'].index(new_schema)]
+            except ValueError:
+                schema['items'].append(new_schema)
+                return schema['items'][-1]
         if key not in schema:
             schema[key] = self._new_schema(value)
             if add_example:
