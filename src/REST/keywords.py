@@ -374,9 +374,7 @@ class Keywords(object):
             try:
                 json = loads(what)
             except ValueError:
-                try:
-                    self.instances[-1]
-                except IndexError:
+                if not self.instances:
                     raise RuntimeError(no_instances_error)
                 json = self._find_by_field(what, return_schema=False)['reality']
                 message = "\n\nThe last instance %s (%s) is:\n" % (
