@@ -19,5 +19,5 @@ Query with JSONPath from response body array
     Integer     $[4].id             5
 
     # TODO:
-    #Integer     $[5].id             5
+    #Integer     $[5].id             5         # should fail gracefully
     #Integer     $[*].id             2
