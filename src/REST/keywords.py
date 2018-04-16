@@ -15,6 +15,7 @@ from os import path, getcwd
 
 from flex.core import validate_api_call
 from genson import SchemaBuilder
+from jsonpath_ng import parse as parse_jsonpath
 from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
@@ -364,7 +365,7 @@ class Keywords(object):
         no_instances_error = "No instance to output: No requests made, " \
             "and no previous instances loaded in the library settings."
         message = "\nValue is (%s):\n" % (what.__class__.__name__)
-        if what is "":
+        if what == "":
             try:
                 json = self.instances[-1]
             except IndexError:
@@ -531,14 +532,29 @@ class Keywords(object):
             schema['example'] = body
 
     def _find_by_field(self, field, return_schema=True, print_found=True):
-        keys = field.split()
-        try:
-            value = self.instances[-1]
-        except IndexError:
+        if not self.instances:
             raise RuntimeError("Nothing to validate against: " +
                 "No requests made, and no previous instances loaded in " +
                 "the library settings.")
-        schema = value['schema']
+
+        if field.startswith("$"):
+            value = self.instances[-1]['response']['body']
+            schema = self.instances[-1]['schema']['response']['body']
+            if field == "$":
+                keys = []
+            else:
+                try:
+                    query = parse_jsonpath(field)
+                except Exception as e:
+                    raise RuntimeError("Invalid JSONPath query '%s':\n%s" % (
+                        field, e))
+                paths = [str(match.full_path) for match in query.find(value)]
+                keys = paths[0].replace("[", "").replace("]", "").split('.')
+        else:
+            value = self.instances[-1]
+            schema = self.instances[-1]['schema']
+            keys = field.split()
+
         if 'exampled' in schema and schema['exampled']:
             add_example = True
         else:
