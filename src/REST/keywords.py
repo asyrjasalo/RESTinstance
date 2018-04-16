@@ -7,6 +7,7 @@ from .compat import IS_PYTHON_2, STRING_TYPES
 from pytz import utc
 from tzlocal import get_localzone
 
+from collections import OrderedDict
 from copy import deepcopy
 from datetime import datetime
 from json import dumps, loads
@@ -20,9 +21,9 @@ from requests import request as client
 from requests.exceptions import SSLError, Timeout
 
 if IS_PYTHON_2:
-    from urlparse import parse_qs, urljoin, urlparse
+    from urlparse import parse_qsl, urljoin, urlparse
 else:
-    from urllib.parse import parse_qs, urljoin, urlparse
+    from urllib.parse import parse_qsl, urljoin, urlparse
 
 from robot.api import logger
 from robot.api.deco import keyword
@@ -121,8 +122,8 @@ class Keywords(object):
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "GET"
-        request['query'] = {}
-        query_in_url = parse_qs(urlparse(endpoint).query)
+        request['query'] = OrderedDict()
+        query_in_url = OrderedDict(parse_qsl(urlparse(endpoint).query))
         if query_in_url:
             request['query'].update(query_in_url)
             endpoint = endpoint.rsplit('?', 1)[0]
