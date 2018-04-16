@@ -19,7 +19,7 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 : ${MR_IMAGE_TAG:="0.1.2"}
 : ${MR_NETWORK:="testapi_default"}
 : ${MR_PORT:=8273}                    # this is your host machine's port
-: ${RF_ARGS:="--randomize all"}
+: ${RF_ARGS:=""}
 
 ### helpers ####################################################################
 
