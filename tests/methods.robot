@@ -43,6 +43,7 @@ PUT with valid params
     Null        response body sleep
     PUT         /users/2                    { "pockets": "", "money": 0.02 }
     String      response body pockets       ${EMPTY}
+    String      response body pockets       ""
     Number      response body money         0.02
     Missing     response body moving
 

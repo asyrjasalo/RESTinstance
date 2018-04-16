@@ -162,12 +162,13 @@ class REST(Keywords):
 
     @staticmethod
     def _input_string(value):
-        if value == '""' or not value:
+        if value == "":
             return ""
-        if not value.startswith('"'):
-            value = '"' + value
-        if not value.endswith('"'):
-            value = value + '"'
+        if isinstance(value, STRING_TYPES):
+            if not value.startswith('"'):
+                value = '"' + value
+            if not value.endswith('"'):
+                value = value + '"'
         try:
             json_value = loads(value)
             if not isinstance(json_value, STRING_TYPES):
