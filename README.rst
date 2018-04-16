@@ -216,11 +216,12 @@ It was presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
 Contributors:
 
 - `jjwong <https://github.com/jjwong>`__
-  for helping with keyword documentation and examples
+  for helping with keyword documentation and examples (also check
+  `RESTinstance_starter_project <https://github.com/jjwong/RESTinstance_starter_project>`__)
 
 - `Przemysław "sqilz" Hendel <https://github.com/sqilz>`__
-  for using and testing RESTinstance in early phase, and providing
-  `RESTinstance-wrapper <https://github.com/sqilz/RESTinstance-wrapper>`__
+  for using and testing RESTinstance in early phase (also check
+  `RESTinstance-wrapper <https://github.com/sqilz/RESTinstance-wrapper>`__)
 
 
 We use the following Python excellence under the hood:
