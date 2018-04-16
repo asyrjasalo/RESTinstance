@@ -8,7 +8,7 @@ Why?
 ----
 
 1. **RESTinstance relies on Robot Framework's language-agnostic,
-   natural language syntax for API tests.** It is not tied to any
+   natural language syntax for API tests.** It is neither tied to any
    particular programming language nor development framework. Using
    RESTinstance requires little, if any, programming knowledge. It
    builts on long-term technologies with well established communities,
@@ -18,7 +18,7 @@ Why?
    to base on constraints** rather than on specific values (e.g. "email
    must be valid" vs "email is foo\@bar.com"). This approach reduces test
    maintenance when the values responded by the API are prone to change.
-   Although values are not required, you can still test whenever they
+   Although values are not required, you can still test them whenever they
    make sense (e.g. GET response body from one endpoint, then POST some
    of its values to another endpoint).
 
@@ -48,7 +48,7 @@ On 3.x and 2.7, you can install `the package from PyPi <https://pypi.org/project
 Docker
 ~~~~~~~
 
-`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.0.2>`__:
+`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.0.3>`__:
 
 ::
 
@@ -211,6 +211,17 @@ Credits
 RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__ and was originally written by Anssi Syrjäsalo.
 
 It was presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
+
+
+Contributors:
+
+- `jjwong <https://github.com/jjwong>`__, helping with keyword documentation and
+  examples
+
+- `Przemysław "sqilz" Hendel <https://github.com/sqilz>`__ for using and testing
+  RESTinstance in early phase, and providing
+  `RESTinstance-wrapper <https://github.com/sqilz/RESTinstance-wrapper>`__.
+
 
 We use the following Python excellence under the hood:
 

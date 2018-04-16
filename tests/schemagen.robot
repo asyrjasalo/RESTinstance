@@ -20,7 +20,9 @@ Responding JSON array
 Method with query parameters
     GET         /users?_limit=10
     Object      request query
-    Array       request query _limit    [ "10" ]
+    String      request query _limit    10
+    GET         /users?_limit=10        { "_limit": "5" }
+    String      request query _limit    5
     String      response body 0 name    Leanne Graham   minLength=3
     String      response body 1 name    "Ervin Howell"  pattern="[A-Za-z]+"
     Output      schema                  ${CURDIR}/schemagen/request_query.json

@@ -2,13 +2,19 @@
 from __future__ import unicode_literals
 from __future__ import division
 from io import open
-from .compat import STRING_TYPES
+from .compat import IS_PYTHON_2, STRING_TYPES
 
 from json import dumps, load, loads
 from os import path
+from yaml import load as load_yaml
 
 from pygments import highlight, lexers, formatters
 from requests.packages.urllib3 import disable_warnings
+
+if IS_PYTHON_2:
+    from urlparse import parse_qs, urljoin, urlparse
+else:
+    from urllib.parse import parse_qs, urljoin, urlparse
 
 from robot.api import logger
 
@@ -43,13 +49,13 @@ class REST(Keywords):
     ROBOT_LIBRARY_SCOPE = 'TEST SUITE'
 
     # Altogether 24 keywords        context:
-    # -----------------------------------------------------
+    # -------------------------------------------------------
     # 2 setting keywords            next instances
     # 4 expectation keywords        next instances
     # 7 request keywords            next instance
     # 8 assertion keywords          last instance's schema
-    # 3 IO keywords                 see the respective KWs
-    # -----------------------------------------------------
+    # 3 IO keywords                 the last instance or none
+    # -------------------------------------------------------
 
     def __init__(self, url=None,
                  ssl_verify=True,
@@ -60,29 +66,35 @@ class REST(Keywords):
                  schema={},
                  spec={},
                  instances=[]):
-        if url:
-            url = REST._input_string(url)
-            if not url.startswith(("http://", "https://")):
-                url = "http://" + url
-            if url.endswith('/'):
-                url = url[:-1]
-        self.url = url
         self.request = {
             'method': None,
-            'endpoint': None,
+            'url': None,
+            'scheme': "",
+            'netloc': "",
+            'path': "",
             'query': {},
             'body': None,
             'headers': {
-                'Accept': accept,
-                'Content-Type': content_type,
-                'User-Agent': user_agent
+                'Accept': REST._input_string(accept),
+                'Content-Type': REST._input_string(content_type),
+                'User-Agent': REST._input_string(user_agent)
             },
             'proxies': REST._input_object(proxies),
             'timeout': [None, None],
             'cert': None,
-            'sslVerify': REST._input_boolean(ssl_verify),
+            'sslVerify': REST._input_ssl_verify(ssl_verify),
             'allowRedirects': True
         }
+        if url:
+            url = REST._input_string(url)
+            if url.endswith('/'):
+                url = url[:-1]
+            if not url.startswith(("http://", "https://")):
+                url = "http://" + url
+            url_parts = urlparse(url)
+            self.request['scheme'] = url_parts.scheme
+            self.request['netloc'] = url_parts.netloc
+            self.request['path'] = url_parts.path
         if not self.request['sslVerify']:
             disable_warnings()
         self.schema = {
@@ -150,12 +162,13 @@ class REST(Keywords):
 
     @staticmethod
     def _input_string(value):
-        if value == '""' or not value:
+        if value == "":
             return ""
-        if not value.startswith('"'):
-            value = '"' + value
-        if not value.endswith('"'):
-            value = value + '"'
+        if isinstance(value, STRING_TYPES):
+            if not value.startswith('"'):
+                value = '"' + value
+            if not value.endswith('"'):
+                value = value + '"'
         try:
             json_value = loads(value)
             if not isinstance(json_value, STRING_TYPES):
@@ -208,8 +221,12 @@ class REST(Keywords):
             raise RuntimeError("File '%s' cannot be opened:\n%s" % (
                 path, e))
         except ValueError as e:
-            raise RuntimeError("File '%s' is not valid JSON:\n%s" % (
-                path, e))
+            try:
+                with open(path, encoding="utf-8") as file:
+                    return load_yaml(file)
+            except ValueError:
+                raise RuntimeError("File '%s' is not valid JSON or YAML:\n%s" %
+                    (path, e))
 
     @staticmethod
     def _input_json_as_string(string):
@@ -245,6 +262,18 @@ class REST(Keywords):
                 raise RuntimeError("This cert, given as a JSON array, " +
                     "must have length of 2:\n%s" % (value))
         return value
+
+    @staticmethod
+    def _input_ssl_verify(value):
+        try:
+            return REST._input_boolean(value)
+        except RuntimeError:
+            value = REST._input_string(value)
+            if not path.isfile(value):
+                raise RuntimeError("This SSL verify option is neither " +
+                    "a Python or JSON boolean, nor a path to an existing " +
+                    "CA bundle file:\n%s" % (value))
+            return value
 
     @staticmethod
     def _input_timeout(value):

@@ -11,7 +11,7 @@ ${valid}=       { "name": "Julie Langford" }
 
 *** Test Cases ***
 GET existing user
-    GET         /users/1
+    GET         users/1
     Integer     response status             200
     Integer     response body id            1
     String      response body name          Leanne Graham
@@ -43,11 +43,12 @@ PUT with valid params
     Null        response body sleep
     PUT         /users/2                    { "pockets": "", "money": 0.02 }
     String      response body pockets       ${EMPTY}
+    String      response body pockets       ""
     Number      response body money         0.02
     Missing     response body moving
 
 PATCH with valid params
-    GET         /users/3
+    GET         "/users/3"                  # quotes are optional
     String      response body name          Clementine Bauch
     PATCH       /users/3                    ${valid}
     String      response body name          Julie Langford
