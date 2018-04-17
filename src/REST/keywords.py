@@ -541,7 +541,7 @@ class Keywords(object):
             schema['example'] = body
 
     def _find_by_field(self, field, return_schema=True, print_found=True):
-        # TODO: _ensure_instances_exist()
+        # TODO: _last_instance_or_error()
         if not self.instances:
             raise RuntimeError("Nothing to validate against: " +
                 "No requests made, and no previous instances loaded in " +
@@ -578,7 +578,7 @@ class Keywords(object):
         else:
             add_example = False
 
-        # TODO: _find_by_path()
+        # TODO: _find_by_path(value, schema=None)
         found = []
         for path in paths:
             value = root_value
