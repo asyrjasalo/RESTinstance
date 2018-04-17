@@ -377,12 +377,10 @@ class Keywords(object):
 
     @keyword
     def output(self, what="", file_path=None, append=False, sort_keys=False):
-        no_instances_error = "No instance to output: No requests made, " \
-            "and no previous instances loaded in the library settings."
         message = "\nValue is (%s):\n" % (what.__class__.__name__)
         if what == "":
             try:
-                json = self.instances[-1]
+                json = self._last_instance_or_error()
             except IndexError:
                 raise RuntimeError(no_instances_error)
             message = "\n\nThe last instance is:\n"
@@ -390,8 +388,7 @@ class Keywords(object):
             try:
                 json = loads(what)
             except ValueError:
-                if not self.instances:
-                    raise RuntimeError(no_instances_error)
+                self._last_instance_or_error()
                 # TODO: fix to return all matches
                 json = self._find_by_field(what,
                     return_schema=False)[0]['reality']
@@ -581,9 +578,8 @@ class Keywords(object):
         try:
             return self.instances[-1]
         except IndexError:
-            raise RuntimeError("Nothing to validate against: " +
-                "No requests made, and no previous instances loaded in " +
-                "the library settings.")
+            raise RuntimeError("No instances: No requests made, " +
+                "and no previous instances loaded in the library import.")
 
     def _find_by_path(self, field, path, value, schema, return_schema=True,
                       print_found=True):
