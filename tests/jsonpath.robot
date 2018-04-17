@@ -7,13 +7,13 @@ JSONPath query from object
     GET         /users/1
     Integer     $.id                    1
     Integer     $[id]                   1
-    Integer     $."id"                   1
+    Integer     $."id"                  1
     String      $.name                  Leanne Graham
     String      $.'name'                 Leanne Graham
     String      $..lat                  -37.3159
     String      $.company.name          Romaguera-Crona
     String      $.name|$.username       Bret
-    Integer     $.name|$.id             2
+    Integer     $.name|$.id             13  # PASS: there is already 1 in enum!
     Object      $.name|$.id|$.company
 
 JSONPath query from array
