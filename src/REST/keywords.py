@@ -220,42 +220,44 @@ class Keywords(object):
             found = self._find_by_field(field, print_found=False)
         except AssertionError:
             return None
-        for f in found:
-            self.log_json(f['reality'],
+        for value in found['reality']:
+            self.log_json(value,
                 "\n\nExpected '%s' to not exist, but it is:\n%s" % (field))
         raise AssertionError("Expected '%s' to not exist, but it does." % (
             field))
 
     @keyword
     def null(self, field, **validations):
-        found = self._find_by_field(field)
-        for f in found:
-            reality = f['reality']
+        values = []
+        for found in self._find_by_field(field):
+            reality = found['reality']
             schema = { "type": "null" }
             skip = self._input_boolean(validations.pop('skip', False))
             if not skip:
                 self._assert_schema(schema, reality)
-        return [f['reality'] for f in found]
+            values.append(reality)
+        return values
 
     @keyword
     def boolean(self, field, value=None, **validations):
-        found = self._find_by_field(field)
-        for f in found:
-            reality = f['reality']
+        values = []
+        for found in self._find_by_field(field):
+            reality = found['reality']
             schema = { "type": "boolean" }
             if value is not None:
                 schema['enum'] = [self._input_boolean(value)]
             skip = self._input_boolean(validations.pop('skip', False))
             if not skip:
                 self._assert_schema(schema, reality)
-        return [f['reality'] for f in found]
+            values.append(reality)
+        return values
 
     @keyword
     def integer(self, field, *enum, **validations):
-        found = self._find_by_field(field)
-        for f in found:
-            schema = f['schema']
-            reality = f['reality']
+        values = []
+        for found in self._find_by_field(field):
+            schema = found['schema']
+            reality = found['reality']
             skip = self._input_boolean(validations.pop('skip', False))
             self._set_type_validations("integer", schema, validations)
             if enum:
@@ -267,14 +269,15 @@ class Keywords(object):
                         schema['enum'].append(value)
             if not skip:
                 self._assert_schema(schema, reality)
-        return [f['reality'] for f in found]
+            values.append(reality)
+        return values
 
     @keyword
     def number(self, field, *enum, **validations):
-        found = self._find_by_field(field)
-        for f in found:
-            schema = f['schema']
-            reality = f['reality']
+        values = []
+        for found in self._find_by_field(field):
+            schema = found['schema']
+            reality = found['reality']
             skip = self._input_boolean(validations.pop('skip', False))
             self._set_type_validations("number", schema, validations)
             if enum:
@@ -286,14 +289,15 @@ class Keywords(object):
                         schema['enum'].append(value)
             if not skip:
                 self._assert_schema(schema, reality)
-        return [f['reality'] for f in found]
+            values.append(reality)
+        return values
 
     @keyword
     def string(self, field, *enum, **validations):
-        found = self._find_by_field(field)
-        for f in found:
-            schema = f['schema']
-            reality = f['reality']
+        values = []
+        for found in self._find_by_field(field):
+            schema = found['schema']
+            reality = found['reality']
             skip = self._input_boolean(validations.pop('skip', False))
             self._set_type_validations("string", schema, validations)
             if enum:
@@ -305,14 +309,15 @@ class Keywords(object):
                         schema['enum'].append(value)
             if not skip:
                 self._assert_schema(schema, reality)
-        return [f['reality'] for f in found]
+            values.append(reality)
+        return values
 
     @keyword
     def object(self, field, *enum, **validations):
-        found = self._find_by_field(field)
-        for f in found:
-            schema = f['schema']
-            reality = f['reality']
+        values = []
+        for found in self._find_by_field(field):
+            schema = found['schema']
+            reality = found['reality']
             skip = self._input_boolean(validations.pop('skip', False))
             self._set_type_validations("object", schema, validations)
             if enum:
@@ -324,7 +329,8 @@ class Keywords(object):
                         schema['enum'].append(value)
             if not skip:
                 self._assert_schema(schema, reality)
-        return [f['reality'] for f in found]
+            values.append(reality)
+        return values
 
     @keyword
     def array(self, field, *enum, **validations):
@@ -336,10 +342,10 @@ class Keywords(object):
         | `GET`   | /users?limit=100 |                |
         | `Array` | response body    | maxItems = 100 |
         """
-        found = self._find_by_field(field)
-        for f in found:
-            schema = f['schema']
-            reality = f['reality']
+        values = []
+        for found in self._find_by_field(field):
+            schema = found['schema']
+            reality = found['reality']
             skip = self._input_boolean(validations.pop('skip', False))
             self._set_type_validations("array", schema, validations)
             if enum:
@@ -351,7 +357,8 @@ class Keywords(object):
                         schema['enum'].append(value)
             if not skip:
                 self._assert_schema(schema, reality)
-        return [f['reality'] for f in found]
+            values.append(reality)
+        return values
 
     # IO keywords
 
