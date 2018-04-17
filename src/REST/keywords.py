@@ -540,11 +540,13 @@ class Keywords(object):
             schema['example'] = body
 
     def _find_by_field(self, field, return_schema=True, print_found=True):
+        # TODO: _ensure_instances_exist()
         if not self.instances:
             raise RuntimeError("Nothing to validate against: " +
                 "No requests made, and no previous instances loaded in " +
                 "the library settings.")
 
+        # TODO: _get_paths_by_field()
         paths = []
         if field.startswith("$"):
             value = self.instances[-1]['response']['body']
@@ -573,6 +575,7 @@ class Keywords(object):
         else:
             add_example = False
 
+        # TODO: _find_by_path()
         found = []
         for path in paths:
             for key in path:
