@@ -15,7 +15,7 @@ from os import path, getcwd
 
 from flex.core import validate_api_call
 from genson import SchemaBuilder
-from jsonpath_ng import parse as parse_jsonpath
+from jsonpath_ng.ext import parse as parse_jsonpath
 from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
