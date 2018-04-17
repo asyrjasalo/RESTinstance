@@ -386,7 +386,8 @@ class Keywords(object):
                 if not self.instances:
                     raise RuntimeError(no_instances_error)
                 # TODO: fix to return all matches
-                json = self._find_by_field(what, return_schema=False)[0]['reality']
+                json = self._find_by_field(what,
+                    return_schema=False)[0]['reality']
                 message = "\n\nThe last instance %s (%s) is:\n" % (
                     what, json.__class__.__name__)
         else:
@@ -560,7 +561,8 @@ class Keywords(object):
                 except Exception as e:
                     raise RuntimeError("Invalid JSONPath query '%s':\n%s" % (
                         field, e))
-                matches = [str(match.full_path) for match in query.find(root_value)]
+                matches = [str(match.full_path) for match in query.find(
+                    root_value)]
                 if not matches:
                     raise AssertionError("JSONPath query '%s' " % (field) +
                         "did not match anything.")
