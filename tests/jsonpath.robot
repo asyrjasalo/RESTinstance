@@ -13,6 +13,8 @@ JSONPath query from object
     String      $..lat                  -37.3159
     String      $.company.name          Romaguera-Crona
     String      $.name|$.username       Bret
+    Integer     $.name|$.id             2
+    Object      $.name|$.id|$.company
 
 JSONPath query from array
     GET         /users?_limit=5
