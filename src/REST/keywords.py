@@ -549,11 +549,11 @@ class Keywords(object):
             schema['example'] = body
 
     def _find_by_field(self, field, return_schema=True, print_found=True):
-        self._last_instance_or_error()
+        last_instance = self._last_instance_or_error()
         paths = []
         if field.startswith("$"):
-            value = self.instances[-1]['response']['body']
-            schema = self.instances[-1]['schema']['response']['body']
+            value = last_instance['response']['body']
+            schema = last_instance['schema']['response']['body']
             if field == "$":
                 paths = []
             else:
@@ -570,8 +570,8 @@ class Keywords(object):
                     path = match.replace("[", "").replace("]", "").split('.')
                     paths.append(path)
         else:
-            value = self.instances[-1]
-            schema = self.instances[-1]['schema']
+            value = last_instance
+            schema = last_instance['schema']
             path = field.split()
             paths.append(path)
         return [self._find_by_path(field, path, value, schema,
