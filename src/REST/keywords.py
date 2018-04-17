@@ -385,6 +385,7 @@ class Keywords(object):
             except ValueError:
                 if not self.instances:
                     raise RuntimeError(no_instances_error)
+                # TODO: fix to return all matches
                 json = self._find_by_field(what, return_schema=False)[0]['reality']
                 message = "\n\nThe last instance %s (%s) is:\n" % (
                     what, json.__class__.__name__)
@@ -549,8 +550,8 @@ class Keywords(object):
         # TODO: _get_paths_by_field()
         paths = []
         if field.startswith("$"):
-            value = self.instances[-1]['response']['body']
-            schema = self.instances[-1]['schema']['response']['body']
+            root_value = self.instances[-1]['response']['body']
+            root_schema = self.instances[-1]['schema']['response']['body']
             if field == "$":
                 paths = []
             else:
@@ -559,18 +560,20 @@ class Keywords(object):
                 except Exception as e:
                     raise RuntimeError("Invalid JSONPath query '%s':\n%s" % (
                         field, e))
-                matches = [str(match.full_path) for match in query.find(value)]
+                matches = [str(match.full_path) for match in query.find(root_value)]
+                if not matches:
+                    raise AssertionError("JSONPath query '%s' " % (field) +
+                        "did not match anything.")
                 for match in matches:
                     path = match.replace("[", "").replace("]", "").split('.')
                     paths.append(path)
-
         else:
-            value = self.instances[-1]
-            schema = self.instances[-1]['schema']
+            root_value = self.instances[-1]
+            root_schema = self.instances[-1]['schema']
             path = field.split()
             paths.append(path)
 
-        if 'exampled' in schema and schema['exampled']:
+        if 'exampled' in root_schema and root_schema['exampled']:
             add_example = True
         else:
             add_example = False
@@ -578,6 +581,8 @@ class Keywords(object):
         # TODO: _find_by_path()
         found = []
         for path in paths:
+            value = root_value
+            schema = root_schema
             for key in path:
                 try:
                     value = self._value_by_key(value, key)
@@ -594,8 +599,8 @@ class Keywords(object):
                     raise AssertionError(
                         "\nExpected index '%s' did not exist." % (field))
                 if return_schema:
-                    schema = self._schema_by_key(
-                        schema, key, value, add_example)
+                    schema = self._schema_by_key(schema, key, value,
+                        add_example)
             f = {
                 'path': path,
                 'reality': value
