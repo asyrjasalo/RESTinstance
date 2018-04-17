@@ -549,17 +549,11 @@ class Keywords(object):
             schema['example'] = body
 
     def _find_by_field(self, field, return_schema=True, print_found=True):
-        # TODO: _last_instance_or_error()
-        if not self.instances:
-            raise RuntimeError("Nothing to validate against: " +
-                "No requests made, and no previous instances loaded in " +
-                "the library settings.")
-
-        # TODO: _get_paths_by_field()
+        self._last_instance_or_error()
         paths = []
         if field.startswith("$"):
-            root_value = self.instances[-1]['response']['body']
-            root_schema = self.instances[-1]['schema']['response']['body']
+            value = self.instances[-1]['response']['body']
+            schema = self.instances[-1]['schema']['response']['body']
             if field == "$":
                 paths = []
             else:
@@ -568,8 +562,7 @@ class Keywords(object):
                 except Exception as e:
                     raise RuntimeError("Invalid JSONPath query '%s':\n%s" % (
                         field, e))
-                matches = [str(match.full_path) for match in query.find(
-                    root_value)]
+                matches = [str(match.full_path) for match in query.find(value)]
                 if not matches:
                     raise AssertionError("JSONPath query '%s' " % (field) +
                         "did not match anything.")
@@ -577,46 +570,46 @@ class Keywords(object):
                     path = match.replace("[", "").replace("]", "").split('.')
                     paths.append(path)
         else:
-            root_value = self.instances[-1]
-            root_schema = self.instances[-1]['schema']
+            value = self.instances[-1]
+            schema = self.instances[-1]['schema']
             path = field.split()
             paths.append(path)
+        return [self._find_by_path(field, path, value, schema,
+                return_schema, print_found) for path in paths]
 
-        if 'exampled' in root_schema and root_schema['exampled']:
-            add_example = True
-        else:
-            add_example = False
+    def _last_instance_or_error(self):
+        try:
+            return self.instances[-1]
+        except IndexError:
+            raise RuntimeError("Nothing to validate against: " +
+                "No requests made, and no previous instances loaded in " +
+                "the library settings.")
 
-        # TODO: _find_by_path(value, schema=None)
-        found = []
-        for path in paths:
-            value = root_value
-            schema = root_schema
-            for key in path:
-                try:
-                    value = self._value_by_key(value, key)
-                except (KeyError, TypeError):
-                    if print_found:
-                        self.log_json(value,
-                            "\n\nProperty '%s' does not exist in:\n" % (key))
-                    raise AssertionError(
-                        "\nExpected property '%s' was not found." % (field))
-                except IndexError:
-                    if print_found:
-                        self.log_json(value,
-                            "\n\nIndex '%s' does not exist in:\n" % (key))
-                    raise AssertionError(
-                        "\nExpected index '%s' did not exist." % (field))
-                if return_schema:
-                    schema = self._schema_by_key(schema, key, value,
-                        add_example)
-            f = {
-                'path': path,
-                'reality': value
-            }
+    def _find_by_path(self, field, path, value, schema, return_schema=True,
+                      print_found=True):
+        for key in path:
+            try:
+                value = self._value_by_key(value, key)
+            except (KeyError, TypeError):
+                if print_found:
+                    self.log_json(value,
+                        "\n\nProperty '%s' does not exist in:\n" % (key))
+                raise AssertionError(
+                    "\nExpected property '%s' was not found." % (field))
+            except IndexError:
+                if print_found:
+                    self.log_json(value,
+                        "\n\nIndex '%s' does not exist in:\n" % (key))
+                raise AssertionError(
+                    "\nExpected index '%s' did not exist." % (field))
             if return_schema:
-                f.update({ 'schema': schema })
-            found.append(f)
+                schema = self._schema_by_key(schema, key, value)
+        found = {
+            'path': path,
+            'reality': value
+        }
+        if return_schema:
+            found['schema'] = schema
         return found
 
     def _value_by_key(self, json, key):
@@ -625,7 +618,7 @@ class Keywords(object):
         except ValueError:
             return json[key]
 
-    def _schema_by_key(self, schema, key, value, add_example=False):
+    def _schema_by_key(self, schema, key, value):
         if 'properties' in schema:
             schema = schema['properties']
         elif 'items' in schema:
@@ -639,9 +632,13 @@ class Keywords(object):
                 return schema['items'][-1]
         if key not in schema:
             schema[key] = self._new_schema(value)
-            if add_example:
+            if self._should_add_examples():
                 schema[key]['example'] = value
         return schema[key]
+
+    def _should_add_examples(self):
+        schema = self._last_instance_or_error()['schema']
+        return 'exampled' in schema and schema['exampled']
 
     def _set_type_validations(self, json_type, schema, validations):
         if validations:
