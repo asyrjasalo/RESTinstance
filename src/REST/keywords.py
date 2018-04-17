@@ -545,28 +545,28 @@ class Keywords(object):
                 "No requests made, and no previous instances loaded in " +
                 "the library settings.")
 
-        matches = []
+        paths = []
         if field.startswith("$"):
             value = self.instances[-1]['response']['body']
             schema = self.instances[-1]['schema']['response']['body']
             if field == "$":
-                keys = []
+                paths = []
             else:
                 try:
                     query = parse_jsonpath(field)
                 except Exception as e:
                     raise RuntimeError("Invalid JSONPath query '%s':\n%s" % (
                         field, e))
-                paths = [str(match.full_path) for match in query.find(value)]
-                for path in paths:
-                    keys = path.replace("[", "").replace("]", "").split('.')
-                    matches.append(keys)
+                matches = [str(match.full_path) for match in query.find(value)]
+                for match in matches:
+                    path = match.replace("[", "").replace("]", "").split('.')
+                    paths.append(path)
 
         else:
             value = self.instances[-1]
             schema = self.instances[-1]['schema']
-            keys = field.split()
-            matches.append(keys)
+            path = field.split()
+            paths.append(path)
 
         if 'exampled' in schema and schema['exampled']:
             add_example = True
@@ -574,8 +574,8 @@ class Keywords(object):
             add_example = False
 
         found = []
-        for keys in matches:
-            for key in keys:
+        for path in paths:
+            for key in path:
                 try:
                     value = self._value_by_key(value, key)
                 except (KeyError, TypeError):
@@ -594,7 +594,7 @@ class Keywords(object):
                     schema = self._schema_by_key(
                         schema, key, value, add_example)
             f = {
-                'keys': keys,
+                'path': path,
                 'reality': value
             }
             if return_schema:
