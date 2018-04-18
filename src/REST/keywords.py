@@ -216,14 +216,13 @@ class Keywords(object):
 
     @keyword
     def missing(self, field):
-        # TODO/jsonpath: Test this properly
         try:
-            found = self._find_by_field(field, print_found=False)
+            matches = self._find_by_field(field, print_found=False)
         except AssertionError:
-            return None
-        for value in found['reality']:
-            self.log_json(value,
-                "\n\nExpected '%s' to not exist, but it is:\n%s" % (field))
+            return
+        for found in matches:
+            self.log_json(found['reality'],
+                "\n\nExpected '%s' to not exist, but it is:\n" % (field))
         raise AssertionError("Expected '%s' to not exist, but it does." % (
             field))
 
