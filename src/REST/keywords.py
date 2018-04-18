@@ -216,6 +216,7 @@ class Keywords(object):
 
     @keyword
     def missing(self, field):
+        # TODO/jsonpath: Test this properly
         try:
             found = self._find_by_field(field, print_found=False)
         except AssertionError:
@@ -389,7 +390,7 @@ class Keywords(object):
                 json = loads(what)
             except ValueError:
                 self._last_instance_or_error()
-                # TODO: fix to return all matches
+                # TODO/jsonpath: fix to return all matches
                 json = self._find_by_field(what,
                     return_schema=False)[0]['reality']
                 message = "\n\nThe last instance %s (%s) is:\n" % (
@@ -547,10 +548,12 @@ class Keywords(object):
 
     def _find_by_field(self, field, return_schema=True, print_found=True):
         last_instance = self._last_instance_or_error()
+        schema = None
         paths = []
         if field.startswith("$"):
             value = last_instance['response']['body']
-            schema = last_instance['schema']['response']['body']
+            if return_schema:
+                schema = last_instance['schema']['response']['body']
             if field == "$":
                 paths = []
             else:
@@ -568,11 +571,12 @@ class Keywords(object):
                     paths.append(path)
         else:
             value = last_instance
-            schema = last_instance['schema']
+            if return_schema:
+                schema = last_instance['schema']
             path = field.split()
             paths.append(path)
-        return [self._find_by_path(field, path, value, schema,
-                return_schema, print_found) for path in paths]
+        return [self._find_by_path(field, path, value, schema, print_found)
+                for path in paths]
 
     def _last_instance_or_error(self):
         try:
@@ -581,8 +585,7 @@ class Keywords(object):
             raise RuntimeError("No instances: No requests made, " +
                 "and no previous instances loaded in the library import.")
 
-    def _find_by_path(self, field, path, value, schema, return_schema=True,
-                      print_found=True):
+    def _find_by_path(self, field, path, value, schema=None, print_found=True):
         for key in path:
             try:
                 value = self._value_by_key(value, key)
@@ -598,14 +601,13 @@ class Keywords(object):
                         "\n\nIndex '%s' does not exist in:\n" % (key))
                 raise AssertionError(
                     "\nExpected index '%s' did not exist." % (field))
-            if return_schema:
+            if schema:
                 schema = self._schema_by_key(schema, key, value)
         found = {
             'path': path,
-            'reality': value
+            'reality': value,
+            'schema': schema
         }
-        if return_schema:
-            found['schema'] = schema
         return found
 
     def _value_by_key(self, json, key):
