@@ -15,6 +15,8 @@ JSONPath query from object
     String      $.name|$.username       Bret
     Integer     $.name|$.id             13  # PASS: there is already 1 in enum!
     Object      $.name|$.id|$.company
+    Missing     response body notexisting
+    Missing     $.notexisting
 
 JSONPath query from array
     GET         /users?_limit=5
@@ -31,3 +33,4 @@ JSONPath query from array
     Object      $.[*]..lat.`parent`
     Integer     $.[*] where $.id
     Integer     $.[0:1].id|$.[1:4].id   1   2   3   4   5
+    Missing     $[*].notexisting
