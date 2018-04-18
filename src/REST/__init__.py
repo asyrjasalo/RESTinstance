@@ -118,7 +118,7 @@ class REST(Keywords):
             json_data = highlight(json,
                                   lexers.JsonLexer(),
                                   formatters.TerminalFormatter())
-            logger.info("%s%s" % (header, json_data), also_console=True)
+            logger.console("%s%s" % (header, json_data), newline=False)
         return json
 
     @staticmethod
