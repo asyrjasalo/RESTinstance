@@ -13,7 +13,7 @@ JSONPath query from object
     String      $..lat                  -37.3159
     String      $.company.name          Romaguera-Crona
     String      $.name|$.username       Bret
-    Integer     $.name|$.id             13  # PASS: there is already 1 in enum!
+    Integer     $.name|$.id             13  # the previous 1 is kept in enum!
     Object      $.name|$.id|$.company
     Missing     response body notexisting
     Missing     $.notexisting
