@@ -232,8 +232,8 @@ We use the following Python excellence under the hood:
    "wolverdude" Wolverton, for JSON Schema generator
 -  `jsonschema <https://github.com/Julian/jsonschema>`__, by Julian
    Berman, for JSON Schema draft-04 validation
--  `pygments <http://pygments.org>`__, by Georg Brandl et al., for JSON syntax
-   coloring, in console `Output`
+-  `pygments <http://pygments.org>`__, by Georg Brandl et al.,
+   for JSON syntax coloring, in console `Output`
 -  `requests <https://github.com/requests/requests>`__, by Kenneth
    Reitz et al., for making HTTP requests
 
