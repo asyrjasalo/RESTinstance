@@ -230,6 +230,8 @@ We use the following Python excellence under the hood:
    for Swagger 2.0 validation
 -  `GenSON <https://github.com/wolverdude/GenSON>`__, by Jon
    "wolverdude" Wolverton, for JSON Schema generator
+-  `jsonpath-ng <https://github.com/h2non/jsonpath-ng>`__, by Tomas
+    Aparicio and Kenneth Knowles, for handling JSONPath queries
 -  `jsonschema <https://github.com/Julian/jsonschema>`__, by Julian
    Berman, for JSON Schema draft-04 validation
 -  `pygments <http://pygments.org>`__, by Georg Brandl et al.,
