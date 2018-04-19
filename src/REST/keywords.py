@@ -389,11 +389,13 @@ class Keywords(object):
                 json = loads(what)
             except ValueError:
                 self._last_instance_or_error()
-                # TODO/jsonpath: fix to return all matches
-                json = self._find_by_field(what,
-                    return_schema=False)[0]['reality']
-                message = "\n\nThe last instance %s (%s) is:\n" % (
-                    what, json.__class__.__name__)
+                matches = self._find_by_field(what, return_schema=False)
+                if len(matches) > 1:
+                    json = [found['reality'] for found in matches]
+
+                else:
+                    json = matches[0]['reality']
+                message = "\n\n%s is:\n" % (what)
         else:
             json = what
         sort_keys = self._input_boolean(sort_keys)
