@@ -376,15 +376,16 @@ class Keywords(object):
             return self._input_string(what)
 
     @keyword
-    def output(self, what="", file_path=None, append=False, sort_keys=False):
-        message = "\nValue is (%s):\n" % (what.__class__.__name__)
+    def output(self, what="", file_path=None, append=False,
+               sort_keys=False):
         if what == "":
+            message = "\n\nThe last instance is:\n"
             try:
                 json = self._last_instance_or_error()
             except IndexError:
                 raise RuntimeError(no_instances_error)
-            message = "\n\nThe last instance is:\n"
         elif isinstance(what, (STRING_TYPES)):
+            message = "\n\n%s is:\n" % (what)
             try:
                 json = loads(what)
             except ValueError:
@@ -392,11 +393,10 @@ class Keywords(object):
                 matches = self._find_by_field(what, return_schema=False)
                 if len(matches) > 1:
                     json = [found['reality'] for found in matches]
-
                 else:
                     json = matches[0]['reality']
-                message = "\n\n%s is:\n" % (what)
         else:
+            message = "\n\nValue is (%s):\n" % (what.__class__.__name__)
             json = what
         sort_keys = self._input_boolean(sort_keys)
         if not file_path:
