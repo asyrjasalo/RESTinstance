@@ -69,6 +69,7 @@ the next time you run ``./rfdocker``.
 To pass the proxy settings to the container and run it on host network:
 
 ::
+
     RUN_ARGS="--env HTTP_PROXY,HTTPS_PROXY --network=host" ./rfdocker
 
 
