@@ -54,6 +54,7 @@ Docker
 
    docker pull asyrjasalo/restinstance
    docker run --rm -ti --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
+     --network host --env HTTP_PROXY --env HTTPS_PROXY \
      --volume "$PWD/tests":/home/robot/tests \
      --volume "$PWD/results":/home/robot/results \
      asyrjasalo/restinstance tests
