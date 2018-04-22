@@ -222,7 +222,7 @@ class Keywords(object):
             return
         for found in matches:
             self.log_json(found['reality'],
-                "\n\nExpected '%s' to not exist, but it is:\n" % (field))
+                "\n\nExpected '%s' to not exist, but it is:" % (field))
         raise AssertionError("Expected '%s' to not exist, but it does." % (
             field))
 
@@ -379,13 +379,13 @@ class Keywords(object):
     def output(self, what="", file_path=None, append=False,
                sort_keys=False):
         if what == "":
-            message = "\n\nThe last instance is:\n"
+            message = "\n\nThe last instance:"
             try:
                 json = self._last_instance_or_error()
             except IndexError:
                 raise RuntimeError(no_instances_error)
         elif isinstance(what, (STRING_TYPES)):
-            message = "\n\n%s is:\n" % (what)
+            message = "\n\nThe last instance %s:" % (what)
             try:
                 json = loads(what)
             except ValueError:
@@ -396,7 +396,7 @@ class Keywords(object):
                 else:
                     json = matches[0]['reality']
         else:
-            message = "\n\nValue is (%s):\n" % (what.__class__.__name__)
+            message = "\n\nInput %s as JSON is:" % (what.__class__.__name__)
             json = what
         sort_keys = self._input_boolean(sort_keys)
         if not file_path:
@@ -593,13 +593,13 @@ class Keywords(object):
             except (KeyError, TypeError):
                 if print_found:
                     self.log_json(value,
-                        "\n\nProperty '%s' does not exist in:\n" % (key))
+                        "\n\nProperty '%s' does not exist in:" % (key))
                 raise AssertionError(
                     "\nExpected property '%s' was not found." % (field))
             except IndexError:
                 if print_found:
                     self.log_json(value,
-                        "\n\nIndex '%s' does not exist in:\n" % (key))
+                        "\n\nIndex '%s' does not exist in:" % (key))
                 raise AssertionError(
                     "\nExpected index '%s' did not exist." % (field))
             if schema:
