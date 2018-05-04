@@ -378,9 +378,9 @@ class Keywords(object):
     @keyword
     def output(self, what="", file_path=None, append=False,
                sort_keys=False):
-        message = "\nOutput (%s) as JSON is:" % (what.__class__.__name__)
+        message = "\n%s as JSON is:" % (what.__class__.__name__)
         if what == "":
-            message = "\n\nThe last instance:"
+            message = "\n\nThe current instance as JSON is:"
             try:
                 json = self._last_instance_or_error()
             except IndexError:
@@ -390,7 +390,7 @@ class Keywords(object):
                 json = loads(what)
             except ValueError:
                 self._last_instance_or_error()
-                message = "\n\nThe last instance %s:" % (what)
+                message = "\n\n%s as JSON is:" % (what)
                 matches = self._find_by_field(what, return_schema=False)
                 if len(matches) > 1:
                     json = [found['reality'] for found in matches]
