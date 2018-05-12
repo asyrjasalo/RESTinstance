@@ -47,6 +47,14 @@ class Keywords(object):
 
     @keyword
     def set_headers(self, headers):
+        """
+        You can `Set Headers` one header at a time.
+
+        Example:
+        Set the authorization header and content type.
+        | `Set Headers`     | {"authorization": "Basic Og=="}       |
+        | `Set Headers`     | {"content-type": "application/json"}  |
+        """
         self.request['headers'].update(self._input_object(headers))
         return self.request['headers']
 
@@ -417,6 +425,14 @@ class Keywords(object):
 
     @keyword
     def output(self, what="", file_path=None, append=False, sort_keys=False):
+        """After a REST call, you can output the response.
+
+        Example:
+        `GET` users and `Output` the response body.
+        | `GET`    | /users?limit=2  |
+        | `Output` | response body   |
+
+        """
         no_instances_error = "No instance to output: No requests made, " \
             "and no previous instances loaded in the library settings."
         message = "\nValue is (%s):\n" % (what.__class__.__name__)
