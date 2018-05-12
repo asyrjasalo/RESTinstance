@@ -113,12 +113,12 @@ class REST(Keywords):
     def log_json(json, header="", also_console=True, sort_keys=False):
         json = dumps(json, ensure_ascii=False, indent=4,
                      separators=(',', ': ' ), sort_keys=sort_keys)
-        logger.info("%s%s" % (header, json))    # no coloring for log.html
+        logger.info("%s\n%s" % (header, json))    # no coloring for log.html
         if also_console:
             json_data = highlight(json,
                                   lexers.JsonLexer(),
                                   formatters.TerminalFormatter())
-            logger.info("%s%s" % (header, json_data), also_console=True)
+            logger.console("%s\n%s" % (header, json_data), newline=False)
         return json
 
     @staticmethod

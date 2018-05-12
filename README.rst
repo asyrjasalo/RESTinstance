@@ -48,12 +48,13 @@ On 3.x and 2.7, you can install `the package from PyPi <https://pypi.org/project
 Docker
 ~~~~~~~
 
-`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.0.3>`__:
+`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.0.4>`__:
 
 ::
 
    docker pull asyrjasalo/restinstance
    docker run --rm -ti --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
+     --env HTTP_PROXY --env HTTPS_PROXY --network host \
      --volume "$PWD/tests":/home/robot/tests \
      --volume "$PWD/results":/home/robot/results \
      asyrjasalo/restinstance tests
@@ -64,6 +65,12 @@ If you are already using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
 just add ``RESTinstance`` to your ``requirements.txt`` and remove the
 commented lines in ``Dockerfile``. It will be installed automatically
 the next time you run ``./rfdocker``.
+
+To pass the proxy settings to the container and run it on host network:
+
+::
+
+    RUN_ARGS="--env HTTP_PROXY,HTTPS_PROXY --network=host" ./rfdocker
 
 
 Usage
@@ -78,28 +85,42 @@ The most common use cases for library are:
 .. code:: robotframework
 
     *** Settings ***
-    Library         REST              https://jsonplaceholder.typicode.com
+    Library         REST    https://jsonplaceholder.typicode.com
+    Documentation   The test data can be read from files, strings or dicts.
+    ...             The validation keywords correspond to the JSON types.
+    ...             They take in either a plain text path or a JSONPath.
+    ...             Optionally type specific JSONSchema validations can be used.
+    ...             You can optionally check for constant JSON values too.
+    ...             Every request creates an instance. Can be output as JSON.
+    ...             The validations are effective for the last created instance.
+    ...             The scope of the created instances is this test suite.
+
 
     *** Variables ***
-    ${json}=        { "id": 11, "name": "Gil Alexander" }
-    &{dict}=        name=Julie Langford
+    ${json}         { "id": 11, "name": "Gil Alexander" }
+    &{dict}         name=Julie Langford
+
 
     *** Test Cases ***
-    GET existing users
-        GET         /users?limit=5
-        Array       response body
-        Object      response body 0
-        Integer     response body 0 id        1
-        [Teardown]  Output  response body 0
-
     GET an existing user
-        GET         /users/1
+        GET         /users/1                  # this creates a new instance
+        Object      response body
         Integer     response body id          1
-        String      response body name        Leanne Graham
+        String      response body name        Leanne Graham   # quotes optional
+        [Teardown]  Output                    # the current instance
+
+    GET existing users, JSONPath can be used
+        GET         /users?_limit=5           # this is now the last instance
+        Array       response body
+        Integer     $[0].id                   1           # first id is 1
+        String      $[0]..lat                 -37.3159    # any matching child
+        Integer     $..id                     maximum=5   # multiple matches
+        [Teardown]  Output  $[*].id           # all ids as a JSON array
 
     POST with valid params to create an user
         POST        /users                    ${json}
         Integer     response status           201
+        [Teardown]  Output                    # file_path=${OUTPUTDIR}/inst.json
 
     PUT with valid params to update existing
         PUT         /users/2                  { "isCoding": true }
@@ -111,17 +132,18 @@ The most common use cases for library are:
         Number      response body money       0.02
         Missing     response body moving
 
-    PATCH with valid params and using response as the new payload
+    PATCH with valid params, use response further as a new payload
         &{res}=     GET   /users/3
-        String      response body name        Clementine Bauch
+        String      $.name                    Clementine Bauch
         PATCH       /users/4                  { "name": "${res.body['name']}" }
-        String      response body name        Clementine Bauch
+        String      $.name                    Clementine Bauch
         PATCH       /users/5                  ${dict}
-        String      response body name        ${dict.name}
+        String      $.name                    ${dict.name}
 
     DELETE existing successfully
         DELETE      /users/6
         Integer     response status           200    202     204
+        Rest instances   ${OUTPUTDIR}/all_cases.json   # all instances so far
 
 
 2. **Testing for JSON types and constraints using JSON Schema validations.**
@@ -215,12 +237,13 @@ It was presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
 
 Contributors:
 
-- `jjwong <https://github.com/jjwong>`__, helping with keyword documentation and
-  examples
+- `jjwong <https://github.com/jjwong>`__
+  for helping with keyword documentation and examples (also check
+  `RESTinstance_starter_project <https://github.com/jjwong/RESTinstance_starter_project>`__)
 
-- `Przemysław "sqilz" Hendel <https://github.com/sqilz>`__ for using and testing
-  RESTinstance in early phase, and providing
-  `RESTinstance-wrapper <https://github.com/sqilz/RESTinstance-wrapper>`__.
+- `Przemysław "sqilz" Hendel <https://github.com/sqilz>`__
+  for using and testing RESTinstance in early phase (also check
+  `RESTinstance-wrapper <https://github.com/sqilz/RESTinstance-wrapper>`__)
 
 
 We use the following Python excellence under the hood:
@@ -229,10 +252,12 @@ We use the following Python excellence under the hood:
    for Swagger 2.0 validation
 -  `GenSON <https://github.com/wolverdude/GenSON>`__, by Jon
    "wolverdude" Wolverton, for JSON Schema generator
+-  `jsonpath-ng <https://github.com/h2non/jsonpath-ng>`__,
+   by Tomas Aparicio and Kenneth Knowles, for handling JSONPath queries
 -  `jsonschema <https://github.com/Julian/jsonschema>`__, by Julian
    Berman, for JSON Schema draft-04 validation
--  `pygments <http://pygments.org>`__, by Georg Brandl et al., for JSON syntax
-   coloring, in console `Output`
+-  `pygments <http://pygments.org>`__, by Georg Brandl et al.,
+   for JSON syntax coloring, in console `Output`
 -  `requests <https://github.com/requests/requests>`__, by Kenneth
    Reitz et al., for making HTTP requests
 

@@ -15,6 +15,7 @@ from os import path, getcwd
 
 from flex.core import validate_api_call
 from genson import SchemaBuilder
+from jsonpath_ng.ext import parse as parse_jsonpath
 from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
@@ -233,11 +234,12 @@ class Keywords(object):
         | `Missing` | response body shouldNotExist |
         """
         try:
-            found = self._find_by_field(field, print_found=False)
+            matches = self._find_by_field(field, print_found=False)
         except AssertionError:
-            return None
-        self.log_json(found['reality'],
-            "\n\nExpected '%s' to not exist, but it is:\n%s" % (field))
+            return
+        for found in matches:
+            self.log_json(found['reality'],
+                "\n\nExpected '%s' to not exist, but it is:" % (field))
         raise AssertionError("Expected '%s' to not exist, but it does." % (
             field))
 
@@ -251,13 +253,15 @@ class Keywords(object):
         | `GET`  | /users/4             |
         | `Null` | response body estate |
         """
-        found = self._find_by_field(field)
-        reality = found['reality']
-        schema = { "type": "null" }
-        skip = self._input_boolean(validations.pop('skip', False))
-        if not skip:
-            self._assert_schema(schema, reality)
-        return reality
+        values = []
+        for found in self._find_by_field(field):
+            reality = found['reality']
+            schema = { "type": "null" }
+            skip = self._input_boolean(validations.pop('skip', False))
+            if not skip:
+                self._assert_schema(schema, reality)
+            values.append(reality)
+        return values
 
     @keyword
     def boolean(self, field, value=None, **validations):
@@ -268,15 +272,17 @@ class Keywords(object):
         | `GET`     | /users/4                |      |
         | `Boolean` | response body isBananas | true |
         """
-        found = self._find_by_field(field)
-        reality = found['reality']
-        schema = { "type": "boolean" }
-        if value is not None:
-            schema['enum'] = [self._input_boolean(value)]
-        skip = self._input_boolean(validations.pop('skip', False))
-        if not skip:
-            self._assert_schema(schema, reality)
-        return reality
+        values = []
+        for found in self._find_by_field(field):
+            reality = found['reality']
+            schema = { "type": "boolean" }
+            if value is not None:
+                schema['enum'] = [self._input_boolean(value)]
+            skip = self._input_boolean(validations.pop('skip', False))
+            if not skip:
+                self._assert_schema(schema, reality)
+            values.append(reality)
+        return values
 
     @keyword
     def integer(self, field, *enum, **validations):
@@ -288,21 +294,23 @@ class Keywords(object):
         | `GET`     | /users/4        |     |     |     |
         | `Integer` | response status | 200 | 202 | 204 |
         """
-        found = self._find_by_field(field)
-        schema = found['schema']
-        reality = found['reality']
-        skip = self._input_boolean(validations.pop('skip', False))
-        self._set_type_validations("integer", schema, validations)
-        if enum:
-            if 'enum' not in schema:
-                schema['enum'] = []
-            for value in enum:
-                value = self._input_integer(value)
-                if value not in schema['enum']:
-                    schema['enum'].append(value)
-        if not skip:
-            self._assert_schema(schema, reality)
-        return reality
+        values = []
+        for found in self._find_by_field(field):
+            schema = found['schema']
+            reality = found['reality']
+            skip = self._input_boolean(validations.pop('skip', False))
+            self._set_type_validations("integer", schema, validations)
+            if enum:
+                if 'enum' not in schema:
+                    schema['enum'] = []
+                for value in enum:
+                    value = self._input_integer(value)
+                    if value not in schema['enum']:
+                        schema['enum'].append(value)
+            if not skip:
+                self._assert_schema(schema, reality)
+            values.append(reality)
+        return values
 
     @keyword
     def number(self, field, *enum, **validations):
@@ -314,21 +322,23 @@ class Keywords(object):
         | `GET`     | /users/4              |    |       |     |
         | `Number` | response body dollars | 42 | 34.50 | 100 |
         """
-        found = self._find_by_field(field)
-        schema = found['schema']
-        reality = found['reality']
-        skip = self._input_boolean(validations.pop('skip', False))
-        self._set_type_validations("number", schema, validations)
-        if enum:
-            if 'enum' not in schema:
-                schema['enum'] = []
-            for value in enum:
-                value = self._input_number(value)
-                if value not in schema['enum']:
-                    schema['enum'].append(value)
-        if not skip:
-            self._assert_schema(schema, reality)
-        return reality
+        values = []
+        for found in self._find_by_field(field):
+            schema = found['schema']
+            reality = found['reality']
+            skip = self._input_boolean(validations.pop('skip', False))
+            self._set_type_validations("number", schema, validations)
+            if enum:
+                if 'enum' not in schema:
+                    schema['enum'] = []
+                for value in enum:
+                    value = self._input_number(value)
+                    if value not in schema['enum']:
+                        schema['enum'].append(value)
+            if not skip:
+                self._assert_schema(schema, reality)
+            values.append(reality)
+        return values
 
     @keyword
     def string(self, field, *enum, **validations):
@@ -340,21 +350,23 @@ class Keywords(object):
         | `GET`     | /users/4           |           |              |
         | `String`  | response body name | Adam West | Peter Parker |
         """
-        found = self._find_by_field(field)
-        schema = found['schema']
-        reality = found['reality']
-        skip = self._input_boolean(validations.pop('skip', False))
-        self._set_type_validations("string", schema, validations)
-        if enum:
-            if 'enum' not in schema:
-                schema['enum'] = []
-            for value in enum:
-                value = self._input_string(value)
-                if value not in schema['enum']:
-                    schema['enum'].append(value)
-        if not skip:
-            self._assert_schema(schema, reality)
-        return reality
+        values = []
+        for found in self._find_by_field(field):
+            schema = found['schema']
+            reality = found['reality']
+            skip = self._input_boolean(validations.pop('skip', False))
+            self._set_type_validations("string", schema, validations)
+            if enum:
+                if 'enum' not in schema:
+                    schema['enum'] = []
+                for value in enum:
+                    value = self._input_string(value)
+                    if value not in schema['enum']:
+                        schema['enum'].append(value)
+            if not skip:
+                self._assert_schema(schema, reality)
+            values.append(reality)
+        return values
 
     @keyword
     def object(self, field, *enum, **validations):
@@ -366,21 +378,23 @@ class Keywords(object):
         | `GET`     | /zoo/4                |
         | `Object`  | response body animals |
         """
-        found = self._find_by_field(field)
-        schema = found['schema']
-        reality = found['reality']
-        skip = self._input_boolean(validations.pop('skip', False))
-        self._set_type_validations("object", schema, validations)
-        if enum:
-            if 'enum' not in schema:
-                schema['enum'] = []
-            for value in enum:
-                value = self._input_object(value)
-                if value not in schema['enum']:
-                    schema['enum'].append(value)
-        if not skip:
-            self._assert_schema(schema, reality)
-        return reality
+        values = []
+        for found in self._find_by_field(field):
+            schema = found['schema']
+            reality = found['reality']
+            skip = self._input_boolean(validations.pop('skip', False))
+            self._set_type_validations("object", schema, validations)
+            if enum:
+                if 'enum' not in schema:
+                    schema['enum'] = []
+                for value in enum:
+                    value = self._input_object(value)
+                    if value not in schema['enum']:
+                        schema['enum'].append(value)
+            if not skip:
+                self._assert_schema(schema, reality)
+            values.append(reality)
+        return values
 
     @keyword
     def array(self, field, *enum, **validations):
@@ -392,21 +406,23 @@ class Keywords(object):
         | `GET`   | /users?limit=100 |                |
         | `Array` | response body    | maxItems = 100 |
         """
-        found = self._find_by_field(field)
-        schema = found['schema']
-        reality = found['reality']
-        skip = self._input_boolean(validations.pop('skip', False))
-        self._set_type_validations("array", schema, validations)
-        if enum:
-            if 'enum' not in schema:
-                schema['enum'] = []
-            for value in enum:
-                value = self._input_array(value)
-                if value not in schema['enum']:
-                    schema['enum'].append(value)
-        if not skip:
-            self._assert_schema(schema, reality)
-        return reality
+        values = []
+        for found in self._find_by_field(field):
+            schema = found['schema']
+            reality = found['reality']
+            skip = self._input_boolean(validations.pop('skip', False))
+            self._set_type_validations("array", schema, validations)
+            if enum:
+                if 'enum' not in schema:
+                    schema['enum'] = []
+                for value in enum:
+                    value = self._input_array(value)
+                    if value not in schema['enum']:
+                        schema['enum'].append(value)
+            if not skip:
+                self._assert_schema(schema, reality)
+            values.append(reality)
+        return values
 
     # IO keywords
 
@@ -424,7 +440,8 @@ class Keywords(object):
             return self._input_string(what)
 
     @keyword
-    def output(self, what="", file_path=None, append=False, sort_keys=False):
+    def output(self, what="", file_path=None, append=False,
+               sort_keys=False):
         """After a REST call, you can output the response.
 
         Example:
@@ -433,26 +450,24 @@ class Keywords(object):
         | `Output` | response body   |
 
         """
-        no_instances_error = "No instance to output: No requests made, " \
-            "and no previous instances loaded in the library settings."
-        message = "\nValue is (%s):\n" % (what.__class__.__name__)
-        if what is "":
+        message = "\n%s as JSON is:" % (what.__class__.__name__)
+        if what == "":
+            message = "\n\nThe current instance as JSON is:"
             try:
-                json = self.instances[-1]
+                json = self._last_instance_or_error()
             except IndexError:
                 raise RuntimeError(no_instances_error)
-            message = "\n\nThe last instance is:\n"
         elif isinstance(what, (STRING_TYPES)):
             try:
                 json = loads(what)
             except ValueError:
-                try:
-                    self.instances[-1]
-                except IndexError:
-                    raise RuntimeError(no_instances_error)
-                json = self._find_by_field(what, return_schema=False)['reality']
-                message = "\n\nThe last instance %s (%s) is:\n" % (
-                    what, json.__class__.__name__)
+                self._last_instance_or_error()
+                message = "\n\n%s as JSON is:" % (what)
+                matches = self._find_by_field(what, return_schema=False)
+                if len(matches) > 1:
+                    json = [found['reality'] for found in matches]
+                else:
+                    json = matches[0]['reality']
         else:
             json = what
         sort_keys = self._input_boolean(sort_keys)
@@ -605,41 +620,67 @@ class Keywords(object):
             schema['example'] = body
 
     def _find_by_field(self, field, return_schema=True, print_found=True):
-        keys = field.split()
-        try:
-            value = self.instances[-1]
-        except IndexError:
-            raise RuntimeError("Nothing to validate against: " +
-                "No requests made, and no previous instances loaded in " +
-                "the library settings.")
-        schema = value['schema']
-        if 'exampled' in schema and schema['exampled']:
-            add_example = True
+        last_instance = self._last_instance_or_error()
+        schema = None
+        paths = []
+        if field.startswith("$"):
+            value = last_instance['response']['body']
+            if return_schema:
+                schema = last_instance['schema']['response']['body']
+            if field == "$":
+                paths = []
+            else:
+                try:
+                    query = parse_jsonpath(field)
+                except Exception as e:
+                    raise RuntimeError("Invalid JSONPath query '%s':\n%s" % (
+                        field, e))
+                matches = [str(match.full_path) for match in query.find(value)]
+                if not matches:
+                    raise AssertionError("JSONPath query '%s' " % (field) +
+                        "did not match anything.")
+                for match in matches:
+                    path = match.replace("[", "").replace("]", "").split('.')
+                    paths.append(path)
         else:
-            add_example = False
-        for key in keys:
+            value = last_instance
+            if return_schema:
+                schema = last_instance['schema']
+            path = field.split()
+            paths.append(path)
+        return [self._find_by_path(field, path, value, schema, print_found)
+                for path in paths]
+
+    def _last_instance_or_error(self):
+        try:
+            return self.instances[-1]
+        except IndexError:
+            raise RuntimeError("No instances: No requests made, " +
+                "and no previous instances loaded in the library import.")
+
+    def _find_by_path(self, field, path, value, schema=None, print_found=True):
+        for key in path:
             try:
                 value = self._value_by_key(value, key)
             except (KeyError, TypeError):
                 if print_found:
                     self.log_json(value,
-                        "\n\nProperty '%s' does not exist in:\n" % (key))
+                        "\n\nProperty '%s' does not exist in:" % (key))
                 raise AssertionError(
                     "\nExpected property '%s' was not found." % (field))
             except IndexError:
                 if print_found:
                     self.log_json(value,
-                        "\n\nIndex '%s' does not exist in:\n" % (key))
+                        "\n\nIndex '%s' does not exist in:" % (key))
                 raise AssertionError(
                     "\nExpected index '%s' did not exist." % (field))
-            if return_schema:
-                schema = self._schema_by_key(schema, key, value, add_example)
+            if schema:
+                schema = self._schema_by_key(schema, key, value)
         found = {
-            'keys': keys,
-            'reality': value
+            'path': path,
+            'reality': value,
+            'schema': schema
         }
-        if return_schema:
-            found.update({ 'schema': schema })
         return found
 
     def _value_by_key(self, json, key):
@@ -648,7 +689,7 @@ class Keywords(object):
         except ValueError:
             return json[key]
 
-    def _schema_by_key(self, schema, key, value, add_example=False):
+    def _schema_by_key(self, schema, key, value):
         if 'properties' in schema:
             schema = schema['properties']
         elif 'items' in schema:
@@ -662,9 +703,13 @@ class Keywords(object):
                 return schema['items'][-1]
         if key not in schema:
             schema[key] = self._new_schema(value)
-            if add_example:
+            if self._should_add_examples():
                 schema[key]['example'] = value
         return schema[key]
+
+    def _should_add_examples(self):
+        schema = self._last_instance_or_error()['schema']
+        return 'exampled' in schema and schema['exampled']
 
     def _set_type_validations(self, json_type, schema, validations):
         if validations:
