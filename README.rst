@@ -147,7 +147,7 @@ The most common use cases for library are:
 
 
 2. **Testing API requests and responses against a JSON Schema document**
-   `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/schema.robot>`__
+    `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/schema.robot>`__
 
 
 3. **Testing API requests and responses against a Swagger specification**
