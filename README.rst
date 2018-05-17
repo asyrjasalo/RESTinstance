@@ -80,7 +80,7 @@ Tip: You can run this README.rst as a test with Robot Framework.
 
 The most common use cases for library are:
 
-1. **Writing the classic value based API tests**
+1. **Testing HTTP JSON APIs with without necessarily knowing the responded values**
 
 .. code:: robotframework
 
@@ -89,7 +89,7 @@ The most common use cases for library are:
     Documentation   The test data can be read from files, strings or dicts.
     ...             The validation keywords correspond to the JSON types.
     ...             They take in either a plain text path or a JSONPath.
-    ...             Optionally type specific JSONSchema validations can be used.
+    ...             Optionally type specific JSON Schema validations can be used.
     ...             You can optionally check for constant JSON values too.
     ...             Every request creates an instance. Can be output as JSON.
     ...             The validations are effective for the last created instance.
@@ -146,12 +146,12 @@ The most common use cases for library are:
         Rest instances   ${OUTPUTDIR}/all_cases.json   # all instances so far
 
 
-2. **Testing for JSON types and constraints using JSON Schema validations.**
-   `Examples <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/validations.robot>`__.
+2. **Testing API requests and responses against a JSON Schema document**
+   `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/schema.robot>`__
 
 
-3. **Testing API requests and responses against a schema or a specification.**
-   `Examples for testing against JSON schema <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/schema.robot>`__ and `examples for testing against Swagger 2.0 specification <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/spec.robot>`__.
+3. **Testing API requests and responses against a Swagger specification**
+    `Examples for testing against Swagger 2.0 specification <https://github.com/asyrjasalo/RESTinstance/blob/master/tests/spec.robot>`__
 
 See `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
 
