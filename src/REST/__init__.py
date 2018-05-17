@@ -83,7 +83,8 @@ class REST(Keywords):
             'timeout': [None, None],
             'cert': None,
             'sslVerify': REST._input_ssl_verify(ssl_verify),
-            'allowRedirects': True
+            'allowRedirects': True,
+            'auth': None
         }
         if url:
             url = REST._input_string(url)

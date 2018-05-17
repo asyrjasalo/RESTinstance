@@ -5,6 +5,7 @@ GenSON==1.0.1
 jsonpath-ng==1.4.3
 pygments==2.2.0
 requests==2.18.4
+requests-kerberos==0.12.0
 
 jsonschema==2.6.0
 rfc3987==1.3.7
