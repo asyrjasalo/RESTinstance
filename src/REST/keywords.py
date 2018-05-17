@@ -52,6 +52,7 @@ class Keywords(object):
         self.request['headers'].update(self._input_object(headers))
         return self.request['headers']
 
+    @keyword
     def set_kerberos_auth(self, option='OPTIONAL'):
         if option == 'REQUIRED':
             self.request['auth'] =  HTTPKerberosAuth(mutual_authentication=REQUIRED)
