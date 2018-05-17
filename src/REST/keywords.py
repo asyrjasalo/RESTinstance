@@ -20,6 +20,7 @@ from jsonschema import Draft4Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
 from requests.exceptions import SSLError, Timeout
+from requests_kerberos import HTTPKerberosAuth, REQUIRED, OPTIONAL, DISABLED
 
 if IS_PYTHON_2:
     from urlparse import parse_qsl, urljoin, urlparse
@@ -50,6 +51,16 @@ class Keywords(object):
     def set_headers(self, headers):
         self.request['headers'].update(self._input_object(headers))
         return self.request['headers']
+
+    def set_kerberos_auth(self, option='OPTIONAL'):
+        if option == 'REQUIRED':
+            self.request['auth'] =  HTTPKerberosAuth(mutual_authentication=REQUIRED)
+        elif option == 'OPTIONAL':
+            self.request['auth'] =  HTTPKerberosAuth(mutual_authentication=OPTIONAL)
+        elif option == 'DISABLED':
+            self.request['auth'] =  HTTPKerberosAuth(mutual_authentication=DISABLED)
+        else:
+            raise RuntimeError("Unsupported option: " + option + "\n Available options: REQUIRED,OPTIONAL,DISABLED")
 
     # Expectations
 
@@ -462,7 +473,8 @@ class Keywords(object):
                               cert=request['cert'],
                               timeout=tuple(request['timeout']),
                               allow_redirects=request['allowRedirects'],
-                              verify=request['sslVerify'])
+                              verify=request['sslVerify'],
+                              auth=request['auth'])
         except SSLError as e:
             raise AssertionError("%s to %s SSL certificate verify failed:\n%s" %
                 (request['method'], request['url'], e))
