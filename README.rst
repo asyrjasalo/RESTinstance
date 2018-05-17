@@ -80,7 +80,7 @@ Tip: You can run this README.rst as a test with Robot Framework.
 
 The most common use cases for library are:
 
-1. **Testing HTTP JSON APIs with without necessarily knowing the responded values**
+1. **Testing HTTP JSON APIs, without necessarily knowing the responded values**
 
 .. code:: robotframework
 
