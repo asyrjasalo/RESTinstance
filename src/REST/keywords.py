@@ -86,7 +86,8 @@ class Keywords(object):
     # Requests
 
     @keyword
-    def head(self, endpoint, timeout=None, allow_redirects=None, validate=True):
+    def head(self, endpoint, timeout=None, allow_redirects=None, validate=True,
+             headers=None):
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "HEAD"
@@ -95,11 +96,13 @@ class Keywords(object):
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
+        if headers:
+            request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
     @keyword
     def options(self, endpoint, timeout=None, allow_redirects=None,
-                validate=True):
+                validate=True, headers=None):
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "OPTIONS"
@@ -108,11 +111,13 @@ class Keywords(object):
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
+        if headers:
+            request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
     @keyword
     def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
-            validate=True):
+            validate=True, headers=None):
         """Make a ``GET`` request call to a specified ``endpoint``.
 
         Example:
@@ -135,11 +140,13 @@ class Keywords(object):
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
+        if headers:
+            request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
     @keyword
     def post(self, endpoint, body=None, timeout=None, allow_redirects=None,
-             validate=True):
+             validate=True, headers=None):
         """Make a ``POST`` request call to a specified ``endpoint``.
 
         Example:
@@ -156,11 +163,13 @@ class Keywords(object):
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
+        if headers:
+            request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
     @keyword
     def put(self, endpoint, body=None, timeout=None, allow_redirects=None,
-            validate=True):
+            validate=True, headers=None):
         """Make a ``PUT`` request call to a specified ``endpoint``.
 
         Example:
@@ -176,11 +185,13 @@ class Keywords(object):
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
+        if headers:
+            request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
     @keyword
     def patch(self, endpoint, body=None, timeout=None, allow_redirects=None,
-              validate=True):
+              validate=True, headers=None):
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "PATCH"
@@ -190,11 +201,13 @@ class Keywords(object):
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
+        if headers:
+            request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
     @keyword
     def delete(self, endpoint, timeout=None, allow_redirects=None,
-               validate=True):
+               validate=True, headers=None):
         """Make a ``DELETE`` request call to a specified ``endpoint``.
 
         Example:
@@ -210,6 +223,8 @@ class Keywords(object):
         if timeout is not None:
             request['timeout'] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
+        if headers:
+            request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
     # Assertions
