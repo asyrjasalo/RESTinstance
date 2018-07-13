@@ -47,7 +47,7 @@ start_or_reset_mounterest() {
     docker run -d -t --name mounterest \
       -e HOST_UID=$(id -u) -e HOST_GID=$(id -g) \
       --network=$MR_NETWORK -p $MB_PORT:2525 -p $MR_PORT:8273 \
-      "$MR_IMAGE_LABEL:$MR_IMAGE_TAG" $MR_ARGS "$this_path"
+      "$MR_IMAGE_LABEL:$MR_IMAGE_TAG" $MR_ARGS
 
       echo "### Waiting for the API to start"
       if ! _portable_timeout 60 bash -c _wait_mounterest_ready 2>/dev/null; then
