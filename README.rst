@@ -174,13 +174,13 @@ To spin up the environment and run the tests:
 
 ::
 
-    ./test
+    scripts/test
 
 To run them on Python 2.7:
 
 ::
 
-    BUILD_ARGS="-f Dockerfile.python2" BUILD_NAME="restinstance-python2" ./test
+    BUILD_ARGS="-f Dockerfile.python2" BUILD_NAME="restinstance-python2" scripts/test
 
 System under test
 ~~~~~~~~~~~~~~~~~
@@ -205,26 +205,26 @@ To generate `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`_
 
 ::
 
-    ./genlibdoc
+    scripts/genlibdoc
 
 
 To build and release Python package to PyPi:
 
 ::
 
-    ./release_pypi
+    scripts/release_pypi
 
 To release the Docker image to private Docker registry:
 
 ::
 
-    ./release https://your.private.registry.com:5000/restinstance
+    scripts/release https://your.private.registry.com:5000/restinstance
 
 To release the Docker image to DockerHub:
 
 ::
 
-    ./release {{organization}}/restinstance
+    scripts/release {{organization}}/restinstance
 
 
 Credits

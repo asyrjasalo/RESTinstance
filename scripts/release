@@ -5,11 +5,12 @@ set -e
 ### consts #####################################################################
 
 this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_path="$this_path/.."
 
 ## variables ###################################################################
 
 registry_url="$1"
-version=$(cat "$this_path/src/REST/version.py" | cut -d"'" -f2 | sed "s/'//g")
+version=$(cat "$repo_path/src/REST/version.py" | cut -d"'" -f2 | sed "s/'//g")
 
 ### release ####################################################################
 

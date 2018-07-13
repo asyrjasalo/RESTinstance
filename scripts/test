@@ -8,6 +8,7 @@ set -e
 ### globals ####################################################################
 
 this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_path="$this_path/.."
 
 ### settings ###################################################################
 
@@ -46,7 +47,7 @@ start_or_reset_mounterest() {
     docker run -d -t --name mounterest \
       -e HOST_UID=$(id -u) -e HOST_GID=$(id -g) \
       --network=$MR_NETWORK -p $MB_PORT:2525 -p $MR_PORT:8273 \
-      "$MR_IMAGE_LABEL:$MR_IMAGE_TAG" $MR_ARGS
+      "$MR_IMAGE_LABEL:$MR_IMAGE_TAG" $MR_ARGS "$this_path"
 
       echo "### Waiting for the API to start"
       if ! _portable_timeout 60 bash -c _wait_mounterest_ready 2>/dev/null; then
@@ -95,5 +96,5 @@ fi
 BUILD_NAME="$BUILD_NAME" \
 BUILD_ARGS="$BUILD_ARGS" \
 RUN_ARGS="--network=$MR_NETWORK -e MB_PORT=$MB_PORT -e MR_PORT=$MR_PORT" \
-  "$this_path/rfdocker" \
+  "$repo_path/rfdocker" \
     $RF_ARGS "${@:-tests}"
