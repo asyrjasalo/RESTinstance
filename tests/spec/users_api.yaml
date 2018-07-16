@@ -1,6 +1,6 @@
 ---
 swagger: '2.0'
-info
+info:
   title: RoboCon RESTinstance API
   version: '2018-01-18'
 paths:
@@ -146,9 +146,7 @@ definitions:
       name:
         type: string
       organizationId:
-        type:
-        - 'null'
-        - integer
+        type: integer
       phone:
         type: string
       registeredAt:
