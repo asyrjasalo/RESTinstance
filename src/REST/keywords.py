@@ -48,6 +48,14 @@ class Keywords(object):
 
     @keyword
     def set_headers(self, headers):
+        """
+        You can `Set Headers` one header at a time.
+
+        Example:
+        Set the authorization header and content type.
+        | `Set Headers`     | {"authorization": "Basic Og=="}       |
+        | `Set Headers`     | {"content-type": "application/json"}  |
+        """
         self.request['headers'].update(self._input_object(headers))
         return self.request['headers']
 
@@ -79,6 +87,7 @@ class Keywords(object):
 
     @keyword
     def clear_expectations(self):
+        """Reset the schema for ``request`` and ``response`` back to empty or {}"""
         self.schema['request'] = {}
         self.schema['response'] = {}
         return self.schema
@@ -231,6 +240,14 @@ class Keywords(object):
 
     @keyword
     def missing(self, field):
+        """Verify a specific ``field`` does not exist.
+
+        Example:
+        After I make a `GET` call, I want to verify the field is not in the response body.
+        If ``shouldNotExist`` is in the body, then fail the assertion. If it is NOT in the body, then pass.
+        | `GET`     | /users/4                     |
+        | `Missing` | response body shouldNotExist |
+        """
         try:
             matches = self._find_by_field(field, print_found=False)
         except AssertionError:
@@ -243,6 +260,14 @@ class Keywords(object):
 
     @keyword
     def null(self, field, **validations):
+        """Verify a specific ``field`` is null.
+
+        Example:
+        After I make a `GET` call, I want to verify the field is null.
+        If response body estate is null, then it is a success.
+        | `GET`  | /users/4             |
+        | `Null` | response body estate |
+        """
         values = []
         for found in self._find_by_field(field):
             reality = found['reality']
@@ -255,6 +280,13 @@ class Keywords(object):
 
     @keyword
     def boolean(self, field, value=None, **validations):
+        """Verify a specific ``field`` is a boolean with a specific value.
+
+        Example:
+        After I make a `GET` call, I want to verify the field is a boolean and is true.
+        | `GET`     | /users/4                |      |
+        | `Boolean` | response body isBananas | true |
+        """
         values = []
         for found in self._find_by_field(field):
             reality = found['reality']
@@ -269,6 +301,14 @@ class Keywords(object):
 
     @keyword
     def integer(self, field, *enum, **validations):
+        """Verify a specific ``field`` is an Integer with a specific value, or set of values.
+
+        Example:
+        After I make a `GET` call, I want to verify the field is an integer and has one or more of my integer values.
+        If the response status returns a 200, 202, or 204, then it is a success.
+        | `GET`     | /users/4        |     |     |     |
+        | `Integer` | response status | 200 | 202 | 204 |
+        """
         values = []
         for found in self._find_by_field(field):
             schema = found['schema']
@@ -289,6 +329,14 @@ class Keywords(object):
 
     @keyword
     def number(self, field, *enum, **validations):
+        """Verify a specific ``field`` is a number(integer or floating) value, or set of values.
+
+        Example:
+        After I make a `GET` call, I want to verify the field is a number and has one or more of my number values.
+        If the response body dollars returns a 42, 34.50, or 100, then it is a success.
+        | `GET`     | /users/4              |    |       |     |
+        | `Number` | response body dollars | 42 | 34.50 | 100 |
+        """
         values = []
         for found in self._find_by_field(field):
             schema = found['schema']
@@ -309,6 +357,14 @@ class Keywords(object):
 
     @keyword
     def string(self, field, *enum, **validations):
+        """Verify a specific ``field`` is a string with a specific value, or set of values.
+
+        Example:
+        After I make a `GET` call, I want to verify the field is a string and has one or more of my string values.
+        If the response body name returns "Adam West" or "Peter Parker", then it is a success.
+        | `GET`     | /users/4           |           |              |
+        | `String`  | response body name | Adam West | Peter Parker |
+        """
         values = []
         for found in self._find_by_field(field):
             schema = found['schema']
@@ -329,6 +385,14 @@ class Keywords(object):
 
     @keyword
     def object(self, field, *enum, **validations):
+        """Verify a specific ``field`` is an object with a specific value, or set of values.
+
+        Example:
+        After I make a `GET` call, I want to verify the field is a object and has one or more of my values.
+        If the response body animals returns an object, then it is a success.
+        | `GET`     | /zoo/4                |
+        | `Object`  | response body animals |
+        """
         values = []
         for found in self._find_by_field(field):
             schema = found['schema']
@@ -393,6 +457,14 @@ class Keywords(object):
     @keyword
     def output(self, what="", file_path=None, append=False,
                sort_keys=False):
+        """After a REST call, you can output the response.
+
+        Example:
+        `GET` users and `Output` the response body.
+        | `GET`    | /users?limit=2  |
+        | `Output` | response body   |
+
+        """
         message = "\n%s as JSON is:" % (what.__class__.__name__)
         if what == "":
             message = "\n\nThe current instance as JSON is:"
