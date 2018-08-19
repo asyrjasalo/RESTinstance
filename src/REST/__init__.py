@@ -73,46 +73,40 @@ class REST(Keywords):
     body, over the phone.
 
     Currently OpenAPI version 2.0 ("Swagger") is supported, but as 3.0.0 is
-    seemingly gaining more popularity in Python scene too, this might change soon.
+    gaining more popularity in Python scene too, this might change soon.
 
 
 
-    == How to use it efficiently ==
+    == How to use the library efficiently ==
 
-    There is very much sorcery in this library, which is currently not
-    the most clearly explained. I will try to shed more light on this
-    efficiently when I have the examples done.
+    The library also represents its own state as JSON itself.
 
-    The library represents its state completely as JSON itself.
-    The state is a JSON array of objects, "instances", each of which always
+    The state is a list of objects, "instances", each of which always
     having the three properties:
 
-    1) Request data as a JSON object
-    2) Response data as a JSON object
-    3) Schema for request and response as their own JSON objects
+    - Request data as a object
+    - Response data as a object
+    - Schema for the request and the response as their respective objects
 
     The scope of the library is test suite, meaning, the instances are
     persisted in memory until the execution of the test suite is finished,
     either successfully or not (due to a fatal error or failing test).
+    The instances, effectively the state, can be output to a JSON file using `RESTinstances` keyword. Beware, it might be mostly useful for machines though.
 
-    By design, it is intended to be used so that one test suite files
-    is used per one API (the same path, the same resource) and having
-    all the methods with valid, invalid and missing requests in the same file.
-    Expect Spec validates all of these requests and their responses against
-    the Swagger 2.0 spec, which is best defined in the suite setup.
+    By design, this library is intended to be used so that one test suite file
+    is used per one API (the same path, the same resource) and containing
+    all the methods with valid, invalid and missing requests in that suite.
+    `Expect Spec` validates all of these requests and their responses against
+    a Swagger 2.0 spec, which is commonly used in the suite setup.
 
     The core functionality of the library is, that for each request-response,
-    as soon as the response has been gotten, and request did not timeout,
-    a new "instance" is created, having the properties described above,
-    and stored in the instances as the top most item in the list.
-
-    This list is persisted until the test suite is finished (suite scope).
-    The instances, effectively the state, can be output to a JSON file using `RESTinstances` keyword. Beware, it might be mostly useful for machines though.
+    as soon as the response has been gotten (and request did not timeout),
+    a new "instance" is created. It has the properties described above,
+    and is stored in the instances as the topmost item in the list.
 
     All the schemas, both generated, and user inputted, are JSON Schema draft-04
     compliant. The support for draft-06 is done, but not merged at this
     point, as it is more important to have the sensible documentation out.
-
     The schemas are generated automatically for request 'body' and 'query'
     and response 'body' JSON, unless the user has used expectation keywords
     to explicitly provide own schema for request or response, or both,
@@ -122,42 +116,42 @@ class REST(Keywords):
     that the library works in the suite scope, so the expectations are persisted
     between test cases. This holds true, unless `Clear Expectations` is called, e.g. in test teardown, where this keyword is the most valuable in.
 
-    All the assertions happen by validating the JSON properties against
-    the respective properties in the schema. These assertions first update the schema, basing on what user is asserting, and then run the validations.
-    The assertions do not require any any values or validations, only type
-    is the mandatory, and it is already in the assertion keyword's name.
+    All assertions are implemented by validating the JSON properties against
+    the respective properties in the schema. These assertions first update the schema basing on what user is asserting, and then run the validations.
+    The assertions do not require any any values or validations, only the type
+    which is included in the keyword name.
 
     The assertion keywords correspond to the JSON types, and all of
-    their validations, including type, are implemented by JSON Schema.
-    Some of the validations are common to all types and some are type-spefic.
-    By design, it is assumed that at least the expected type is known.
+    their validations, including the type, are implemented by JSON Schema.
+    Some of the validations are common for all types and some are type specific.
+    By design, the library assumes that at least the expected type is known.
 
     The property to assert is selected either using a plain text path,
     which is name of the keys in the JSON, going deeper and the keys
     separated by spaces. For JSON arrays, numbers can be used as indexes
     (starting from 0).
 
-    The second option for matching properties to to use JSONPath in the query.
+    A more powerful option for matching values to to use JSONPath as the query.
     Additionally, this allows matching multiple properties (or array items)
     in the JSON, and is quite useful in shortening otherwise very lengthy
     plain text paths, or e.g. validating that all the /users really have that
     email defined. but be careful of not mathing too much.
 
     The asserts check the property in this order:
-    1) type matches the expected
-    2) the value, or at least one them, given in enum, matches
-    3) validations
+    1. type matches the expected
+    2. the value, or at least one them, given in enum, matches
+    3. validations
 
     The assertion keywords are effective only for the last created instance, meaning that execution is stopped as soon as the first keyword fails,
     meaning the first error is occurred.
 
-    To summarize at this point, there are three ways affecting whether
-    tests pass or not. They are listed in the order of magnitude:
-    - Use Expect Spec in the suite setup and put all of that APIs requests
-    to that particular test suite file. Remember the suite scope.
-    - Use Expect Response or Expect Request for asserting that all the
-    upcoming requests validates against this schema, before any further
-    validations happen on the test case level (using Assertion keywords).
+    There are three ways affecting whether tests pass or not.
+    They are listed by the order of magnitude, and topmost overrides below :
+    - Use `Expect Spec` in the suite setup and put all of that APIs requests
+      to that particular test suite file. Remember the suite scope.
+    - Use `Expect Response` or `Expect Request` for asserting that all the
+      upcoming requests validates against this schema, before any further
+      validations happen on the test case level (using Assertion keywords).
     - Use Assertion keywords for asserting one or many (JSONPath) properties
 
     The library provides `Output` keyword for writing the last instance
@@ -180,7 +174,6 @@ class REST(Keywords):
     before the requests happen (in test case level), works quite well
     for ensuring that the tests go red when the API breaks, or when it was
     monkeypatched with hair on fire, without the schemas being first updated.
-    Or there might have been some noise in the signal...
 
     However, this quite automatic approach does not guarantee very
     meaningful tests from the actual API usage point of view:
@@ -192,19 +185,21 @@ class REST(Keywords):
 
     Sometimes values make very much sense, e.g. in workflows where multiple
     APIs must be called in some specific order, e.g. GET a response body
-    from one endpoint, then POSTing some of its properties as the new request body,
-    to some another endpoint. This is not very RESTful indeed, but possible.
+    from one endpoint, then `POST`ing some of its properties as the new request body, to some another endpoint. This is not very RESTful indeed,
+    but possible.
 
-    Similarly as using assertion keywords in the test cases to emphasize the
+    Similarly as using assertion keywords in the test cases, to emphasize the
     importantness of the particular JSON property, e.g. that sane error messages
     are responded by the API if the request body is missing something,
     the values can be explicitly, and visibly, asserted on the test case level
-    to emphasize the importantness of immutability, e.g. that the response status codes must stay as they are now, or the clients won't initiate automatically retrying if there has been some noise in the signal again.
+    to emphasize the importantness of immutability, e.g. that the response status codes must be as they are, as the clients do not know start retrying
+    in case of timeouts.
 
     As of writing this, the machines have not yet gain the knowledge
     to infer what is meaningful to test. Hence, the library provides the
-    assertion keywords to both improve the schemas further, and for readability
-    to clearly state the important properties on the test case level.
+    assertion keywords to both improve the schemas further by your wisdom,
+    and for the sake of readability, to clearly state the important properties
+    on the test case level.
 
     For now, it seems like our ability to think "outside the box",
     use a common language to express it, and leave some documentation for the
