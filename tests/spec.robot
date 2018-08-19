@@ -1,6 +1,6 @@
 *** Settings ***
 Resource        resources/mounterest.robot
-Suite setup     Expect spec                     ${CURDIR}/spec/users_api.yaml
+Suite setup     Expect spec                     ${CURDIR}/swagger/spec_20.yaml
 Suite teardown  Rest instances                  ${OUTPUTDIR}/spec.json
 
 
@@ -36,7 +36,7 @@ PUT with invalid params
     PUT         /users/100       { "id": 1801 }
 
 PUT with valid params
-    [Setup]     Expect spec      ${CURDIR}/spec/users_api.json
+    [Setup]     Expect spec      ${CURDIR}/swagger/spec_20.json
     PUT         /users/100       { "address": { "city": "Delta City" } }
 
 PUT with missing params
@@ -49,7 +49,7 @@ PATCH with invalid params
     PATCH       /users/100       { "nickname": "murph" }
 
 PATCH with valid params
-    [Setup]     Expect spec      ${CURDIR}/spec/users_api.json  replace=false
+    [Setup]     Expect spec      ${CURDIR}/swagger/spec_20.json  replace=false
     PATCH       /users/100       { "username": "murph" }
 
 PATCH with missing params
@@ -59,7 +59,7 @@ DELETE to non-existing
     DELETE      /users/2043
 
 DELETE to existing
-    [Setup]     Expect spec      ${CURDIR}/spec/users_api.json  replace=true
+    [Setup]     Expect spec      ${CURDIR}/swagger/spec_20.json  replace=true
     DELETE      /users/100
 
 DELETE to invalid, but with no validations

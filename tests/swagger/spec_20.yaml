@@ -3,6 +3,13 @@ swagger: '2.0'
 info:
   title: RoboCon RESTinstance API
   version: '2018-01-18'
+host: localhost:8273
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
 paths:
   "/users":
     get:
