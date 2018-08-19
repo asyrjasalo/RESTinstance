@@ -16,7 +16,7 @@ from os import path, getcwd
 from flex.core import validate_api_call
 from genson import SchemaBuilder
 from jsonpath_ng.ext import parse as parse_jsonpath
-from jsonschema import Draft4Validator, FormatChecker
+from jsonschema import Draft4Validator, Draft6Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from requests import request as client
 from requests.exceptions import SSLError, Timeout
@@ -612,6 +612,9 @@ class Keywords(object):
             schema_version = self.schema['version']
             if schema_version == 'draft04':
                 validator = Draft4Validator(schema,
+                    format_checker=FormatChecker())
+            elif schema_version == 'draft06':
+                 validator = Draft6Validator(schema,
                     format_checker=FormatChecker())
             else:
                 raise RuntimeError("Unknown JSON Schema version " +
