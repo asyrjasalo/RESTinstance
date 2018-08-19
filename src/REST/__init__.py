@@ -25,25 +25,208 @@ from .version import __version__
 class REST(Keywords):
     """Robot Framework test library for (RESTful) JSON APIs.
 
-    RESTinstance validates JSON using JSON Schema, guiding you to write API tests
-    basing on constraints (e.g. "response body property email must be a valid
-    email") rather than on specific values (e.g. response body property email
-    is "foo@bar.com"). This reduces test maintenance when values returned by
-    the API are prone to change. Although validations do not require values,
-    you can still use them whenever they make sense (e.g. GET response body
-    from one endpoint, then POST some of its values to another endpoint).
 
-    The library generates JSON Schema for requests and responses automatically,
-    and the schema gets more accurate by your tests.
-    This schema can be used as a documentation or a contract between
-    different teams, or specialities (e.g. testers, developers), to agree on
-    what kind of data the API handles. Additionally, you can mark validations
-    to be skipped, and rather use the tests to define how the API should work,
-    if the API does not exist yet - then the produced schema also acts as a
-    design. The schema can be further used as a base for writing an OpenAPI
-    specification, which RESTinstance can also test against (spec version 2.0,
-    the support for 3.0, and generating also an OpenAPI spec automatically is
-    planned).
+    RESTinstance guides you to write API tests to base on constraints,
+    e.g. "people's emails must be a syntactically valid email addresses",
+    rather than on specific values, which are often prone to change
+    (e.g "the first created user's email is expected to stay as "foo@bar.com").
+
+    It bases on the fact the we are more often interested whether the value
+    changed when it should had, or should not had, as this might indicate a bug,
+    and less often interested in what the value actually was, and now is.
+
+    This approach also helps in tackling tests that fail regularly (only)
+    because the test environment data was reset, but the values used in the
+    tests weren't updated.
+
+
+
+    == Towards contract-based API testing ==
+
+    The library generates JSON Schema for the request and responses properties
+    automatically, but does not fix the property values in the schema,
+    unless this is explicitly wanted. The schema then gets more accurate by
+    using assertion keywords in the test case level. Passing assertions
+    advance the schema further, assuming the validations still pass.
+
+    This schema can also be output, stored and reused as the base for testing
+    the other methods, endpoints or params, but with minimum changes and without
+    excessive duplication of the test data for otherwise very similarly
+    responding methods.
+
+    As JSON Schema is suitable for defining what kind of JSON data should,
+    or should not be send or gotten from the API, but not that suitable
+    in modeling the service - meaning, defining what endpoints allow what
+    properties changed, and what schema the response should conform,
+    the library dives into further contract-based testing by making possible
+    to expect Swagger/OpenAPI specification on the suite setup level,
+    and then liberate the tester to only have to send the requests with
+    (possibly even randomized) params on the test case level.
+    This leads to very clean looking tests.
+
+    OpenAPI specs act well as a common language within the team,
+    at same time recognizing our differing specilities as designers,
+    developers, and testers. Or possibly you want to pressure the external parties
+    to hurry up integrating to your system, but there is some noise in signal,
+    and you do not feel very content providing them the source code,
+    let alone telling which particular JSON fields are required in the response
+    body, over the phone.
+
+    Currently OpenAPI version 2.0 ("Swagger") is supported, but as 3.0.0 is
+    seemingly gaining more popularity in Python scene too, this might change soon.
+
+
+
+    == How to use it efficiently ==
+
+    There is very much sorcery in this library, which is currently not
+    the most clearly explained. I will try to shed more light on this
+    efficiently when I have the examples done.
+
+    The library represents its state completely as JSON itself.
+    The state is a JSON array of objects, "instances", each of which always
+    having the three properties:
+
+    1) Request data as a JSON object
+    2) Response data as a JSON object
+    3) Schema for request and response as their own JSON objects
+
+    The scope of the library is test suite, meaning, the instances are
+    persisted in memory until the execution of the test suite is finished,
+    either successfully or not (due to a fatal error or failing test).
+
+    By design, it is intended to be used so that one test suite files
+    is used per one API (the same path, the same resource) and having
+    all the methods with valid, invalid and missing requests in the same file.
+    Expect Spec validates all of these requests and their responses against
+    the Swagger 2.0 spec, which is best defined in the suite setup.
+
+    The core functionality of the library is, that for each request-response,
+    as soon as the response has been gotten, and request did not timeout,
+    a new "instance" is created, having the properties described above,
+    and stored in the instances as the top most item in the list.
+
+    This list is persisted until the test suite is finished (suite scope).
+    The instances, effectively the state, can be output to a JSON file using `RESTinstances` keyword. Beware, it might be mostly useful for machines though.
+
+    All the schemas, both generated, and user inputted, are JSON Schema draft-04
+    compliant. The support for draft-06 is done, but not merged at this
+    point, as it is more important to have the sensible documentation out.
+
+    The schemas are generated automatically for request 'body' and 'query'
+    and response 'body' JSON, unless the user has used expectation keywords
+    to explicitly provide own schema for request or response, or both,
+    in which is case the expected is preserved instead, and not overridden.
+
+    This helps in testing the similarly responding methods. Do remember though,
+    that the library works in the suite scope, so the expectations are persisted
+    between test cases. This holds true, unless `Clear Expectations` is called, e.g. in test teardown, where this keyword is the most valuable in.
+
+    All the assertions happen by validating the JSON properties against
+    the respective properties in the schema. These assertions first update the schema, basing on what user is asserting, and then run the validations.
+    The assertions do not require any any values or validations, only type
+    is the mandatory, and it is already in the assertion keyword's name.
+
+    The assertion keywords correspond to the JSON types, and all of
+    their validations, including type, are implemented by JSON Schema.
+    Some of the validations are common to all types and some are type-spefic.
+    By design, it is assumed that at least the expected type is known.
+
+    The property to assert is selected either using a plain text path,
+    which is name of the keys in the JSON, going deeper and the keys
+    separated by spaces. For JSON arrays, numbers can be used as indexes
+    (starting from 0).
+
+    The second option for matching properties to to use JSONPath in the query.
+    Additionally, this allows matching multiple properties (or array items)
+    in the JSON, and is quite useful in shortening otherwise very lengthy
+    plain text paths, or e.g. validating that all the /users really have that
+    email defined. but be careful of not mathing too much.
+
+    The asserts check the property in this order:
+    1) type matches the expected
+    2) the value, or at least one them, given in enum, matches
+    3) validations
+
+    The assertion keywords are effective only for the last created instance, meaning that execution is stopped as soon as the first keyword fails,
+    meaning the first error is occurred.
+
+    To summarize at this point, there are three ways affecting whether
+    tests pass or not. They are listed in the order of magnitude:
+    - Use Expect Spec in the suite setup and put all of that APIs requests
+    to that particular test suite file. Remember the suite scope.
+    - Use Expect Response or Expect Request for asserting that all the
+    upcoming requests validates against this schema, before any further
+    validations happen on the test case level (using Assertion keywords).
+    - Use Assertion keywords for asserting one or many (JSONPath) properties
+
+    The library provides `Output` keyword for writing the last instance
+    as JSON to the terminal, or alternatively to a file created at the
+    given path. By default, the output goes to terminal which is often
+    more useful for debugging purposes.
+
+
+
+    == Writing valuable but value-agnostic tests ==
+
+    The generated schemas are JSON themselves, thus can be output as JSON files,
+    and reused as expectations for further tests, or to avoid boilerplate.
+    This is useful if e.g. if you notice testing different HTTP methods,
+    that essentially respond very similar JSON objects, with only minor
+    differences in the presence or the absence of some properties in the JSON.
+
+    Commiting the automatically generated schemas to the git repository, and
+    using the with expectation keywords (either in suite or test setups)
+    before the requests happen (in test case level), works quite well
+    for ensuring that the tests go red when the API breaks, or when it was
+    monkeypatched with hair on fire, without the schemas being first updated.
+    Or there might have been some noise in the signal...
+
+    However, this quite automatic approach does not guarantee very
+    meaningful tests from the actual API usage point of view:
+    As only the constancy of the JSON properties and their types are then
+    verified, this does not put enough weight to writing tests that actually
+    have the ability to tell the reader, what are the meaningful properties
+    in terms this particular request, or in the response gotten from
+    that endpoint.
+
+    Sometimes values make very much sense, e.g. in workflows where multiple
+    APIs must be called in some specific order, e.g. GET a response body
+    from one endpoint, then POSTing some of its properties as the new request body,
+    to some another endpoint. This is not very RESTful indeed, but possible.
+
+    Similarly as using assertion keywords in the test cases to emphasize the
+    importantness of the particular JSON property, e.g. that sane error messages
+    are responded by the API if the request body is missing something,
+    the values can be explicitly, and visibly, asserted on the test case level
+    to emphasize the importantness of immutability, e.g. that the response status codes must stay as they are now, or the clients won't initiate automatically retrying if there has been some noise in the signal again.
+
+    As of writing this, the machines have not yet gain the knowledge
+    to infer what is meaningful to test. Hence, the library provides the
+    assertion keywords to both improve the schemas further, and for readability
+    to clearly state the important properties on the test case level.
+
+    For now, it seems like our ability to think "outside the box",
+    use a common language to express it, and leave some documentation for the
+    upcoming generations probably gives us some advantages over the machines,
+    in the software testing area at least.
+
+
+
+    == Editors for OpenAPI specs? ==
+
+    If you find hard it hard first to understanding OpenAPI specifications
+    just by looking, reading and experimenting on them,
+    you might have more luck with `Apicur <https://studio.apicur.io>`.
+
+    It essentially looks one of the promising (free) web-based GUIs
+    for creating and editing Swagger/OpenAPI specifications.
+
+
+
+    The documentation is still prone to get more organized for 1.0.0.
+
+    The library documentation was not written by a computer.
     """
 
     ROBOT_LIBRARY_SCOPE = 'TEST SUITE'
@@ -52,9 +235,9 @@ class REST(Keywords):
     # -------------------------------------------------------
     # 2 setting keywords            next instances
     # 4 expectation keywords        next instances
-    # 7 request keywords            next instance
+    # 7 operation keywords          next instance
     # 8 assertion keywords          last instance's schema
-    # 3 IO keywords                 the last instance or none
+    # 3 I/O keywords                the last instance or none
     # -------------------------------------------------------
 
     def __init__(self, url=None,

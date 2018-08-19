@@ -28,8 +28,8 @@ Why?
    frontend, test developers), to agree on what kind of data the API handles.
    Additionally, you can mark validations to be skipped and rather use
    the tests to define how the API should work - then the schema also
-   acts as a design. The schema can be further extended to an OpenAPI
-   specification (manually for now, generating also this is planned),
+   acts as the API design. The schema can be further extended to a Swagger
+   specification (version 2.0, OpenAPI 3.0.x also planned),
    which RESTinstance can also test requests and responses against.
    This leads to very clean looking tests.
 

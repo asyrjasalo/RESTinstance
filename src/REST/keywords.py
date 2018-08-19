@@ -39,14 +39,14 @@ class Keywords(object):
         return [name for name in dir(self) if hasattr(getattr(self, name),
             'robot_name')]
 
-    # Settings
+    ### Keywords start here
 
-    @keyword
+    @keyword(name=None, tags=("settings",))
     def set_client_cert(self, cert):
         self.request['cert'] = self._input_client_cert(cert)
         return self.request['cert']
 
-    @keyword
+    @keyword(name=None, tags=("settings",))
     def set_headers(self, headers):
         """
         You can `Set Headers` one header at a time.
@@ -59,9 +59,7 @@ class Keywords(object):
         self.request['headers'].update(self._input_object(headers))
         return self.request['headers']
 
-    # Expectations
-
-    @keyword
+    @keyword(name=None, tags=("expectations",))
     def expect_request(self, schema, replace=False):
         if self._input_boolean(replace):
             self.schema['response'] = self._input_object(schema)
@@ -69,7 +67,7 @@ class Keywords(object):
             self.schema['request'].update(self._input_object(schema))
         return self.schema['request']
 
-    @keyword
+    @keyword(name=None, tags=("expectations",))
     def expect_response(self, schema, replace=False):
         if self._input_boolean(replace):
             self.schema['response'] = self._input_object(schema)
@@ -77,7 +75,7 @@ class Keywords(object):
             self.schema['response'].update(self._input_object(schema))
         return self.schema['response']
 
-    @keyword
+    @keyword(name=None, tags=("expectations",))
     def expect_spec(self, spec, replace=False):
         if self._input_boolean(replace):
             self.spec = self._input_object(spec)
@@ -85,16 +83,14 @@ class Keywords(object):
             self.spec.update(self._input_object(spec))
         return self.spec
 
-    @keyword
+    @keyword(name=None, tags=("expectations",))
     def clear_expectations(self):
         """Reset the schema for ``request`` and ``response`` back to empty or {}"""
         self.schema['request'] = {}
         self.schema['response'] = {}
         return self.schema
 
-    # Requests
-
-    @keyword
+    @keyword(name=None, tags=("operations",))
     def head(self, endpoint, timeout=None, allow_redirects=None, validate=True,
              headers=None):
         endpoint = self._input_string(endpoint)
@@ -109,7 +105,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword
+    @keyword(name=None, tags=("operations",))
     def options(self, endpoint, timeout=None, allow_redirects=None,
                 validate=True, headers=None):
         endpoint = self._input_string(endpoint)
@@ -124,7 +120,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword
+    @keyword(name=None, tags=("operations",))
     def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
             validate=True, headers=None):
         """Make a ``GET`` request call to a specified ``endpoint``.
@@ -153,7 +149,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword
+    @keyword(name=None, tags=("operations",))
     def post(self, endpoint, body=None, timeout=None, allow_redirects=None,
              validate=True, headers=None):
         """Make a ``POST`` request call to a specified ``endpoint``.
@@ -176,7 +172,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword
+    @keyword(name=None, tags=("operations",))
     def put(self, endpoint, body=None, timeout=None, allow_redirects=None,
             validate=True, headers=None):
         """Make a ``PUT`` request call to a specified ``endpoint``.
@@ -198,7 +194,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword
+    @keyword(name=None, tags=("operations",))
     def patch(self, endpoint, body=None, timeout=None, allow_redirects=None,
               validate=True, headers=None):
         endpoint = self._input_string(endpoint)
@@ -214,7 +210,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword
+    @keyword(name=None, tags=("operations",))
     def delete(self, endpoint, timeout=None, allow_redirects=None,
                validate=True, headers=None):
         """Make a ``DELETE`` request call to a specified ``endpoint``.
@@ -236,9 +232,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    # Assertions
-
-    @keyword
+    @keyword(name=None, tags=("assertions",))
     def missing(self, field):
         """Verify a specific ``field`` does not exist.
 
@@ -258,7 +252,7 @@ class Keywords(object):
         raise AssertionError("Expected '%s' to not exist, but it does." % (
             field))
 
-    @keyword
+    @keyword(name=None, tags=("assertions",))
     def null(self, field, **validations):
         """Verify a specific ``field`` is null.
 
@@ -278,7 +272,7 @@ class Keywords(object):
             values.append(reality)
         return values
 
-    @keyword
+    @keyword(name=None, tags=("assertions",))
     def boolean(self, field, value=None, **validations):
         """Verify a specific ``field`` is a boolean with a specific value.
 
@@ -299,7 +293,7 @@ class Keywords(object):
             values.append(reality)
         return values
 
-    @keyword
+    @keyword(name=None, tags=("assertions",))
     def integer(self, field, *enum, **validations):
         """Verify a specific ``field`` is an Integer with a specific value, or set of values.
 
@@ -327,7 +321,7 @@ class Keywords(object):
             values.append(reality)
         return values
 
-    @keyword
+    @keyword(name=None, tags=("assertions",))
     def number(self, field, *enum, **validations):
         """Verify a specific ``field`` is a number(integer or floating) value, or set of values.
 
@@ -355,7 +349,7 @@ class Keywords(object):
             values.append(reality)
         return values
 
-    @keyword
+    @keyword(name=None, tags=("assertions",))
     def string(self, field, *enum, **validations):
         """Verify a specific ``field`` is a string with a specific value, or set of values.
 
@@ -383,7 +377,7 @@ class Keywords(object):
             values.append(reality)
         return values
 
-    @keyword
+    @keyword(name=None, tags=("assertions",))
     def object(self, field, *enum, **validations):
         """Verify a specific ``field`` is an object with a specific value, or set of values.
 
@@ -411,7 +405,7 @@ class Keywords(object):
             values.append(reality)
         return values
 
-    @keyword
+    @keyword(name=None, tags=("assertions",))
     def array(self, field, *enum, **validations):
         """Verify a returned response is an array with specific validations.
 
@@ -439,9 +433,7 @@ class Keywords(object):
             values.append(reality)
         return values
 
-    # IO keywords
-
-    @keyword
+    @keyword(name=None, tags=("I/O",))
     def input(self, what):
         if what is None:
             return None
@@ -454,7 +446,7 @@ class Keywords(object):
         except ValueError:
             return self._input_string(what)
 
-    @keyword
+    @keyword(name=None, tags=("I/O",))
     def output(self, what="", file_path=None, append=False,
                sort_keys=False):
         """After a REST call, you can output the response.
@@ -503,7 +495,7 @@ class Keywords(object):
                     file_path, e))
         return json
 
-    @keyword
+    @keyword(name=None, tags=("I/O",))
     def rest_instances(self, file_path=None, sort_keys=False):
         if not file_path:
             outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
