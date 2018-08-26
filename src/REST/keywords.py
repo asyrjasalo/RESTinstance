@@ -43,6 +43,23 @@ class Keywords(object):
 
     @keyword(name=None, tags=("settings",))
     def set_client_cert(self, cert):
+        """
+        Sets a client certificate for all the upcoming requests in test suite,
+        for e.g. authentication. Overrides the previous if it was already set.
+
+        Arguments:
+
+        ``cert``:   Either a path to an SSL certificate `.pem` file,
+                    or a (JSON) array containing `cert` and `key`,
+                    or a (Python) list or tuple containing `cert` and `key`.
+                    Respectively, values `"null"` and `${None}`
+                    can be used to clear the setting.
+
+        Returns:
+
+            The current SSL certificate in use either as a Python string,
+            list or a tuple, depending on what was originally given.
+        """
         self.request['cert'] = self._input_client_cert(cert)
         return self.request['cert']
 
