@@ -90,7 +90,7 @@ class Keywords(object):
         self.schema['response'] = {}
         return self.schema
 
-    @keyword(name=None, tags=("operations",))
+    @keyword(name=None, tags=("http",))
     def head(self, endpoint, timeout=None, allow_redirects=None, validate=True,
              headers=None):
         endpoint = self._input_string(endpoint)
@@ -105,7 +105,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword(name=None, tags=("operations",))
+    @keyword(name=None, tags=("http",))
     def options(self, endpoint, timeout=None, allow_redirects=None,
                 validate=True, headers=None):
         endpoint = self._input_string(endpoint)
@@ -120,7 +120,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword(name=None, tags=("operations",))
+    @keyword(name=None, tags=("http",))
     def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
             validate=True, headers=None):
         """Make a ``GET`` request call to a specified ``endpoint``.
@@ -149,7 +149,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword(name=None, tags=("operations",))
+    @keyword(name=None, tags=("http",))
     def post(self, endpoint, body=None, timeout=None, allow_redirects=None,
              validate=True, headers=None):
         """Make a ``POST`` request call to a specified ``endpoint``.
@@ -172,7 +172,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword(name=None, tags=("operations",))
+    @keyword(name=None, tags=("http",))
     def put(self, endpoint, body=None, timeout=None, allow_redirects=None,
             validate=True, headers=None):
         """Make a ``PUT`` request call to a specified ``endpoint``.
@@ -194,7 +194,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword(name=None, tags=("operations",))
+    @keyword(name=None, tags=("http",))
     def patch(self, endpoint, body=None, timeout=None, allow_redirects=None,
               validate=True, headers=None):
         endpoint = self._input_string(endpoint)
@@ -210,7 +210,7 @@ class Keywords(object):
             request['headers'].update(self._input_object(headers))
         return self._request(endpoint, request, validate)['response']
 
-    @keyword(name=None, tags=("operations",))
+    @keyword(name=None, tags=("http",))
     def delete(self, endpoint, timeout=None, allow_redirects=None,
                validate=True, headers=None):
         """Make a ``DELETE`` request call to a specified ``endpoint``.
