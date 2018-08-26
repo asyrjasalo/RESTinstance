@@ -420,6 +420,8 @@ class REST(Keywords):
 
     @staticmethod
     def _input_client_cert(value):
+        if value is None or value == "null":
+            return None
         if isinstance(value, STRING_TYPES):
             return value
         if isinstance(value, (list)):
