@@ -230,7 +230,8 @@ To release the Docker image to DockerHub:
 Credits
 -------
 
-RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__ and was originally written by Anssi Syrjäsalo.
+RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__ and was originally written by
+`Anssi Syrjäsalo <https://github.com/asyrjasalo>`__.
 
 It was presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
 
@@ -257,7 +258,7 @@ We use the following Python excellence under the hood:
 -  `jsonschema <https://github.com/Julian/jsonschema>`__, by Julian
    Berman, for JSON Schema draft-04 validation
 -  `pygments <http://pygments.org>`__, by Georg Brandl et al.,
-   for JSON syntax coloring, in console `Output`
+   for JSON syntax coloring, in terminal `Output`
 -  `requests <https://github.com/requests/requests>`__, by Kenneth
    Reitz et al., for making HTTP requests
 
