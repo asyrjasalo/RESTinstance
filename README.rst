@@ -4,8 +4,8 @@ RESTinstance
 `Robot Framework <http://robotframework.org>`__ test library for (RESTful) JSON APIs
 
 
-Why?
-----
+Core features
+-------------
 
 1. **RESTinstance relies on Robot Framework's language-agnostic,
    clean and minimal syntax, for API tests.** It is neither tied to any
@@ -80,7 +80,7 @@ in the making, best accompanied with the  `keyword documentation <https://asyrja
 Quick start
 ~~~~~~~~~~~
 
-You can run this README.rst as a test suite with Robot Framework.
+Tip: Run this ``README.rst`` as a test suite with Robot Framework.
 
 .. code:: robotframework
 
