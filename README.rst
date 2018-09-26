@@ -24,12 +24,11 @@ Core features
 
 3. **It generates JSON Schema for requests and responses automatically,
    and the schema gets more accurate by your tests.**
-   Output the schema to file and reuse it as expectations in later tests,
-   as most of the methods respond similarly with only minor differences.
-   Or extend the schema further to a full Swagger specification
-   (version 2.0, OpenAPI 3.0.x also planned), which RESTinstance can
-   test requests and responses against. All this leads to reusability,
-   having great test coverage with minimum effort and very clean tests.
+   Output the schema to a file and reuse it as expectations to test the other methods, as most of them respond similarly with only minor differences.
+   Or extend the schema further to a full Swagger spec (version 2.0,
+   OpenAPI 3.0 also planned), which RESTinstance can test requests and
+   responses against. All this leads to reusability, getting great test
+   coverage with minimum number of keystrokes and clean looking tests.
 
 
 Installation
