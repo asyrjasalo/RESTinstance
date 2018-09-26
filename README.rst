@@ -74,7 +74,7 @@ To pass the proxy settings to the container and run it on host network:
 Usage
 -----
 
-There is a `step-by-step tutorial <https://github.com/asyrjasalo/RESTinstance/blob/master/examples>`__  in the making, which is best accompanied with the
+There is a `step by step tutorial <https://github.com/asyrjasalo/RESTinstance/blob/master/examples>`__  in the making, which is best accompanied with the
  `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
 
 Quick start
