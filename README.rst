@@ -45,7 +45,7 @@ On 3.x and 2.7, you can install `the package from PyPi <https://pypi.org/project
 Docker
 ~~~~~~~
 
-`The image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ has Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.0.4>`__:
+`The RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ includes Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.0.4>`__:
 
 ::
 
@@ -58,7 +58,7 @@ Docker
 
 rfdocker
 ~~~~~~~~
-If you are already using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
+If already using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
 just add ``RESTinstance`` to your ``requirements.txt`` and remove the
 commented lines in ``Dockerfile``. It will be installed automatically
 the next time you run ``./rfdocker``.
