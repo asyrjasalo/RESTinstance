@@ -4,8 +4,8 @@ RESTinstance
 `Robot Framework <http://robotframework.org>`__ test library for (RESTful) JSON APIs
 
 
-Core features
--------------
+Advantages
+----------
 
 1. **RESTinstance relies on Robot Framework's language-agnostic,
    clean and minimal syntax, for API tests.** It is neither tied to any
@@ -28,7 +28,7 @@ Core features
    Or extend the schema further to a full Swagger spec (version 2.0,
    OpenAPI 3.0 also planned), which RESTinstance can test requests and
    responses against. All this leads to reusability, getting great test
-   coverage with minimum number of keystrokes and clean looking tests.
+   coverage with minimum number of keystrokes and very clean tests.
 
 
 Installation
@@ -73,7 +73,7 @@ To pass the proxy settings to the container and run it on host network:
 Usage
 -----
 
-There is a `step-by-step tutorial <https://github.com/asyrjasalo/RESTinstance/blob/master/examples>`__ 
+There is a `step-by-step tutorial <https://github.com/asyrjasalo/RESTinstance/blob/master/examples>`__
 in the making, best accompanied with the  `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
 
 Quick start
