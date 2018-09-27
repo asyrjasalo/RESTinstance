@@ -126,7 +126,7 @@ Tip: Run this ``README.rst`` as a test suite with Robot Framework.
     POST with valid params to create a new user, can be output to a file
         POST        /users                    ${json}
         Integer     response status           201
-        [Teardown]  Output  response body     # file_path=${OUTPUTDIR}/new.json
+        [Teardown]  Output  response body     ${OUTPUTDIR}/new_user.demo.json
 
     PUT with valid params to update the existing user, values matter here
         PUT         /users/2                  { "isCoding": true }
@@ -149,7 +149,7 @@ Tip: Run this ``README.rst`` as a test suite with Robot Framework.
     DELETE the existing successfully, save the history of all requests
         DELETE      /users/6                  # status can be any of the below
         Integer     response status           200    202     204
-        Rest instances   ${OUTPUTDIR}/all_cases.json  # all the instances so far
+        Rest instances  ${OUTPUTDIR}/all.demo.json  # all the instances so far
 
 
 Development
