@@ -4,6 +4,7 @@ __pycache__
 
 *.private
 
+*.demo.json
 log.html
 report.html
 output.xml
