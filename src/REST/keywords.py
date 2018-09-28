@@ -478,8 +478,7 @@ class Keywords(object):
             return self._input_string(what)
 
     @keyword(name=None, tags=("I/O",))
-    def output(self, what="", file_path=None, append=False,
-               sort_keys=False):
+    def output(self, what="", file_path=None, append=False, sort_keys=False):
         """After a REST call, you can output the response.
 
         Example:
