@@ -362,12 +362,12 @@ class REST(Keywords):
 
     @staticmethod
     def _input_number(value):
-        if isinstance(value, (float)):
+        if isinstance(value, (float, int)):
             return value
         try:
             json_value = loads(value)
-            if not isinstance(json_value, (float)):
-                raise TypeError("This is not a Python float: %s" % (
+            if not isinstance(json_value, (float, int)):
+                raise TypeError("This is not a Python float or integer: %s" % (
                     json_value))
         except (ValueError, TypeError):
             raise RuntimeError("This is not a JSON number:\n%s" % (value))

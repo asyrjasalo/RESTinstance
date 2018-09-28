@@ -57,4 +57,4 @@ DELETE existing
     DELETE      /users/9
     Integer     response status             200     204
     GET         /users/9
-    Integer     response status             404
+    Number      response status             404
