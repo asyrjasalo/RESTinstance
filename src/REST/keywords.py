@@ -665,7 +665,7 @@ class Keywords(object):
             if response_properties:
                 self._validate_schema(response_properties, response)
         request_properties['body'] = self._new_schema(request['body'])
-        response_properties['query'] = self._new_schema(request['query'])
+        request_properties['query'] = self._new_schema(request['query'])
         response_properties['body'] = self._new_schema(response['body'])
         if 'exampled' in schema and schema['exampled']:
             self._generate_schema_examples(schema, response)
