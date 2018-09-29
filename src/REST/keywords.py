@@ -94,21 +94,31 @@ class Keywords(object):
 
     @keyword(name=None, tags=("expectations",))
     def expect_request(self, schema, replace=False):
-        request_schema = self.schema['properties']['request']
+        new_schema = self._input_object(schema)
         if self._input_boolean(replace):
-            request_schema = self._input_object(schema)
+            self.schema['properties']['request'] = self._input_object(new_schema)
         else:
-            request_schema.update(self._input_object(schema))
-        return request_schema
+            self.schema['properties']['request'].update(new_schema)
+        return self.schema['properties']['request']
 
     @keyword(name=None, tags=("expectations",))
     def expect_response(self, schema, replace=False):
+        new_schema = self._input_object(schema)
+        if self._input_boolean(replace):
+            self.schema['properties']['response'] = new_schema
+        else:
+            self.schema['properties']['response'].update(new_schema)
+        return self.schema['properties']['response']
+
+    @keyword(name=None, tags=("expectations",))
+    def expect_response_body(self, schema, replace=True):
+        new_schema = self._input_object(schema)
         response_schema = self.schema['properties']['response']
         if self._input_boolean(replace):
-            response_schema = self._input_object(schema)
+            response_schema['properties']['body'] = new_schema
         else:
-            response_schema.update(self._input_object(schema))
-        return response_schema
+            response_schema['properties']['body'].update(new_schema)
+        return response_schema['properties']['body']
 
     @keyword(name=None, tags=("expectations",))
     def clear_expectations(self):
@@ -730,7 +740,7 @@ class Keywords(object):
                 try:
                     query = parse_jsonpath(field)
                 except Exception as e:
-                    raise RuntimeError("Invalid JSONPath query '%s':\n%s" % (
+                    raise RuntimeError("Invalid JSONPath query '%s': %s" % (
                         field, e))
                 matches = [str(match.full_path) for match in query.find(value)]
                 if not matches:

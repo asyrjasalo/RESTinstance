@@ -353,10 +353,9 @@ class REST(Keywords):
         try:
             json_value = loads(value)
             if not isinstance(json_value, (bool)):
-                raise TypeError("This is not a Python boolean: %s" % (
-                    json_value))
-        except (ValueError, TypeError):
-            raise RuntimeError("This is not a JSON boolean:\n%s" % (value))
+                raise RuntimeError("Input is not a JSON boolean: %s" % (value))
+        except ValueError:
+            raise RuntimeError("Input is not valid JSON: %s" % (value))
         return json_value
 
     @staticmethod
@@ -366,10 +365,9 @@ class REST(Keywords):
         try:
             json_value = loads(value)
             if not isinstance(json_value, (int)):
-                raise TypeError("This is not a Python integer: %s" % (
-                    json_value))
-        except (ValueError, TypeError):
-            raise RuntimeError("This is not a JSON integer:\n%s" % (value))
+                raise RuntimeError("Input is not a JSON integer: %s" % (value))
+        except ValueError:
+            raise RuntimeError("Input is not valid JSON: %s" % (value))
         return json_value
 
     @staticmethod
@@ -379,10 +377,9 @@ class REST(Keywords):
         try:
             json_value = loads(value)
             if not isinstance(json_value, (float, int)):
-                raise TypeError("This is not a Python float or integer: %s" % (
-                    json_value))
-        except (ValueError, TypeError):
-            raise RuntimeError("This is not a JSON number:\n%s" % (value))
+                raise RuntimeError("Input is not a JSON number: %s" % (value))
+        except ValueError:
+            raise RuntimeError("Input is not valid JSON: %s" % (value))
         return json_value
 
     @staticmethod
@@ -397,44 +394,44 @@ class REST(Keywords):
         try:
             json_value = loads(value)
             if not isinstance(json_value, STRING_TYPES):
-                raise TypeError("This is not a Python string: %s" % (
-                    json_value))
-        except (ValueError, TypeError):
-            raise RuntimeError("This is not a JSON string:\n%s" % (value))
+                raise RuntimeError("Input is not a JSON string: %s" % (value))
+        except ValueError:
+            raise RuntimeError("Input not is valid JSON: %s" % (value))
         return json_value
+
 
     @staticmethod
     def _input_object(value):
         if isinstance(value, (dict)):
             return value
-        if path.isfile(value):
-            json_value = REST._input_json_from_file(value)
-        else:
-            try:
+        try:
+            if path.isfile(value):
+                json_value = REST._input_json_from_file(value)
+            else:
                 json_value = loads(value)
-                if not isinstance(json_value, (dict)):
-                    raise TypeError("This is not a Python dict: %s" % (
-                        json_value))
-            except (ValueError, TypeError):
-                raise RuntimeError("This is neither a JSON object, " +
-                "nor a path to an existing file:\n%s" % (value))
+            if not isinstance(json_value, (dict)):
+                raise RuntimeError("Input or file has no JSON object: %s" % (
+                    value))
+        except ValueError:
+            raise RuntimeError("Input is not valid JSON or a file: %s" % (
+                value))
         return json_value
 
     @staticmethod
     def _input_array(value):
         if isinstance(value, (list)):
             return value
-        if path.isfile(value):
-            json_value = REST._input_json_from_file(value)
-        else:
-            try:
+        try:
+            if path.isfile(value):
+                json_value = REST._input_json_from_file(value)
+            else:
                 json_value = loads(value)
-                if not isinstance(json_value, (list)):
-                    raise TypeError("This is not a Python list: %s" % (
-                        json_value))
-            except (ValueError, TypeError):
-                raise RuntimeError("This is not a JSON array:\n%s" % (
+            if not isinstance(json_value, (list)):
+                raise RuntimeError("Input or file has no JSON array: %s" % (
                     value))
+        except ValueError:
+            raise RuntimeError("Input is not valid JSON or a file: %s" % (
+                value))
         return json_value
 
     @staticmethod
@@ -443,8 +440,7 @@ class REST(Keywords):
             with open(path, encoding="utf-8") as file:
                 return load(file)
         except IOError as e:
-            raise RuntimeError("File '%s' cannot be opened:\n%s" % (
-                path, e))
+            raise RuntimeError("File '%s' cannot be opened:\n%s" % (path, e))
         except ValueError as e:
             try:
                 with open(path, encoding="utf-8") as file:
@@ -462,8 +458,7 @@ class REST(Keywords):
         try:
             return REST._input_json_as_string(dumps(value, ensure_ascii=False))
         except ValueError:
-            raise RuntimeError("This Python value " +
-                "cannot be read as JSON:\n%s" % (value))
+            raise RuntimeError("Input is not valid JSON: %s" % (value))
 
     @staticmethod
     def _input_client_cert(value):
@@ -473,21 +468,21 @@ class REST(Keywords):
             return value
         if isinstance(value, (list)):
             if len(value) != 2:
-                raise RuntimeError("This cert, given as a Python list, " +
-                    "must have length of 2:\n%s" % (value))
+                raise RuntimeError("Client cert given as a (Python) list, " +
+                    "must have length of 2: %s" % (value))
             return value
         try:
             value = loads(value)
             if not isinstance(value, STRING_TYPES + (list)):
-                raise TypeError("This is not a Python string " +
-                    "or a list:\n%s" % (value))
-        except (ValueError, TypeError):
-            raise RuntimeError("This cert must be either " +
-                "a JSON string or an array:\n%s" % (value))
+                raise RuntimeError("Input is not a JSON string " +
+                    "or a list: %s" + (value))
+        except ValueError:
+            raise RuntimeError("Input is not a JSON string " +
+                "or an array: %s " % (value))
         if isinstance(value, (list)):
             if len(value) != 2:
-                raise RuntimeError("This cert, given as a JSON array, " +
-                    "must have length of 2:\n%s" % (value))
+                raise RuntimeError("Client cert given as a JSON array, " +
+                    "must have length of 2: %s" % (value))
         return value
 
     @staticmethod
@@ -497,9 +492,9 @@ class REST(Keywords):
         except RuntimeError:
             value = REST._input_string(value)
             if not path.isfile(value):
-                raise RuntimeError("This SSL verify option is neither " +
-                    "a Python or JSON boolean, nor a path to an existing " +
-                    "CA bundle file:\n%s" % (value))
+                raise RuntimeError("SSL verify option is not " +
+                    "a Python or a JSON boolean or a path to an existing " +
+                    "CA bundle file: %s" % (value))
             return value
 
     @staticmethod
@@ -508,21 +503,20 @@ class REST(Keywords):
             return [value, value]
         if isinstance(value, (list)):
             if len(value) != 2:
-                raise RuntimeError("This timeout, given as a Python list, " +
-                    "must have length of 2:\n%s" % (value))
+                raise RuntimeError("Timeout given as a (Python) list, " +
+                    "must have length of 2: %s" % (value))
             return value
         try:
             value = loads(value)
             if not isinstance(value, (int, float, list)):
-                raise TypeError("This is not a Python integer, " +
-                    "float or a list:\n%s" % (value))
-        except (ValueError, TypeError):
-            raise RuntimeError("This timeout must be either a JSON integer, " +
-                "number or an array:\n%s" % (value))
+                raise RuntimeError("Input is not a JSON integer, " +
+                    "number or a list: %s" % (value))
+        except ValueError:
+            raise RuntimeError("Input is not valid JSON: %s" % (value))
         if isinstance(value, (list)):
             if len(value) != 2:
-                raise RuntimeError("This timeout, given as a JSON array, " +
-                    "must have length of 2:\n" % (value))
+                raise RuntimeError("Timeout given as a JSON array, " +
+                    "must have length of 2: %s" % (value))
             else:
                 return value
         return [value, value]
