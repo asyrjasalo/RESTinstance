@@ -311,10 +311,19 @@ class REST(Keywords):
         if not self.request['sslVerify']:
             disable_warnings()
         self.schema = {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "type": "object",
+            "properties": {
+                "request": {
+                    "type": "object",
+                    "properties": {}
+                },
+                "response": {
+                    "type": "object",
+                    "properties": {}
+                }
+            },
             "exampled": True,
-            "version": "draft04",
-            "request": {},
-            "response": {}
         }
         self.schema.update(self._input_object(schema))
         self.spec = {}

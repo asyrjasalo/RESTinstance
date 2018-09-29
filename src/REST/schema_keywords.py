@@ -17,39 +17,39 @@ GENSON_GENERATED_KEYWORDS = ("$schema", "anyOf", "items", "patternProperties",
 
 SCHEMA_KEYWORDS = {
     "common": {
-        "draft04": ("enum", "type", "allOf", "anyOf", "oneOf", "not",
+        "draft-04": ("enum", "type", "allOf", "anyOf", "oneOf", "not",
                    "definitions"),
-        "draft06": ("enum", "type", "allOf", "anyOf", "oneOf", "not",
+        "draft-06": ("enum", "type", "allOf", "anyOf", "oneOf", "not",
                    "definitions", "const", "contains", "propertyNames")
     },
     "integer": {
-        "draft04": ("multipleOf", "maximum", "exclusiveMaximum", "minimum",
+        "draft-04": ("multipleOf", "maximum", "exclusiveMaximum", "minimum",
                    "exclusiveMinimum"),
-        "draft06": ("multipleOf", "maximum", "exclusiveMaximum", "minimum",
+        "draft-06": ("multipleOf", "maximum", "exclusiveMaximum", "minimum",
                    "exclusiveMinimum")
     },
     "number": {
-        "draft04": ("multipleOf", "maximum", "exclusiveMaximum", "minimum",
+        "draft-04": ("multipleOf", "maximum", "exclusiveMaximum", "minimum",
                    "exclusiveMinimum"),
-        "draft06": ("multipleOf", "maximum", "exclusiveMaximum", "minimum",
+        "draft-06": ("multipleOf", "maximum", "exclusiveMaximum", "minimum",
                    "exclusiveMinimum")
     },
     "string": {
-        "draft04": ("format", "maxLength", "minLength", "pattern"),
-        "draft06": ("format", "maxLength", "minLength", "pattern")
+        "draft-04": ("format", "maxLength", "minLength", "pattern"),
+        "draft-06": ("format", "maxLength", "minLength", "pattern")
     },
     "object": {
-        "draft04": ("maxProperties", "minProperties", "required",
+        "draft-04": ("maxProperties", "minProperties", "required",
                    "additionalProperties", "properties",
                    "patternProperties", "dependencies"),
-        "draft06": ("maxProperties", "minProperties", "required",
+        "draft-06": ("maxProperties", "minProperties", "required",
                    "additionalProperties", "properties",
                    "patternProperties", "dependencies")
     },
     "array": {
-        "draft04": ("additionalItems", "items", "maxItems", "minItems",
+        "draft-04": ("additionalItems", "items", "maxItems", "minItems",
                    "uniqueItems"),
-        "draft06": ("additionalItems", "items", "maxItems", "minItems",
+        "draft-06": ("additionalItems", "items", "maxItems", "minItems",
                    "uniqueItems")
     }
 }

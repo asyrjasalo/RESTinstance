@@ -92,19 +92,21 @@ class Keywords(object):
 
     @keyword(name=None, tags=("expectations",))
     def expect_request(self, schema, replace=False):
+        request_schema = self.schema['properties']['request']
         if self._input_boolean(replace):
-            self.schema['response'] = self._input_object(schema)
+            request_schema = self._input_object(schema)
         else:
-            self.schema['request'].update(self._input_object(schema))
-        return self.schema['request']
+            request_schema.update(self._input_object(schema))
+        return request_schema
 
     @keyword(name=None, tags=("expectations",))
     def expect_response(self, schema, replace=False):
+        response_schema = self.schema['properties']['response']
         if self._input_boolean(replace):
-            self.schema['response'] = self._input_object(schema)
+            response_schema = self._input_object(schema)
         else:
-            self.schema['response'].update(self._input_object(schema))
-        return self.schema['response']
+            response_schema.update(self._input_object(schema))
+        return response_schema
 
     @keyword(name=None, tags=("expectations",))
     def expect_spec(self, spec, replace=False):
@@ -117,8 +119,14 @@ class Keywords(object):
     @keyword(name=None, tags=("expectations",))
     def clear_expectations(self):
         """Reset the schema for ``request`` and ``response`` back to empty or {}"""
-        self.schema['request'] = {}
-        self.schema['response'] = {}
+        self.schema['properties']['request'] = {
+            "type": "object",
+            "properties": {}
+        }
+        self.schema['properties']['response'] = {
+            "type": "object",
+            "properties": {}
+        }
         return self.schema
 
     @keyword(name=None, tags=("http",))
@@ -478,6 +486,50 @@ class Keywords(object):
             return self._input_string(what)
 
     @keyword(name=None, tags=("I/O",))
+    def output_schema(self, what="", file_path=None, append=False,
+                      sort_keys=False):
+        message = "\n%s as JSON is:" % (what.__class__.__name__)
+        if what == "":
+            message = "\n\nThe current instance's JSON Schema is:"
+            try:
+                json = deepcopy(self._last_instance_or_error()['schema'])
+                del json['$schema']
+                del json['exampled']
+            except IndexError:
+                raise RuntimeError(no_instances_error)
+        elif isinstance(what, (STRING_TYPES)):
+            try:
+                json = self._new_schema(loads(what))
+            except ValueError:
+                self._last_instance_or_error()
+                message = "\n\n%s JSON Schema is:" % (what)
+                matches = self._find_by_field(what)
+                if len(matches) > 1:
+                    json = [found['schema'] for found in matches]
+                else:
+                    json = matches[0]['schema']
+        else:
+            json = self._new_schema(what)
+        sort_keys = self._input_boolean(sort_keys)
+        if not file_path:
+            self.log_json(json, message, sort_keys=sort_keys)
+        else:
+            content = dumps(json, ensure_ascii=False, indent=4,
+                            separators=(',', ': ' ), sort_keys=sort_keys)
+            write_mode = 'a' if self._input_boolean(append) else 'w'
+            try:
+                with open(path.join(getcwd(), file_path), write_mode,
+                          encoding="utf-8") as file:
+                    if IS_PYTHON_2:
+                        content = unicode(content)
+                    file.write(content)
+            except IOError as e:
+                raise RuntimeError("Error outputting to file '%s':\n%s" % (
+                    file_path, e))
+        return json
+
+
+    @keyword(name=None, tags=("I/O",))
     def output(self, what="", file_path=None, append=False, sort_keys=False):
         """After a REST call, you can output the response.
 
@@ -491,7 +543,9 @@ class Keywords(object):
         if what == "":
             message = "\n\nThe current instance as JSON is:"
             try:
-                json = self._last_instance_or_error()
+                json = deepcopy(self._last_instance_or_error())
+                del json['schema']
+                del json['spec']
             except IndexError:
                 raise RuntimeError(no_instances_error)
         elif isinstance(what, (STRING_TYPES)):
@@ -601,14 +655,16 @@ class Keywords(object):
             'headers': dict(response.headers)
         }
         schema = deepcopy(self.schema)
+        request_properties = schema['properties']['request']['properties']
+        response_properties = schema['properties']['response']['properties']
         if validate_schema:
-            if schema['request']:
-                self._validate_schema(schema['request'], request)
-            if schema['response']:
-                self._validate_schema(schema['response'], response)
-        schema['request']['body'] = self._new_schema(request['body'])
-        schema['request']['query'] = self._new_schema(request['query'])
-        schema['response']['body'] = self._new_schema(response['body'])
+            if request_properties:
+                self._validate_schema(request_properties, request)
+            if response_properties:
+                self._validate_schema(response_properties, response)
+        request_properties['body'] = self._new_schema(request['body'])
+        response_properties['query'] = self._new_schema(request['query'])
+        response_properties['body'] = self._new_schema(response['body'])
         if 'exampled' in schema and schema['exampled']:
             self._generate_schema_examples(schema, response)
         return {
@@ -631,16 +687,12 @@ class Keywords(object):
 
     def _assert_schema(self, schema, reality):
         try:
-            schema_version = self.schema['version']
-            if schema_version == 'draft04':
-                validator = Draft4Validator(schema,
-                    format_checker=FormatChecker())
-            elif schema_version == 'draft06':
+            if "draft-06" in self.schema['$schema']:
                  validator = Draft6Validator(schema,
                     format_checker=FormatChecker())
             else:
-                raise RuntimeError("Unknown JSON Schema version " +
-                    "was given:\n%s" % (schema_version))
+                validator = Draft4Validator(schema,
+                    format_checker=FormatChecker())
             validator.validate(reality)
         except ValidationError as e:
             raise AssertionError(e)
@@ -652,7 +704,7 @@ class Keywords(object):
 
     def _generate_schema_examples(self, schema, response):
         body = response['body']
-        schema = schema['response']['body']
+        schema = schema['properties']['response']['properties']['body']
         if isinstance(body, (dict)):
             for field in body:
                 schema['properties'][field]['example'] = body[field]
@@ -666,7 +718,8 @@ class Keywords(object):
         if field.startswith("$"):
             value = last_instance['response']['body']
             if return_schema:
-                schema = last_instance['schema']['response']['body']
+                res_schema = last_instance['schema']['properties']['response']
+                schema = res_schema['properties']['body']
             if field == "$":
                 paths = []
             else:
@@ -685,7 +738,7 @@ class Keywords(object):
         else:
             value = last_instance
             if return_schema:
-                schema = last_instance['schema']
+                schema = last_instance['schema']['properties']
             path = field.split()
             paths.append(path)
         return [self._find_by_path(field, path, value, schema, print_found)
@@ -753,12 +806,16 @@ class Keywords(object):
 
     def _set_type_validations(self, json_type, schema, validations):
         if validations:
-            kws = list(SCHEMA_KEYWORDS['common'][self.schema['version']])
-            kws.extend(SCHEMA_KEYWORDS[json_type][self.schema['version']])
+            if "draft-06" in self.schema['$schema']:
+                schema_version = "draft-06"
+            else:
+                schema_version = "draft-04"
+            kws = list(SCHEMA_KEYWORDS['common'][schema_version])
+            kws.extend(SCHEMA_KEYWORDS[json_type][schema_version])
         for validation in validations:
             if validation not in kws:
                 raise RuntimeError("Unknown JSON Schema (%s)" % (
-                    self.schema['version']) + " validation keyword " +
+                    schema_version) + " validation keyword " +
                 "for %s:\n%s" % (json_type, validation))
             schema[validation] = self.input(validations[validation])
         schema.update({ "type": json_type })
