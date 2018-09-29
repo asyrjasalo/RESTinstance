@@ -93,45 +93,38 @@ class Keywords(object):
         return self.request['headers']
 
     @keyword(name=None, tags=("expectations",))
-    def expect_request(self, schema, replace=False):
-        new_schema = self._input_object(schema)
-        if self._input_boolean(replace):
-            self.schema['properties']['request'] = self._input_object(new_schema)
+    def expect_request(self, schema, merge=False):
+        schema = self._input_object(schema)
+        if "properties" not in schema:
+            schema = { "properties": schema }
+        if self._input_boolean(merge):
+            new_schema = SchemaBuilder(schema_uri=False)
+            new_schema.add_schema(self.schema['properties']['request'])
+            new_schema.add_schema(schema)
+            self.schema['properties']['request'] = new_schema.to_schema()
         else:
-            self.schema['properties']['request'].update(new_schema)
+            self.schema['properties']['request'] = schema
         return self.schema['properties']['request']
 
     @keyword(name=None, tags=("expectations",))
-    def expect_response(self, schema, replace=False):
-        new_schema = self._input_object(schema)
-        if self._input_boolean(replace):
-            self.schema['properties']['response'] = new_schema
+    def expect_response(self, schema, merge=False):
+        schema = self._input_object(schema)
+        if "properties" not in schema:
+            schema = { "properties": schema }
+        if self._input_boolean(merge):
+            new_schema = SchemaBuilder(schema_uri=False)
+            new_schema.add_schema(self.schema['properties']['response'])
+            new_schema.add_schema(schema)
+            self.schema['properties']['response'] = new_schema.to_schema()
         else:
-            self.schema['properties']['response'].update(new_schema)
+            self.schema['properties']['response'] = schema
         return self.schema['properties']['response']
 
     @keyword(name=None, tags=("expectations",))
-    def expect_response_body(self, schema, replace=True):
-        new_schema = self._input_object(schema)
+    def expect_response_body(self, schema):
         response_schema = self.schema['properties']['response']
-        if self._input_boolean(replace):
-            response_schema['properties']['body'] = new_schema
-        else:
-            response_schema['properties']['body'].update(new_schema)
+        response_schema['properties']['body'].update(self._input_object(schema))
         return response_schema['properties']['body']
-
-    @keyword(name=None, tags=("expectations",))
-    def clear_expectations(self):
-        """Reset the schema for ``request`` and ``response`` back to empty or {}"""
-        self.schema['properties']['request'] = {
-            "type": "object",
-            "properties": {}
-        }
-        self.schema['properties']['response'] = {
-            "type": "object",
-            "properties": {}
-        }
-        return self.schema
 
     @keyword(name=None, tags=("http",))
     def head(self, endpoint, timeout=None, allow_redirects=None, validate=True,
