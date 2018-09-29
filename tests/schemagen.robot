@@ -1,5 +1,6 @@
 *** Settings ***
 Resource        resources/mounterest.robot
+Library         REST                    mounterest:${api_port}/
 Test setup      Reset state
 
 

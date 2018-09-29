@@ -1,5 +1,6 @@
 *** Settings ***
 Resource        resources/mounterest.robot
+Library         REST                        mounterest:${api_port}/
 Suite setup     Create mountebank proxy
 Test setup      Reset state
 

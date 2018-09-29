@@ -1,6 +1,6 @@
 *** Settings ***
 Resource        resources/mounterest.robot
-Suite setup     Expect spec                     ${CURDIR}/swagger/spec_20.yaml
+Library         REST   mounterest:${api_port}/  spec=${CURDIR}/swagger/spec_20.json
 Suite teardown  Rest instances                  ${OUTPUTDIR}/spec.json
 
 
