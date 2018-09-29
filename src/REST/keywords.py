@@ -504,7 +504,7 @@ class Keywords(object):
                       sort_keys=False):
         message = "\n%s as JSON is:" % (what.__class__.__name__)
         if what == "":
-            message = "\n\nThe current instance's JSON Schema is:"
+            message = "\n\nThe instance's JSON Schema is:"
             try:
                 json = self._last_instance_or_error()['schema']
             except IndexError:
@@ -553,7 +553,7 @@ class Keywords(object):
         """
         message = "\n%s as JSON is:" % (what.__class__.__name__)
         if what == "":
-            message = "\n\nThe current instance as JSON is:"
+            message = "\n\nThe instance as JSON is:"
             try:
                 json = deepcopy(self._last_instance_or_error())
                 json.pop('schema')
