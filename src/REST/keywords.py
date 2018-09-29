@@ -111,14 +111,6 @@ class Keywords(object):
         return response_schema
 
     @keyword(name=None, tags=("expectations",))
-    def expect_spec(self, spec, replace=False):
-        if self._input_boolean(replace):
-            self.spec = self._input_object(spec)
-        else:
-            self.spec.update(self._input_object(spec))
-        return self.spec
-
-    @keyword(name=None, tags=("expectations",))
     def clear_expectations(self):
         """Reset the schema for ``request`` and ``response`` back to empty or {}"""
         self.schema['properties']['request'] = {
