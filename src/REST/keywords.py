@@ -328,6 +328,8 @@ class Keywords(object):
             schema = { "type": "boolean" }
             if value is not None:
                 schema['enum'] = [self._input_boolean(value)]
+            elif self._should_add_examples():
+                schema['examples'] = [reality]
             skip = self._input_boolean(validations.pop('skip', False))
             if not skip:
                 self._assert_schema(schema, reality)
@@ -357,6 +359,8 @@ class Keywords(object):
                     value = self._input_integer(value)
                     if value not in schema['enum']:
                         schema['enum'].append(value)
+            elif self._should_add_examples():
+                schema['examples'] = [reality]
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -385,6 +389,8 @@ class Keywords(object):
                     value = self._input_number(value)
                     if value not in schema['enum']:
                         schema['enum'].append(value)
+            elif self._should_add_examples():
+                schema['examples'] = [reality]
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -413,6 +419,8 @@ class Keywords(object):
                     value = self._input_string(value)
                     if value not in schema['enum']:
                         schema['enum'].append(value)
+            elif self._should_add_examples():
+                schema['examples'] = [reality]
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -441,6 +449,8 @@ class Keywords(object):
                     value = self._input_object(value)
                     if value not in schema['enum']:
                         schema['enum'].append(value)
+            elif self._should_add_examples():
+                schema['examples'] = [reality]
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -469,6 +479,8 @@ class Keywords(object):
                     value = self._input_array(value)
                     if value not in schema['enum']:
                         schema['enum'].append(value)
+            elif self._should_add_examples():
+                schema['examples'] = [reality]
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -796,10 +808,11 @@ class Keywords(object):
                 return schema['items'][-1]
         if key not in schema:
             schema[key] = self._new_schema(value)
-            if 'examples' in self.schema:
-                if isinstance(self.schema['examples'], (list)):
-                    schema[key]['examples'] = [value]
         return schema[key]
+
+    def _should_add_examples(self):
+        return 'examples' in self.schema and isinstance(
+            self.schema['examples'], (list))
 
     def _set_type_validations(self, json_type, schema, validations):
         if validations:

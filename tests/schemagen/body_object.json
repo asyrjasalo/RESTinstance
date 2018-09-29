@@ -75,6 +75,9 @@
         },
         "email": {
             "default": "Sincere@april.biz",
+            "examples": [
+                "Sincere@april.biz"
+            ],
             "format": "email",
             "type": "string"
         },
