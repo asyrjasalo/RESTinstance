@@ -1,8 +1,7 @@
 *** Settings ***
 Resource        resources/mounterest.robot
-Library         REST   mounterest:${api_port}/  spec=${CURDIR}/swagger/spec_20.json
-Suite teardown  Rest instances                  ${OUTPUTDIR}/spec.json
-
+Library         REST                            mounterest:${api_port}/
+...             spec=${CURDIR}/swagger/spec_20.yaml
 
 *** Test Cases ***
 GET to existing
