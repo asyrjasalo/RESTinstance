@@ -315,6 +315,8 @@ class REST(Keywords):
         self.schema = {
             "$schema": "http://json-schema.org/draft-04/schema#",
             "type": "object",
+            "default": True,
+            "examples": [],
             "properties": {
                 "request": {
                     "type": "object",
@@ -324,8 +326,7 @@ class REST(Keywords):
                     "type": "object",
                     "properties": {}
                 }
-            },
-            "exampled": True,
+            }
         }
         self.schema.update(self._input_object(schema))
         self.spec = {}

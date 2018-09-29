@@ -494,9 +494,7 @@ class Keywords(object):
         if what == "":
             message = "\n\nThe current instance's JSON Schema is:"
             try:
-                json = deepcopy(self._last_instance_or_error()['schema'])
-                del json['$schema']
-                del json['exampled']
+                json = self._last_instance_or_error()['schema']
             except IndexError:
                 raise RuntimeError(no_instances_error)
         elif isinstance(what, (STRING_TYPES)):
@@ -546,8 +544,8 @@ class Keywords(object):
             message = "\n\nThe current instance as JSON is:"
             try:
                 json = deepcopy(self._last_instance_or_error())
-                del json['schema']
-                del json['spec']
+                json.pop('schema')
+                json.pop('spec')
             except IndexError:
                 raise RuntimeError(no_instances_error)
         elif isinstance(what, (STRING_TYPES)):
@@ -667,8 +665,8 @@ class Keywords(object):
         request_properties['body'] = self._new_schema(request['body'])
         request_properties['query'] = self._new_schema(request['query'])
         response_properties['body'] = self._new_schema(response['body'])
-        if 'exampled' in schema and schema['exampled']:
-            self._generate_schema_examples(schema, response)
+        if 'default' in schema and schema['default']:
+            self._add_defaults_to_schema(schema, response)
         return {
             'request': request,
             'response': response,
@@ -704,14 +702,14 @@ class Keywords(object):
         builder.add_object(value)
         return builder.to_schema()
 
-    def _generate_schema_examples(self, schema, response):
+    def _add_defaults_to_schema(self, schema, response):
         body = response['body']
         schema = schema['properties']['response']['properties']['body']
         if isinstance(body, (dict)):
             for field in body:
-                schema['properties'][field]['example'] = body[field]
+                schema['properties'][field]['default'] = body[field]
         elif isinstance(body, (list)):
-            schema['example'] = body
+            schema['default'] = body
 
     def _find_by_field(self, field, return_schema=True, print_found=True):
         last_instance = self._last_instance_or_error()
@@ -798,13 +796,10 @@ class Keywords(object):
                 return schema['items'][-1]
         if key not in schema:
             schema[key] = self._new_schema(value)
-            if self._should_add_examples():
-                schema[key]['example'] = value
+            if 'examples' in self.schema:
+                if isinstance(self.schema['examples'], (list)):
+                    schema[key]['examples'] = [value]
         return schema[key]
-
-    def _should_add_examples(self):
-        schema = self._last_instance_or_error()['schema']
-        return 'exampled' in schema and schema['exampled']
 
     def _set_type_validations(self, json_type, schema, validations):
         if validations:

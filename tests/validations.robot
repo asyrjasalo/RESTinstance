@@ -1,6 +1,6 @@
 *** Settings ***
 Resource        resources/mounterest.robot
-Library         REST        schema={ "exampled": false }
+Library         REST        schema={ "examples": null }
 Suite setup     Set expectations
 Test setup      Reset state
 

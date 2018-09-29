@@ -1,4 +1,7 @@
 {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "default": true,
+    "examples": [],
     "properties": {
         "request": {
             "properties": {
@@ -6,9 +9,6 @@
                     "type": "null"
                 },
                 "query": {
-                    "example": {
-                        "_limit": "5"
-                    },
                     "properties": {
                         "_limit": {
                             "enum": [
@@ -28,7 +28,7 @@
         "response": {
             "properties": {
                 "body": {
-                    "example": [
+                    "default": [
                         {
                             "address": {
                                 "city": "Gwenborough",
@@ -338,17 +338,6 @@
                         }
                     ],
                     "type": "array"
-                },
-                "query": {
-                    "properties": {
-                        "_limit": {
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "_limit"
-                    ],
-                    "type": "object"
                 }
             },
             "type": "object"

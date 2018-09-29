@@ -1,4 +1,7 @@
 {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "default": true,
+    "examples": [],
     "properties": {
         "request": {
             "properties": {
@@ -22,6 +25,9 @@
                         "name"
                     ],
                     "type": "object"
+                },
+                "query": {
+                    "type": "object"
                 }
             },
             "type": "object"
@@ -31,11 +37,11 @@
                 "body": {
                     "properties": {
                         "id": {
-                            "example": 11,
+                            "default": 11,
                             "type": "integer"
                         },
                         "name": {
-                            "example": "Gil Alexander",
+                            "default": "Gil Alexander",
                             "type": "string"
                         }
                     },
@@ -43,9 +49,6 @@
                         "id",
                         "name"
                     ],
-                    "type": "object"
-                },
-                "query": {
                     "type": "object"
                 }
             },

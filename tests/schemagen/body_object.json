@@ -1,7 +1,7 @@
 {
     "properties": {
         "address": {
-            "example": {
+            "default": {
                 "city": "Gwenborough",
                 "geo": {
                     "lat": "-37.3159",
@@ -50,7 +50,7 @@
             "type": "object"
         },
         "company": {
-            "example": {
+            "default": {
                 "bs": "harness real-time e-markets",
                 "catchPhrase": "Multi-layered client-server neural-net",
                 "name": "Romaguera-Crona"
@@ -74,28 +74,28 @@
             "type": "object"
         },
         "email": {
-            "example": "Sincere@april.biz",
+            "default": "Sincere@april.biz",
             "format": "email",
             "type": "string"
         },
         "id": {
-            "example": 1,
+            "default": 1,
             "type": "integer"
         },
         "name": {
-            "example": "Leanne Graham",
+            "default": "Leanne Graham",
             "type": "string"
         },
         "phone": {
-            "example": "1-770-736-8031 x56442",
+            "default": "1-770-736-8031 x56442",
             "type": "string"
         },
         "username": {
-            "example": "Bret",
+            "default": "Bret",
             "type": "string"
         },
         "website": {
-            "example": "hildegard.org",
+            "default": "hildegard.org",
             "type": "string"
         }
     },
