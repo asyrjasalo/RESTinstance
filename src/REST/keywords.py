@@ -912,15 +912,10 @@ class Keywords(object):
         Skip is intented mainly for debugging the updated schema before aborting.
 
         *Examples*
-        | `GET`  | /users?_limit=10 | | | # https://jsonplaceholder.typicode.com/users |
-        | `Array` | response body | |
-        | `Array` | $[0] | | | # same as above |
-        | `Array` | $[*] | minItems=1 | maxItems=10 |
-
-        | | `GET`  | /users/1 | | # https://jsonplaceholder.typicode.com/users/1 |
-        | ${schema} | Object | schema response body |
-        | | `GET`  | /users | | # https://jsonplaceholder.typicode.com/users |
-        | | `Array` | $[*] | items=${schema} | # the data model is the same |
+        | `GET`  | /users?_limit=10 | | | | # https://jsonplaceholder.typicode.com/users |
+        | `Array` | response body | | |
+        | `Array` | $ | | | | # same as above |
+        | `Array` | $ | minItems=1 | maxItems=10 | uniqueItems=true |
         """
         values = []
         for found in self._find_by_field(field):
