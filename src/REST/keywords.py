@@ -409,7 +409,7 @@ class Keywords(object):
 
         *Examples*
 
-        | `PUT` | /users/2 | { "name": "Julie Langford" } |
+        | `PUT` | /users/2 | { "name": "Julie Langford", "username": "jlangfor" } |
         | `PUT` | /users/2 | ${dict} |
         """
         endpoint = self._input_string(endpoint)
@@ -944,6 +944,32 @@ class Keywords(object):
 
     @keyword(name=None, tags=("I/O",))
     def input(self, what):
+        """*Converts the input to JSON and returns it.*
+
+        Any of the following is accepted:
+
+        - The path to JSON file
+        - Any scalar that can be interpreted as JSON
+        - A dictionary or a list
+
+        *Examples*
+
+        | ${payload} | `Input` | ${CURDIR}/payload.json |
+
+        | ${object} | `Input` | { "name": "Julie Langford", "username": "jlangfor" } |
+        | ${object} | `Input` | ${dict} |
+
+        | ${array} | `Input` | ["name", "username"] |
+        | ${array} | `Input` | ${list} |
+
+        | ${boolean} | `Input` | true |
+        | ${boolean} | `Input` | ${True} |
+
+        | ${number} | `Input` | 2.0 |
+        | ${number} | `Input` | ${2.0} |
+
+        | ${string} | `Input` | Quotes are optional for strings |
+        """
         if what is None:
             return None
         if not isinstance(what, STRING_TYPES):
@@ -983,11 +1009,11 @@ class Keywords(object):
 
         *Examples*
 
-        | Output Schema | response | ${CURDIR}/response_schema.json | # Write a file to use with `Expect Response` |
-        | Output Schema | response body | ${CURDIR}/response_body_schema.json | # Write a file to use with `Expect Response Body` |
+        | `Output Schema` | response | ${CURDIR}/response_schema.json | # Write a file to use with `Expect Response` |
+        | `Output Schema` | response body | ${CURDIR}/response_body_schema.json | # Write a file to use with `Expect Response Body` |
 
-        | Output Schema | $.email | # only the schema for one response body property |
-        | Output Schema | $..geo | # only the schema for the nested response body property |
+        | `Output Schema` | $.email | # only the schema for one response body property |
+        | `Output Schema` | $..geo | # only the schema for the nested response body property |
         """
         message = "\n%s as JSON is:" % (what.__class__.__name__)
         if what == "":
@@ -1054,17 +1080,17 @@ class Keywords(object):
 
         *Examples*
 
-        | Output | response | # only the response is output |
-        | Output | response body | # only the response body is output |
-        | Output | $.email | # only the response body property is output |
-        | Output | $..geo | # only the nested response body property is output |
+        | `Output` | response | # only the response is output |
+        | `Output` | response body | # only the response body is output |
+        | `Output` | $.email | # only the response body property is output |
+        | `Output` | $..geo | # only the nested response body property is output |
 
-        | Output | request | # only the request is output |
-        | Output | request headers | # only the request headers are output |
-        | Output | request headers Authentication | # only this header is output |
+        | `Output` | request | # only the request is output |
+        | `Output` | request headers | # only the request headers are output |
+        | `Output` | request headers Authentication | # only this header is output |
 
-        | Output | response body | ${CURDIR}/response_body.json | | # write the response body to a file |
-        | Output | response seconds | ${CURDIR}/response_delays.log | append=true | # keep track of response delays in a file |
+        | `Output` | response body | ${CURDIR}/response_body.json | | # write the response body to a file |
+        | `Output` | response seconds | ${CURDIR}/response_delays.log | append=true | # keep track of response delays in a file |
         """
         message = "\n%s as JSON is:" % (what.__class__.__name__)
         if what == "":
@@ -1108,6 +1134,26 @@ class Keywords(object):
 
     @keyword(name=None, tags=("I/O",))
     def rest_instances(self, file_path=None, sort_keys=False):
+        """*Writes the instances as JSON to a file.*
+
+        The instances are written to file as a JSON array of JSON objects,
+        each object representing a single instance, and having three properties:
+
+        - the request
+        - the response
+        - the schema for both, which have been updated according to the tests
+
+        The file is created if it does not exist, otherwise it is truncated.
+
+        *Options*
+
+        ``sort_keys``: If true, the instances are sorted alphabetically by
+        property names.
+
+        *Examples*
+
+        | `Rest Instances` | ${CURDIR}/log.json |
+        """
         if not file_path:
             outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
             if self.request['netloc']:
