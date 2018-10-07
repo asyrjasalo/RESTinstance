@@ -1291,23 +1291,26 @@ class Keywords(object):
         if field.startswith("$"):
             value = last_instance['response']['body']
             if return_schema:
-                res_schema = last_instance['schema']['properties']['response']
-                schema = res_schema['properties']['body']
+                schema = last_instance['schema']['properties']['response']
+                schema = schema['properties']['body']
             if field == "$":
-                paths = []
-            else:
-                try:
-                    query = parse_jsonpath(field)
-                except Exception as e:
-                    raise RuntimeError("Invalid JSONPath query '%s': %s" % (
-                        field, e))
-                matches = [str(match.full_path) for match in query.find(value)]
-                if not matches:
-                    raise AssertionError("JSONPath query '%s' " % (field) +
-                        "did not match anything.")
-                for match in matches:
-                    path = match.replace("[", "").replace("]", "").split('.')
-                    paths.append(path)
+                return [{
+                    'path': ["response", "body"],
+                    'reality': value,
+                    'schema': schema
+                }]
+            try:
+                query = parse_jsonpath(field)
+            except Exception as e:
+                raise RuntimeError("Invalid JSONPath query '%s': %s" % (
+                    field, e))
+            matches = [str(match.full_path) for match in query.find(value)]
+            if not matches:
+                raise AssertionError("JSONPath query '%s' " % (field) +
+                    "did not match anything.")
+            for match in matches:
+                path = match.replace("[", "").replace("]", "").split('.')
+                paths.append(path)
         else:
             value = last_instance
             if return_schema:
