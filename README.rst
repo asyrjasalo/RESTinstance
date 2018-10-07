@@ -38,7 +38,7 @@ Three installation methods are supported. Pick the one that suits you best.
 
 As a Python package
 ~~~~~~~~~~~~~~~~~~~
-On 3.x and 2.7, you can install or upgrade `the package from PyPi <https://pypi.org/project/RESTinstance>`__:
+On 3.x and 2.7, you can install or upgrade `from PyPi <https://pypi.org/project/RESTinstance>`__:
 
 ::
 
@@ -47,7 +47,7 @@ On 3.x and 2.7, you can install or upgrade `the package from PyPi <https://pypi.
 As a Docker image
 ~~~~~~~~~~~~~~~~~
 
-`The RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ includes Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.0.4>`__:
+`The RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ contains Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.0.4>`__:
 
 ::
 
@@ -61,11 +61,10 @@ As a Docker image
 Using rfdocker
 ~~~~~~~~~~~~~~
 If already using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
-just add ``RESTinstance`` to your ``requirements.txt`` and remove the
-commented lines in ``Dockerfile``. It will be installed automatically
-the next time ``./rfdocker`` is ran.
+add ``RESTinstance`` to ``requirements.txt`` and remove the commented lines
+in ``Dockerfile``. It will be installed next time ``./rfdocker`` is ran.
 
-To pass the proxy settings to the container and run it on host network:
+To pass the proxy settings to the container and run it on the host network:
 
 ::
 
