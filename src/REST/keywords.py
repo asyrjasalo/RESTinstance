@@ -118,7 +118,7 @@ class Keywords(object):
 
         *Examples*
 
-        | `Expect Request` | ${CURDIR}/valid_payload.json | # See `Output Schema` |
+        | `Expect Request` | ${CURDIR}/valid_payload.json | | # See `Output Schema` |
         | `Expect Request` | { "body": { "required": ["id"] } } | merge=true |
         """
         schema = self._input_object(schema)
@@ -161,7 +161,7 @@ class Keywords(object):
 
         *Examples*
 
-        | `Expect Response` | ${CURDIR}/endpoint_data_model.json | # See `Output Schema` |
+        | `Expect Response` | ${CURDIR}/endpoint_data_model.json | | # See `Output Schema` |
         | `Expect Response` | { "headers": { "required": ["Via"] } } | merge=true |
         | `Expect Response` | { "seconds": { "maximum": "1.0" } } | merge=true |
         """
@@ -610,12 +610,12 @@ class Keywords(object):
 
         *Examples*
 
-        | `PUT`  | /users/1 | { "verified_email": true } | | # https://jsonplaceholder.typicode.com/users/1 |
-        | `Boolean` | response body verified_email | | | # value is optional |
+        | `PUT`  | /users/1 | { "verified_email": true } | | | # https://jsonplaceholder.typicode.com/users/1 |
+        | `Boolean` | response body verified_email | | | | # value is optional |
         | `Boolean` | response body verified_email | true |
-        | `Boolean` | response body verified_email | ${True} | | # same as above |
-        | `Boolean` | $.verified_email | true | | # JSONPath alternative |
-        | `Boolean` | $.verified_email | true | enum=[1, "1"] skip=true | # would pass |
+        | `Boolean` | response body verified_email | ${True} | | | # same as above |
+        | `Boolean` | $.verified_email | true | | | # JSONPath alternative |
+        | `Boolean` | $.verified_email | true | enum=[1, "1"] | skip=true | # would pass |
         """
         values = []
         for found in self._find_by_field(field):
@@ -664,10 +664,10 @@ class Keywords(object):
 
         *Examples*
 
-        | `GET`  | /users/1 | | | # https://jsonplaceholder.typicode.com/users/1 |
-        | `Integer` | response body id | | | # value is optional |
+        | `GET`  | /users/1 | | # https://jsonplaceholder.typicode.com/users/1 |
+        | `Integer` | response body id | | # value is optional |
         | `Integer` | response body id | 1 |
-        | `Integer` | response body id | ${1} | | # same as above |
+        | `Integer` | response body id | ${1} | # same as above |
         | `Integer` | $.id | 1 | # JSONPath alternative |
 
         | `GET`  | /users?_limit=10 | | | | # https://jsonplaceholder.typicode.com/users |
