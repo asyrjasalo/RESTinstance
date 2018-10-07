@@ -59,41 +59,68 @@ class Keywords(object):
 
     @keyword(name=None, tags=("settings",))
     def set_client_cert(self, cert):
-        """
-        Sets a client certificate for all the upcoming requests in test suite,
-        for e.g. authentication. Overrides the previous if it was already set.
+        """*Sets the client cert for the requests.*
 
-        Arguments:
+        The cert is either a path to a .pem file, or a JSON array, or a list
+        having the cert path and the key path.
 
-        ``cert``:   Either a path to an SSL certificate `.pem` file,
-                    or a (JSON) array containing `cert` and `key`,
-                    or a (Python) list or tuple containing `cert` and `key`.
-                    Respectively, values `"null"` and `${None}`
-                    can be used to clear the setting.
+        Values ``null`` and ``${None}`` can be used for clearing the cert.
 
-        Returns:
+        *Examples*
 
-            The current SSL certificate in use either as a Python string,
-            list or a tuple, depending on what was originally given.
+        | `Set Client Cert` | ${CURDIR}/client.pem |
+        | `Set Client Cert` | ["${CURDIR}/client.cert", "${CURDIR}/client.key"] |
+        | `Set Client Cert` | ${paths_list} |
         """
         self.request['cert'] = self._input_client_cert(cert)
         return self.request['cert']
 
     @keyword(name=None, tags=("settings",))
     def set_headers(self, headers):
-        """
-        You can `Set Headers` one header at a time.
+        """*Sets new request headers or updates the existing.*
 
-        Example:
-        Set the authorization header and content type.
-        | `Set Headers`     | {"authorization": "Basic Og=="}       |
-        | `Set Headers`     | {"content-type": "application/json"}  |
+        ``headers``: The headers to add or update as a JSON object or a
+        dictionary.
+
+        *Examples*
+
+        | `Set Headers` | { "authorization": "Basic QWxhZGRpbjpPcGVuU2VzYW1"} |
+        | `Set Headers` | { "Accept-Encoding": "identity"} |
+        | `Set Headers` | ${auth_dict} |
         """
         self.request['headers'].update(self._input_object(headers))
         return self.request['headers']
 
     @keyword(name=None, tags=("expectations",))
     def expect_request(self, schema, merge=False):
+        """*Sets the schema to validate the request properties*
+
+        Expectations are effective for following requests in the test suite,
+        or until they are reset or updated by using expectation keywords again.
+        On the test suite level (suite setup), they are best used for expecting
+        the endpoint wide properties that are common regardless of the tested
+        HTTP method, and on the test case level (test setup) to merge in
+        the HTTP method specific properties.
+
+        `Expect Request` is intented to be used with tests that have some of the
+        request properties, e.g. body or query parameters, randomized ("fuzzing")
+        for validating that the sent values are within the expected scope.
+
+        If the keyword is used, following HTTP keywords will fail when
+        their request properties are not valid against the expected schema.
+
+        If the keyword is not used, a new schema is generated for each following
+        request for its ``body`` and ``query`` properties. Use `Output Schema` to output it and use it as an input to this keyword.
+
+        *Options*
+
+        ``merge``: Merges the new schema with the current instead of replacing it
+
+        *Examples*
+
+        | `Expect Request` | ${CURDIR}/valid_payload.json | # See `Output Schema` |
+        | `Expect Request` | { "body": { "required": ["id"] } } | merge=true |
+        """
         schema = self._input_object(schema)
         if "properties" not in schema:
             schema = { "properties": schema }
@@ -108,6 +135,36 @@ class Keywords(object):
 
     @keyword(name=None, tags=("expectations",))
     def expect_response(self, schema, merge=False):
+        """*Sets the schema to validate the response properties.*
+
+        Expectations are effective for following requests in the test suite,
+        or until they are reset or updated by using expectation keywords again.
+        On the test suite level (suite setup), they are best used for expecting
+        the endpoint wide properties that are common regardless of the tested
+        HTTP method, and on the test case level (test setup) to merge in
+        the HTTP method specific properties.
+
+        `Expect Response` is intented to be used on the suite level to validate
+        the endpoint properties that hold regardless of the HTTP method,
+        such as body property types, responded headers, authentication, etc.
+
+        If the keyword is used, following HTTP keywords will fail when
+        their response properties are not valid against the expected schema.
+
+        If the keyword is not used, a new schema is inferred for each following
+        response for its ``body``. Use `Output Schema` to output it and use it
+        as an input to this keyword.
+
+        *Options*
+
+        ``merge``: Merges the new schema with the current instead of replacing it
+
+        *Examples*
+
+        | `Expect Response` | ${CURDIR}/endpoint_data_model.json | # See `Output Schema` |
+        | `Expect Response` | { "headers": { "required": ["Via"] } } | merge=true |
+        | `Expect Response` | { "seconds": { "maximum": "1.0" } } | merge=true |
+        """
         schema = self._input_object(schema)
         if "properties" not in schema:
             schema = { "properties": schema }
@@ -122,6 +179,42 @@ class Keywords(object):
 
     @keyword(name=None, tags=("expectations",))
     def expect_response_body(self, schema):
+        """*Updates the schema to validate the response body properties.*
+
+        Expectations are effective for following requests in the test suite,
+        or until they are reset or updated by using expectation keywords again.
+        On the test suite level (suite setup), they are best used for expecting
+        the endpoint wide properties that are common regardless of the tested
+        HTTP method, and on the test case level (test setup) to merge in
+        the HTTP method specific properties.
+
+        `Expect Response Body` is intented to be used on the test case level,
+        to validate that the response body has the expected properties for
+        the particular HTTP method. Note that if something about response body
+        has been already expected with `Expected Response`, using this keyword
+        updates the expectations in terms of given response body properties.
+
+        If the keyword is used, following HTTP keywords will fail if
+        their response body is not valid against the expected schema.
+
+        If the keyword is not used, and no schema is already expected with
+        `Expect Response` for response ``body``, a new schema is inferred for it.
+        Use `Output Schema` to output it and use it as an input to this keyword.
+
+        *Tips*
+
+        Regardless whether the HTTP method returns one (an object) or many
+        (an array of objects), the validation of the object property types and features can usually be done to some extent on the test suite level
+        with `Expect Response`, then extended on the test case level using this
+        keyword. This helps in ensuring that the data model is unified between
+        the different HTTP methods.
+
+        *Examples*
+
+        | `Expect Response Body` | ${CURDIR}/user_properties.json | # See `Output Schema` |
+        | `Expect Response Body` | { "required": ["id", "token"] } | # Only these are required from this method |
+        | `Expect Response Body` | { "additionalProperties": false } | # Nothing extra should be responded by this method |
+        """
         response_schema = self.schema['properties']['response']
         response_schema['properties']['body'].update(self._input_object(schema))
         return response_schema['properties']['body']
@@ -129,6 +222,29 @@ class Keywords(object):
     @keyword(name=None, tags=("http",))
     def head(self, endpoint, timeout=None, allow_redirects=None, validate=True,
              headers=None):
+        """*Sends a HEAD request to the endpoint.*
+
+        The endpoint is joined with the URL given on library init (if any).
+        If endpoint starts with ``http://`` or ``https://``, it is assumed
+        an URL outside the tested API (which may affect logging).
+
+        *Options*
+
+        ``timeout``: A number of seconds to wait for the response before failing the keyword.
+
+        ``allow_redirects``: If true, follow all redirects.
+        In contrary to other methods, no HEAD redirects are followed by default.
+
+        ``validate``: If false, skips any request and response validations set
+        by expectation keywords and a spec given on library init.
+
+        ``headers``: The headers to add or override for this request.
+
+        *Examples*
+
+        | `HEAD` | /users/1 |
+        | `HEAD` | /users/1 | timeout=0.5 |
+        """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "HEAD"
@@ -144,6 +260,28 @@ class Keywords(object):
     @keyword(name=None, tags=("http",))
     def options(self, endpoint, timeout=None, allow_redirects=None,
                 validate=True, headers=None):
+        """*Sends an OPTIONS request to the endpoint.*
+
+        The endpoint is joined with the URL given on library init (if any).
+        If endpoint starts with ``http://`` or ``https://``, it is assumed
+        an URL outside the tested API (which may affect logging).
+
+        *Options*
+
+        ``timeout``: A number of seconds to wait for the response before failing the keyword.
+
+        ``allow_redirects``: If false, do not follow any redirects.
+
+        ``validate``: If false, skips any request and response validations set
+        by expectation keywords and a spec given on library init.
+
+        ``headers``: Headers as a JSON object to add or override for the request.
+
+        *Examples*
+
+        | `OPTIONS` | /users/1 |
+        | `OPTIONS` | /users/1 | allow_redirects=false |
+        """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "OPTIONS"
@@ -159,12 +297,34 @@ class Keywords(object):
     @keyword(name=None, tags=("http",))
     def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
             validate=True, headers=None):
-        """Make a ``GET`` request call to a specified ``endpoint``.
+        """*Sends a GET request to the endpoint.*
 
-        Example:
-        GET users from site and ensure status code is 200
-        | `GET`     | /users?limit=2  |     |
-        | `Integer` | response status | 200 |
+        The endpoint is joined with the URL given on library init (if any).
+        If endpoint starts with ``http://`` or ``https://``, it is assumed
+        an URL outside the tested API (which may affect logging).
+
+        *Options*
+
+        ``query``: Request query parameters as a JSON object or a dictionary.
+        Alternatively, query parameters can be given as part of endpoint as well.
+
+        ``timeout``: A number of seconds to wait for the response before failing the keyword.
+
+        ``allow_redirects``: If false, do not follow any redirects.
+
+        ``validate``: If false, skips any request and response validations set
+        by expectation keywords and a spec given on library init.
+
+        ``headers``: Headers as a JSON object to add or override for the request.
+
+        *Examples*
+
+        | `GET` | /users/1 |
+        | `GET` | /users | timeout=2.5 |
+        | `GET` | /users?_limit=2 |
+        | `GET` | /users | _limit=2 |
+        | `GET` | /users | { "_limit": "2" } |
+        | `GET` | https://jsonplaceholder.typicode.com/users | headers={ "Authentication": "" } |
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
@@ -188,12 +348,29 @@ class Keywords(object):
     @keyword(name=None, tags=("http",))
     def post(self, endpoint, body=None, timeout=None, allow_redirects=None,
              validate=True, headers=None):
-        """Make a ``POST`` request call to a specified ``endpoint``.
+        """*Sends a POST request to the endpoint.*
 
-        Example:
-        POST "Mr Potato" to endpoint and ensure status code is 201
-        | `POST`    | /users          | { "id": 11, "name": "Mr Potato" } |
-        | `Integer` | response status | 201                               |
+        The endpoint is joined with the URL given on library init (if any).
+        If endpoint starts with ``http://`` or ``https://``, it is assumed
+        an URL outside the tested API (which may affect logging).
+
+        *Options*
+
+        ``body``: Request body parameters as a JSON object, file or a dictionary.
+
+        ``timeout``: A number of seconds to wait for the response before failing the keyword.
+
+        ``allow_redirects``: If false, do not follow any redirects.
+
+        ``validate``: If false, skips any request and response validations set
+        by expectation keywords and a spec given on library init.
+
+        ``headers``: Headers as a JSON object to add or override for the request.
+
+        *Examples*
+
+        | `POST` | /users | { "id": 11, "name": "Gil Alexander" } |
+        | `POST` | /users | ${CURDIR}/new_user.json |
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
@@ -211,11 +388,29 @@ class Keywords(object):
     @keyword(name=None, tags=("http",))
     def put(self, endpoint, body=None, timeout=None, allow_redirects=None,
             validate=True, headers=None):
-        """Make a ``PUT`` request call to a specified ``endpoint``.
+        """*Sends a PUT request to the endpoint.*
 
-        Example:
-        PUT existing record with new name to endpoint
-        | `PUT`  | /users/11  | { "name": "Albus Potter" }  |
+        The endpoint is joined with the URL given on library init (if any).
+        If endpoint starts with ``http://`` or ``https://``, it is assumed
+        an URL outside the tested API (which may affect logging).
+
+        *Options*
+
+        ``body``: Request body parameters as a JSON object, file or a dictionary.
+
+        ``timeout``: A number of seconds to wait for the response before failing the keyword.
+
+        ``allow_redirects``: If false, do not follow any redirects.
+
+        ``validate``: If false, skips any request and response validations set
+        by expectation keywords and a spec given on library init.
+
+        ``headers``: Headers as a JSON object to add or override for the request.
+
+        *Examples*
+
+        | `PUT` | /users/2 | { "name": "Julie Langford" } |
+        | `PUT` | /users/2 | ${dict} |
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
@@ -233,6 +428,30 @@ class Keywords(object):
     @keyword(name=None, tags=("http",))
     def patch(self, endpoint, body=None, timeout=None, allow_redirects=None,
               validate=True, headers=None):
+        """*Sends a PATCH request to the endpoint.*
+
+        The endpoint is joined with the URL given on library init (if any).
+        If endpoint starts with ``http://`` or ``https://``, it is assumed
+        an URL outside the tested API (which may affect logging).
+
+        *Options*
+
+        ``body``: Request body parameters as a JSON object, file or a dictionary.
+
+        ``timeout``: A number of seconds to wait for the response before failing the keyword.
+
+        ``allow_redirects``: If false, do not follow any redirects.
+
+        ``validate``: If false, skips any request and response validations set
+        by expectation keywords and a spec given on library init.
+
+        ``headers``: Headers as a JSON object to add or override for the request.
+
+        *Examples*
+
+        | `PATCH` | /users/4 | { "name": "Clementine Bauch" } |
+        | `PATCH` | /users/4 | ${dict} |
+        """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "PATCH"
@@ -249,12 +468,27 @@ class Keywords(object):
     @keyword(name=None, tags=("http",))
     def delete(self, endpoint, timeout=None, allow_redirects=None,
                validate=True, headers=None):
-        """Make a ``DELETE`` request call to a specified ``endpoint``.
+        """*Sends a DELETE request to the endpoint.*
 
-        Example:
-        DELETE user 4 from endpoint and ensure status code is 200, 202, or 204.
-        | `DELETE`  | /users/4        |     |     |     |
-        | `Integer` | response status | 200 | 202 | 204 |
+        The endpoint is joined with the URL given on library init (if any).
+        If endpoint starts with ``http://`` or ``https://``, it is assumed
+        an URL outside the tested API (which may affect logging).
+
+        *Options*
+
+        ``timeout``: A number of seconds to wait for the response before failing the keyword.
+
+        ``allow_redirects``: If false, do not follow any redirects.
+
+        ``validate``: If false, skips any request and response validations set
+        by expectation keywords and a spec given on library init.
+
+        ``headers``: Headers as a JSON object to add or override for the request.
+
+        *Examples*
+
+        | `DELETE` | /users/6 |
+        | `DELETE` | http://localhost:8273/state | validate=false |
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
@@ -270,13 +504,28 @@ class Keywords(object):
 
     @keyword(name=None, tags=("assertions",))
     def missing(self, field):
-        """Verify a specific ``field`` does not exist.
+        """*Asserts the field does not exist.*
 
-        Example:
-        After I make a `GET` call, I want to verify the field is not in the response body.
-        If ``shouldNotExist`` is in the body, then fail the assertion. If it is NOT in the body, then pass.
-        | `GET`     | /users/4                     |
-        | `Missing` | response body shouldNotExist |
+        The field consists of parts separated by spaces, the parts being
+        object property names or array indices starting from 0, and the root
+        being the instance created by the last request (see `Output` for it).
+
+        For asserting deeply nested properties or multiple objects at once,
+        [http://goessner.net/articles/JsonPath|JSONPath] can be used with
+        [https://github.com/h2non/jsonpath-ng#jsonpath-syntax|supported JSONPath expressions],
+        the root being the response body.
+
+        *Examples*
+
+        | `GET`     | /users/1 | # https://jsonplaceholder.typicode.com/users/1 |
+        | `Missing` | response body password |
+        | `Missing` | $.password |
+        | `Missing` | $..geo.elevation | # response body address geo elevation |
+
+        | `GET`     | /users | # https://jsonplaceholder.typicode.com/users |
+        | `Missing` | response body 0 password |
+        | `Missing` | $[*].password |
+        | `Missing` | $[*]..geo.elevation |
         """
         try:
             matches = self._find_by_field(field, print_found=False)
@@ -290,13 +539,35 @@ class Keywords(object):
 
     @keyword(name=None, tags=("assertions",))
     def null(self, field, **validations):
-        """Verify a specific ``field`` is null.
+        """*Asserts the field as JSON null.*
 
-        Example:
-        After I make a `GET` call, I want to verify the field is null.
-        If response body estate is null, then it is a success.
-        | `GET`  | /users/4             |
-        | `Null` | response body estate |
+        The field consists of parts separated by spaces, the parts being
+        object property names or array indices starting from 0, and the root
+        being the instance created by the last request (see `Output` for it).
+
+        For asserting deeply nested properties or multiple objects at once,
+        [http://goessner.net/articles/JsonPath|JSONPath] can be used with
+        [https://github.com/h2non/jsonpath-ng#jsonpath-syntax|supported JSONPath expressions],
+        the root being the response body.
+
+        *Validations*
+
+        The JSON Schema validation keywords
+        [https://json-schema.org/understanding-json-schema/reference/generic.html|common for all types]
+        can be used. Validations are optional but update the schema of
+        the property (more accurate) if given.
+        `Output Schema` can be used for the current schema of the field.
+
+        The keyword will fail if any of the given validations fail.
+        Given validations can be skipped altogether by adding ``skip=true``.
+        When skipped, the schema is updated but the validations are not ran.
+        Skip is intented mainly for debugging the updated schema before aborting.
+
+        *Examples*
+
+        | `PUT`  | /users/1 | { "deactivated_at": null } | # https://jsonplaceholder.typicode.com/users/1 |
+        | `Null` | response body deactivated_at | |
+        | `Null` | $.deactivated_at | | # JSONPath alternative |
         """
         values = []
         for found in self._find_by_field(field):
@@ -310,12 +581,41 @@ class Keywords(object):
 
     @keyword(name=None, tags=("assertions",))
     def boolean(self, field, value=None, **validations):
-        """Verify a specific ``field`` is a boolean with a specific value.
+        """*Asserts the field as JSON boolean.*
 
-        Example:
-        After I make a `GET` call, I want to verify the field is a boolean and is true.
-        | `GET`     | /users/4                |      |
-        | `Boolean` | response body isBananas | true |
+        The field consists of parts separated by spaces, the parts being
+        object property names or array indices starting from 0, and the root
+        being the instance created by the last request (see `Output` for it).
+
+        For asserting deeply nested properties or multiple objects at once,
+        [http://goessner.net/articles/JsonPath|JSONPath] can be used with
+        [https://github.com/h2non/jsonpath-ng#jsonpath-syntax|supported JSONPath expressions], the root being the response body.
+
+        *Value*
+
+        If given, the property value is validated in addition to the type.
+
+        *Validations*
+
+        The JSON Schema validation keywords
+        [https://json-schema.org/understanding-json-schema/reference/generic.html|common for all types]
+        can be used. Validations are optional but update the schema of
+        the property (more accurate) if given.
+        `Output Schema` can be used for the current schema of the field.
+
+        The keyword will fail if any of the given validations fail.
+        Given validations can be skipped altogether by adding ``skip=true``.
+        When skipped, the schema is updated but the validations are not ran.
+        Skip is intented mainly for debugging the updated schema before aborting.
+
+        *Examples*
+
+        | `PUT`  | /users/1 | { "verified_email": true } | | # https://jsonplaceholder.typicode.com/users/1 |
+        | `Boolean` | response body verified_email | | | # value is optional |
+        | `Boolean` | response body verified_email | true |
+        | `Boolean` | response body verified_email | ${True} | | # same as above |
+        | `Boolean` | $.verified_email | true | | # JSONPath alternative |
+        | `Boolean` | $.verified_email | true | enum=[1, "1"] skip=true | # would pass |
         """
         values = []
         for found in self._find_by_field(field):
@@ -333,13 +633,47 @@ class Keywords(object):
 
     @keyword(name=None, tags=("assertions",))
     def integer(self, field, *enum, **validations):
-        """Verify a specific ``field`` is an Integer with a specific value, or set of values.
+        """*Asserts the field as JSON integer.*
 
-        Example:
-        After I make a `GET` call, I want to verify the field is an integer and has one or more of my integer values.
-        If the response status returns a 200, 202, or 204, then it is a success.
-        | `GET`     | /users/4        |     |     |     |
-        | `Integer` | response status | 200 | 202 | 204 |
+        The field consists of parts separated by spaces, the parts being
+        object property names or array indices starting from 0, and the root
+        being the instance created by the last request (see `Output` for it).
+
+        For asserting deeply nested properties or multiple objects at once,
+        [http://goessner.net/articles/JsonPath|JSONPath] can be used with
+        [https://github.com/h2non/jsonpath-ng#jsonpath-syntax|supported JSONPath expressions],
+        the root being the response body.
+
+        *Enum*
+
+        The allowed values for the property as zero or more arguments.
+        If none given, the value of the property is not asserted.
+
+        *Validations*
+
+        The JSON Schema validation keywords
+        [https://json-schema.org/understanding-json-schema/reference/numeric.html#integer|for numeric types]
+        can be used. Validations are optional but update the schema of
+        the property (more accurate) if given.
+        `Output Schema` can be used for the current schema of the field.
+
+        The keyword will fail if any of the given validations fail.
+        Given validations can be skipped altogether by adding ``skip=true``.
+        When skipped, the schema is updated but the validations are not ran.
+        Skip is intented mainly for debugging the updated schema before aborting.
+
+        *Examples*
+
+        | `GET`  | /users/1 | | | # https://jsonplaceholder.typicode.com/users/1 |
+        | `Integer` | response body id | | | # value is optional |
+        | `Integer` | response body id | 1 |
+        | `Integer` | response body id | ${1} | | # same as above |
+        | `Integer` | $.id | 1 | # JSONPath alternative |
+
+        | `GET`  | /users?_limit=10 | | | | # https://jsonplaceholder.typicode.com/users |
+        | `Integer` | response body 0 id | 1 | | |
+        | `Integer` | $[0].id | 1 | | | # same as above |
+        | `Integer` | $[*].id | | minimum=1 | maximum=10 |
         """
         values = []
         for found in self._find_by_field(field):
@@ -363,13 +697,45 @@ class Keywords(object):
 
     @keyword(name=None, tags=("assertions",))
     def number(self, field, *enum, **validations):
-        """Verify a specific ``field`` is a number(integer or floating) value, or set of values.
+        """*Asserts the field as JSON number.*
 
-        Example:
-        After I make a `GET` call, I want to verify the field is a number and has one or more of my number values.
-        If the response body dollars returns a 42, 34.50, or 100, then it is a success.
-        | `GET`     | /users/4              |    |       |     |
-        | `Number` | response body dollars | 42 | 34.50 | 100 |
+        The field consists of parts separated by spaces, the parts being
+        object property names or array indices starting from 0, and the root
+        being the instance created by the last request (see `Output` for it).
+
+        For asserting deeply nested properties or multiple objects at once,
+        [http://goessner.net/articles/JsonPath|JSONPath] can be used with
+        [https://github.com/h2non/jsonpath-ng#jsonpath-syntax|supported JSONPath expressions],
+        the root being the response body.
+
+        *Enum*
+
+        The allowed values for the property as zero or more arguments.
+        If none given, the value of the property is not asserted.
+
+        *Validations*
+
+        The JSON Schema validation keywords
+        [https://json-schema.org/understanding-json-schema/reference/numeric.html#number|for numeric types] can be used. Validations are optional but update the schema of
+        the property (more accurate) if given.
+        `Output Schema` can be used for the current schema of the field.
+
+        The keyword will fail if any of the given validations fail.
+        Given validations can be skipped altogether by adding ``skip=true``.
+        When skipped, the schema is updated but the validations are not ran.
+        Skip is intented mainly for debugging the updated schema before aborting.
+
+        *Examples*
+
+        | `PUT`  | /users/1 | { "allocation": 95.0 } | # https://jsonplaceholder.typicode.com/users/1 |
+        | `Number` | response body allocation | | # value is optional |
+        | `Number` | response body allocation | 95.0 |
+        | `Number` | response body allocation | ${95.0} | # same as above |
+        | `Number` | $.allocation | 95.0 | # JSONPath alternative |
+
+        | `GET`  | /users?_limit=10 | | | | # https://jsonplaceholder.typicode.com/users |
+        | `Number` | $[0].id | 1 | | | # integers are also numbers |
+        | `Number` | $[*].id | | minimum=1 | maximum=10 |
         """
         values = []
         for found in self._find_by_field(field):
@@ -393,13 +759,46 @@ class Keywords(object):
 
     @keyword(name=None, tags=("assertions",))
     def string(self, field, *enum, **validations):
-        """Verify a specific ``field`` is a string with a specific value, or set of values.
+        """*Asserts the field as JSON string.*
 
-        Example:
-        After I make a `GET` call, I want to verify the field is a string and has one or more of my string values.
-        If the response body name returns "Adam West" or "Peter Parker", then it is a success.
-        | `GET`     | /users/4           |           |              |
-        | `String`  | response body name | Adam West | Peter Parker |
+        The field consists of parts separated by spaces, the parts being
+        object property names or array indices starting from 0, and the root
+        being the instance created by the last request (see `Output` for it).
+
+        For asserting deeply nested properties or multiple objects at once,
+        [http://goessner.net/articles/JsonPath|JSONPath] can be used with
+        [https://github.com/h2non/jsonpath-ng#jsonpath-syntax|supported JSONPath expressions], the root being the response body.
+
+        *Enum*
+
+        The allowed values for the property as zero or more arguments.
+        If none given, the value of the property is not asserted.
+
+        *Validations*
+
+        The JSON Schema validation keywords
+        [https://json-schema.org/understanding-json-schema/reference/string.html|for string]
+        can be used. Validations are optional but update the schema of
+        the property (more accurate) if given.
+        `Output Schema` can be used for the current schema of the field.
+
+        The keyword will fail if any of the given validations fail.
+        Given validations can be skipped altogether by adding ``skip=true``.
+        When skipped, the schema is updated but the validations are not ran.
+        Skip is intented mainly for debugging the updated schema before aborting.
+
+        *Examples*
+
+        | `GET`  | /users/1 | | | # https://jsonplaceholder.typicode.com/users/1 |
+        | `String` | response body email | | | # value is optional |
+        | `String` | response body email | Sincere@april.biz |
+        | `String` | $.email | Sincere@april.biz | | # JSONPath alternative |
+        | `String` | $.email | | format=email |
+
+        | `GET`  | /users?_limit=10 | | | # https://jsonplaceholder.typicode.com/users |
+        | `String` | response body 0 email | Sincere@april.biz |
+        | `String` | $[0].email | Sincere@april.biz | | # same as above |
+        | `String` | $[*].email | | format=email |
         """
         values = []
         for found in self._find_by_field(field):
@@ -423,13 +822,43 @@ class Keywords(object):
 
     @keyword(name=None, tags=("assertions",))
     def object(self, field, *enum, **validations):
-        """Verify a specific ``field`` is an object with a specific value, or set of values.
+        """*Asserts the field as JSON object.*
 
-        Example:
-        After I make a `GET` call, I want to verify the field is a object and has one or more of my values.
-        If the response body animals returns an object, then it is a success.
-        | `GET`     | /zoo/4                |
-        | `Object`  | response body animals |
+        The field consists of parts separated by spaces, the parts being
+        object property names or array indices starting from 0, and the root
+        being the instance created by the last request (see `Output` for it).
+
+        For asserting deeply nested properties or multiple objects at once,
+        [http://goessner.net/articles/JsonPath|JSONPath] can be used with
+        [https://github.com/h2non/jsonpath-ng#jsonpath-syntax|supported JSONPath expressions], the root being the response body.
+
+        *Enum*
+
+        The allowed values for the property as zero or more arguments.
+        If none given, the value of the property is not asserted.
+
+        *Validations*
+
+        The JSON Schema validation keywords
+        [https://json-schema.org/understanding-json-schema/reference/object.html|for object]
+        can be used. Validations are optional but update the schema of
+        the property (more accurate) if given.
+        `Output Schema` can be used for the current schema of the field.
+
+        The keyword will fail if any of the given validations fail.
+        Given validations can be skipped altogether by adding ``skip=true``.
+        When skipped, the schema is updated but the validations are not ran.
+        Skip is intented mainly for debugging the updated schema before aborting.
+
+        *Examples*
+
+        | `GET`  | /users/1 | | # https://jsonplaceholder.typicode.com/users/1 |
+        | `Object` | response body | |
+        | `Object` | response body | required=["id", "name"] | # can have other properties |
+
+        | `GET`  | /users/1 | | # https://jsonplaceholder.typicode.com/users/1 |
+        | `Object` | $.address.geo | required=["lat", "lng"] |
+        | `Object` | $..geo | additionalProperties=false | # cannot have other properties |
         """
         values = []
         for found in self._find_by_field(field):
@@ -453,13 +882,45 @@ class Keywords(object):
 
     @keyword(name=None, tags=("assertions",))
     def array(self, field, *enum, **validations):
-        """Verify a returned response is an array with specific validations.
+        """*Asserts the field as JSON array.*
 
-        Example:
-        Verify the returned response is an array and has a maximum of 100 items.
-        If more than 100 items, fail.
-        | `GET`   | /users?limit=100 |                |
-        | `Array` | response body    | maxItems = 100 |
+        The field consists of parts separated by spaces, the parts being
+        object property names or array indices starting from 0, and the root
+        being the instance created by the last request (see `Output` for it).
+
+        For asserting deeply nested properties or multiple objects at once,
+        [http://goessner.net/articles/JsonPath|JSONPath] can be used with
+        [https://github.com/h2non/jsonpath-ng#jsonpath-syntax|supported JSONPath expressions],
+        the root being the response body.
+
+        *Enum*
+
+        The allowed values for the property as zero or more arguments.
+        If none given, the value of the property is not asserted.
+
+        *Validations*
+
+        The JSON Schema validation keywords
+        [https://json-schema.org/understanding-json-schema/reference/array.html|for array]
+        can be used. Validations are optional but update the schema of
+        the property (more accurate) if given.
+        `Output Schema` can be used for the current schema of the field.
+
+        The keyword will fail if any of the given validations fail.
+        Given validations can be skipped altogether by adding ``skip=true``.
+        When skipped, the schema is updated but the validations are not ran.
+        Skip is intented mainly for debugging the updated schema before aborting.
+
+        *Examples*
+        | `GET`  | /users?_limit=10 | | | # https://jsonplaceholder.typicode.com/users |
+        | `Array` | response body | |
+        | `Array` | $[0] | | | # same as above |
+        | `Array` | $[*] | minItems=1 | maxItems=10 |
+
+        | | `GET`  | /users/1 | | # https://jsonplaceholder.typicode.com/users/1 |
+        | ${schema} | Object | schema response body |
+        | | `GET`  | /users | | # https://jsonplaceholder.typicode.com/users |
+        | | `Array` | $[*] | items=${schema} | # the data model is the same |
         """
         values = []
         for found in self._find_by_field(field):
@@ -497,6 +958,37 @@ class Keywords(object):
     @keyword(name=None, tags=("I/O",))
     def output_schema(self, what="", file_path=None, append=False,
                       sort_keys=False):
+        """*Outputs JSON Schema to terminal or a file.*
+
+        By default, the schema is output for the last request and response.
+
+        The output can be limited further by:
+
+        - The property of the last instance, e.g. ``request`` or ``response``
+        - Any nested property that exists, similarly as for assertion keywords
+
+        Also variables and values that can be converted to JSON are accepted,
+        in which case the schema is generated for those instead.
+
+        *Options*
+
+        ``file_path``: The JSON Schema is written to a file instead of terminal.
+        The file is created if it does not exist.
+
+        ``append``: If true, the JSON Schema is appended to the given file
+        instead of truncating it first.
+
+        ``sort_keys``: If true, the JSON Schema is sorted alphabetically by
+        property names before it is output.
+
+        *Examples*
+
+        | Output Schema | response | ${CURDIR}/response_schema.json | # Write a file to use with `Expect Response` |
+        | Output Schema | response body | ${CURDIR}/response_body_schema.json | # Write a file to use with `Expect Response Body` |
+
+        | Output Schema | $.email | # only the schema for one response body property |
+        | Output Schema | $..geo | # only the schema for the nested response body property |
+        """
         message = "\n%s as JSON is:" % (what.__class__.__name__)
         if what == "":
             message = "\n\nThe instance's JSON Schema is:"
@@ -535,16 +1027,44 @@ class Keywords(object):
                     file_path, e))
         return json
 
-
     @keyword(name=None, tags=("I/O",))
     def output(self, what="", file_path=None, append=False, sort_keys=False):
-        """After a REST call, you can output the response.
+        """*Outputs JSON to terminal or a file.*
 
-        Example:
-        `GET` users and `Output` the response body.
-        | `GET`    | /users?limit=2  |
-        | `Output` | response body   |
+        By default, the last request and response are output to terminal.
 
+        The output can be limited further by:
+
+        - The property of the last instance, e.g. ``request`` or ``response``
+        - Any nested property that exists, similarly as for assertion keywords
+
+        Also variables and values that can be converted to JSON are accepted,
+        in which case those are output as JSON instead.
+
+        *Options*
+
+        ``file_path``: The JSON is written to a file instead of terminal.
+        The file is created if it does not exist.
+
+        ``append``: If true, the JSON is appended to the given file
+        instead of truncating it first.
+
+        ``sort_keys``: If true, the JSON is sorted alphabetically by
+        property names before it is output.
+
+        *Examples*
+
+        | Output | response | # only the response is output |
+        | Output | response body | # only the response body is output |
+        | Output | $.email | # only the response body property is output |
+        | Output | $..geo | # only the nested response body property is output |
+
+        | Output | request | # only the request is output |
+        | Output | request headers | # only the request headers are output |
+        | Output | request headers Authentication | # only this header is output |
+
+        | Output | response body | ${CURDIR}/response_body.json | | # write the response body to a file |
+        | Output | response seconds | ${CURDIR}/response_delays.log | append=true | # keep track of response delays in a file |
         """
         message = "\n%s as JSON is:" % (what.__class__.__name__)
         if what == "":

@@ -49,7 +49,7 @@ Tip (#1): Bookmark reference pages to speed up finding things when writing tests
 - 6_schemas.rst
 
   - output schema to file
-  - expect response, clear expectations
+  - expect request, response and respoonse body
   - exampled: on/off
 
 - 7_models.rst
