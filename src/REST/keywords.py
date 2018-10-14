@@ -1223,6 +1223,7 @@ class Keywords(object):
             'headers': dict(response.headers)
         }
         schema = deepcopy(self.schema)
+        schema['title'] = "%s %s" % (request['method'], request['url'])
         request_properties = schema['properties']['request']['properties']
         response_properties = schema['properties']['response']['properties']
         if validate_schema:

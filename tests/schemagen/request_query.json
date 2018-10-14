@@ -226,5 +226,6 @@
             "type": "object"
         }
     },
+    "title": "GET http://mounterest:8273/users",
     "type": "object"
 }

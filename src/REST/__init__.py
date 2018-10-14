@@ -153,9 +153,10 @@ class REST(Keywords):
             disable_warnings()
         self.schema = {
             "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
+            "title": url,
             "default": True,
             "examples": [],
+            "type": "object",
             "properties": {
                 "request": {
                     "type": "object",
