@@ -4,6 +4,7 @@ Library         REST                mounterest:${api_port}/
 Suite setup     Reset state
 Suite teardown  Rest instances
 Test setup      Set expectations
+Test teardown   Clear expectations
 
 
 *** Keywords ***

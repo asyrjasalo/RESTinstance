@@ -219,6 +219,23 @@ class Keywords(object):
         response_schema['properties']['body'].update(self._input_object(schema))
         return response_schema['properties']['body']
 
+    @keyword(name=None, tags=("expectations",))
+    def clear_expectations(self):
+        """*Resets the expectations for both request and response.*
+
+        Using this keyword resets any expectations set with keywords
+        `Expect Response`, `Expect Response Body` and `Expect Request`.
+        """
+        self.schema['properties']['request'] = {
+            "type": "object",
+            "properties": {}
+        }
+        self.schema['properties']['response'] = {
+            "type": "object",
+            "properties": {}
+        }
+        return self.schema
+
     @keyword(name=None, tags=("http",))
     def head(self, endpoint, timeout=None, allow_redirects=None, validate=True,
              headers=None):
