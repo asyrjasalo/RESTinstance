@@ -1255,14 +1255,14 @@ class Keywords(object):
 
     def _assert_schema(self, schema, reality):
         try:
-            if "draft-07" in self.schema['$schema']:
-                 validator = Draft7Validator(schema,
+            if "draft-04" in self.schema['$schema']:
+                 validator = Draft4Validator(schema,
                     format_checker=FormatChecker())
             elif "draft-06" in self.schema['$schema']:
                  validator = Draft6Validator(schema,
                     format_checker=FormatChecker())
             else:
-                validator = Draft4Validator(schema,
+                validator = Draft7Validator(schema,
                     format_checker=FormatChecker())
             validator.validate(reality)
         except ValidationError as e:
@@ -1378,12 +1378,12 @@ class Keywords(object):
 
     def _set_type_validations(self, json_type, schema, validations):
         if validations:
-            if "draft-07" in self.schema['$schema']:
-                schema_version = "draft-07"
+            if "draft-04" in self.schema['$schema']:
+                schema_version = "draft-04"
             elif "draft-06" in self.schema['$schema']:
                 schema_version = "draft-06"
             else:
-                schema_version = "draft-04"
+                schema_version = "draft-07"
             kws = list(SCHEMA_KEYWORDS['common'][schema_version])
             kws.extend(SCHEMA_KEYWORDS[json_type][schema_version])
         for validation in validations:
