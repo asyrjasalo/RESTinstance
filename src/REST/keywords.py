@@ -1277,10 +1277,14 @@ class Keywords(object):
         body = response['body']
         schema = schema['properties']['response']['properties']['body']
         if isinstance(body, (dict)):
-            for field in body:
-                schema['properties'][field]['default'] = body[field]
-        elif isinstance(body, (list)):
-            schema['default'] = body
+            self._add_property_defaults(body, schema['properties'])
+
+    def _add_property_defaults(self, body, schema):
+      for key in body:
+        if "properties" in schema[key]:
+            self._add_property_defaults(body[key], schema[key]['properties'])
+        else:
+            schema[key]['default'] = body[key]
 
     def _find_by_field(self, field, return_schema=True, print_found=True):
         last_instance = self._last_instance_or_error()

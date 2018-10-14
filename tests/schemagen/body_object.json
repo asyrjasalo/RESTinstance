@@ -1,26 +1,19 @@
 {
     "properties": {
         "address": {
-            "default": {
-                "city": "Gwenborough",
-                "geo": {
-                    "lat": "-37.3159",
-                    "lng": "81.1496"
-                },
-                "street": "Kulas Light",
-                "suite": "Apt. 556",
-                "zipcode": "92998-3874"
-            },
             "properties": {
                 "city": {
+                    "default": "Gwenborough",
                     "type": "string"
                 },
                 "geo": {
                     "properties": {
                         "lat": {
+                            "default": "-37.3159",
                             "type": "string"
                         },
                         "lng": {
+                            "default": "81.1496",
                             "type": "string"
                         }
                     },
@@ -31,12 +24,15 @@
                     "type": "object"
                 },
                 "street": {
+                    "default": "Kulas Light",
                     "type": "string"
                 },
                 "suite": {
+                    "default": "Apt. 556",
                     "type": "string"
                 },
                 "zipcode": {
+                    "default": "92998-3874",
                     "type": "string"
                 }
             },
@@ -50,19 +46,17 @@
             "type": "object"
         },
         "company": {
-            "default": {
-                "bs": "harness real-time e-markets",
-                "catchPhrase": "Multi-layered client-server neural-net",
-                "name": "Romaguera-Crona"
-            },
             "properties": {
                 "bs": {
+                    "default": "harness real-time e-markets",
                     "type": "string"
                 },
                 "catchPhrase": {
+                    "default": "Multi-layered client-server neural-net",
                     "type": "string"
                 },
                 "name": {
+                    "default": "Romaguera-Crona",
                     "type": "string"
                 }
             },
