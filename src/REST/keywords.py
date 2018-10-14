@@ -1029,7 +1029,7 @@ class Keywords(object):
         """
         if isinstance(what, (STRING_TYPES)):
             if what == "":
-                message = "\nThe instance JSON Schema is:"
+                message = "\nThe current instance JSON Schema is:"
                 try:
                     json = self._last_instance_or_error()['schema']
                 except IndexError:
@@ -1110,7 +1110,7 @@ class Keywords(object):
         """
         if isinstance(what, (STRING_TYPES)):
             if what == "":
-                message = "\nThe instance as JSON is:"
+                message = "\nThe current instance is:"
                 try:
                     json = deepcopy(self._last_instance_or_error())
                     json.pop('schema')
