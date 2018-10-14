@@ -253,7 +253,7 @@ We use the following Python excellence under the hood:
 -  `jsonpath-ng <https://github.com/h2non/jsonpath-ng>`__,
    by Tomas Aparicio and Kenneth Knowles, for handling JSONPath queries
 -  `jsonschema <https://github.com/Julian/jsonschema>`__, by Julian
-   Berman, for JSON Schema draft-04 validation
+   Berman, for JSON Schema validator
 -  `pygments <http://pygments.org>`__, by Georg Brandl et al.,
    for JSON syntax coloring, in terminal `Output`
 -  `requests <https://github.com/requests/requests>`__, by Kenneth
