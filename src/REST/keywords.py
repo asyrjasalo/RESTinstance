@@ -1027,9 +1027,9 @@ class Keywords(object):
         | `Output Schema` | $.email | # only the schema for one response body property |
         | `Output Schema` | $..geo | # only the schema for the nested response body property |
         """
-        message = "\n%s as JSON is:" % (what.__class__.__name__)
+        message = "\n%s as JSON Schema is:" % (what.__class__.__name__)
         if what == "":
-            message = "\n\nThe instance's JSON Schema is:"
+            message = "\n\nThe instance JSON Schema is:"
             try:
                 json = self._last_instance_or_error()['schema']
             except IndexError:
@@ -1104,7 +1104,7 @@ class Keywords(object):
         | `Output` | response body | ${CURDIR}/response_body.json | | # write the response body to a file |
         | `Output` | response seconds | ${CURDIR}/response_delays.log | append=true | # keep track of response delays in a file |
         """
-        message = "\n%s as JSON is:" % (what.__class__.__name__)
+        message = "\n%s is:" % (what.__class__.__name__)
         if what == "":
             message = "\n\nThe instance as JSON is:"
             try:
@@ -1118,7 +1118,7 @@ class Keywords(object):
                 json = loads(what)
             except ValueError:
                 self._last_instance_or_error()
-                message = "\n\n%s as JSON is:" % (what)
+                message = "\n\n%s is:" % (what)
                 matches = self._find_by_field(what, return_schema=False)
                 if len(matches) > 1:
                     json = [found['reality'] for found in matches]
