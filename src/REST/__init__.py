@@ -154,6 +154,7 @@ class REST(Keywords):
         self.schema = {
             "$schema": "http://json-schema.org/draft-07/schema#",
             "title": url,
+            "description": None,
             "default": True,
             "examples": [],
             "type": "object",
