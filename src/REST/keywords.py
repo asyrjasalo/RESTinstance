@@ -32,8 +32,8 @@ from os import path, getcwd
 from flex.core import validate_api_call
 from genson import SchemaBuilder
 from jsonpath_ng.ext import parse as parse_jsonpath
-from jsonschema import Draft4Validator, Draft6Validator, Draft7Validator, FormatChecker
-from jsonschema.exceptions import ValidationError
+from jsonschema import validate, FormatChecker
+from jsonschema.exceptions import SchemaError, ValidationError
 from requests import request as client
 from requests.exceptions import SSLError, Timeout
 
@@ -1256,16 +1256,9 @@ class Keywords(object):
 
     def _assert_schema(self, schema, reality):
         try:
-            if "draft-04" in self.schema['$schema']:
-                 validator = Draft4Validator(schema,
-                    format_checker=FormatChecker())
-            elif "draft-06" in self.schema['$schema']:
-                 validator = Draft6Validator(schema,
-                    format_checker=FormatChecker())
-            else:
-                validator = Draft7Validator(schema,
-                    format_checker=FormatChecker())
-            validator.validate(reality)
+            validate(reality, schema, format_checker=FormatChecker())
+        except SchemaError as e:
+            raise RuntimeError(e)
         except ValidationError as e:
             raise AssertionError(e)
 
