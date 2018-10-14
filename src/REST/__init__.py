@@ -79,9 +79,9 @@ class REST(Keywords):
 
     Request and response schemas are inferred if they are not already
     expected by using expectation keywords. All the validations the library
-    implements are based on JSON Schema [http://json-schema.org/draft-04/json-schema-validation.html|draft-04] by default
-    but also [http://json-schema.org/draft-06/json-schema-validation.html|draft-06] can be configured.
-
+    implements are based on JSON Schema [http://json-schema.org/draft-07/json-schema-validation.html|draft-07] by default
+    but also [http://json-schema.org/draft-06/json-schema-validation.html|draft-06] and
+    [http://json-schema.org/draft-04/json-schema-validation.html|draft-04] can be configured.
 
     = The scope =
 
@@ -152,7 +152,7 @@ class REST(Keywords):
         if not self.request['sslVerify']:
             disable_warnings()
         self.schema = {
-            "$schema": "http://json-schema.org/draft-04/schema#",
+            "$schema": "http://json-schema.org/draft-07/schema#",
             "type": "object",
             "default": True,
             "examples": [],
