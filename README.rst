@@ -61,8 +61,8 @@ As a Docker image
 Using rfdocker
 ~~~~~~~~~~~~~~
 If already using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
-add ``RESTinstance`` to ``requirements.txt`` and remove the commented lines
-in ``Dockerfile``. It will be installed next time ``./rfdocker`` is ran.
+add ``RESTinstance`` to ``requirements.txt`` and uncomment the lines
+in ``Dockerfile``.  It is installed next time ``./rfdocker`` is ran.
 
 To pass the proxy settings to the container and run it on the host network:
 
