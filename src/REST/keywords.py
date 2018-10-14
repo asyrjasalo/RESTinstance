@@ -1232,6 +1232,8 @@ class Keywords(object):
         try:
             response_body = response.json()
         except ValueError:
+            logger.warn("Response body is not JSON. " +
+                "Content-Type is: %s" % response.headers['Content-Type'])
             response_body = response.text
         response = {
             'seconds': response.elapsed.microseconds / 1000 / 1000,
