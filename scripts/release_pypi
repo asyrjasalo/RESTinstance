@@ -9,8 +9,10 @@ repo_path="$this_path/.."
 
 ### release ####################################################################
 
-pip install --upgrade twine wheel
+export PATH="$HOME/.local/bin:$PATH"
+pip install --user --upgrade twine wheel
 rm -rf "$repo_path/dist" "$repo_path/build" \
     "$repo_path/src/RESTinstance.egg-info"
-python setup.py sdist bdist_wheel
+python "$repo_path/setup.py" install --user --force
+python "$repo_path/setup.py" sdist bdist_wheel
 twine upload "$repo_path/dist/*"
