@@ -211,17 +211,17 @@ To create a new ``.venv``, build a Python package and upload it PyPi:
 
     scripts/release_pypi
 
-To release the Docker image to private Docker registry:
+To build a Docker image with ``/src``, tag it and push it to Docker registry:
 
 ::
 
-    scripts/release https://your.private.registry.com:5000/restinstance
+    scripts/release_docker https://your.private.registry.com/restinstance
 
-To release the Docker image to DockerHub:
+To do the same for Docker Hub you can use:
 
 ::
 
-    scripts/release {{organization}}/restinstance
+    scripts/release_docker {{organization}}/restinstance
 
 
 Credits

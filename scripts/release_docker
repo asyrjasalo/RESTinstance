@@ -20,9 +20,9 @@ version=$(echo "$version" | tail -n1)
 if [ -z "$registry_url" ]; then
   echo "Usage: $0 REGISTRY_URL"
   echo ""
-  echo "  e.g.: $0 https://your.registry.com:5000/restinstance"
+  echo "  e.g.: $0 https://your.private.registry.com/restinstance"
   echo
-  echo "Releasing $version"
+  echo "  would tag and push the image as both latest and $version"
   exit 64
 fi
 
