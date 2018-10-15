@@ -2,12 +2,16 @@
 
 set -e
 
-### globals ####################################################################
+### consts #####################################################################
 
 this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_path="$this_path/.."
 
-### run libdoc in docker #######################################################
+### run libdoc #################################################################
 
-RUN_ARGS="--entrypoint entrypoint -v $repo_path/docs:/home/robot/docs" \
-  "$repo_path/rfdocker" python -m robot.libdoc REST docs/index.html
+if which docker >/dev/null ; then
+  RUN_ARGS="--entrypoint entrypoint -v $repo_path/docs:/home/robot/docs" \
+    "$repo_path/rfdocker" python -m robot.libdoc REST docs/index.html
+else
+  python -m robot.libdoc REST "$repo_path/docs/index.html"
+fi
