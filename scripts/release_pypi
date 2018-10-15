@@ -9,10 +9,21 @@ repo_path="$this_path/.."
 
 ### release ####################################################################
 
-export PATH="$HOME/.local/bin:$PATH"
-pip install --user --upgrade twine wheel
-rm -rf "$repo_path/dist" "$repo_path/build" \
+rm -rf "$repo_path/.venv" "$repo_path/dist" "$repo_path/build" \
     "$repo_path/src/RESTinstance.egg-info"
-python "$repo_path/setup.py" install --user --force
+
+if ! which virtualenv >/dev/null ; then
+  pip install --user virtualenv
+fi
+
+virtualenv "$repo_path/.venv"
+source "$repo_path/.venv/bin/activate"
+trap "deactivate ; echo 'Deactivated virtualenv .venv'" EXIT ERR
+
+pip install "$repo_path"
+
+pip install wheel
 python "$repo_path/setup.py" sdist bdist_wheel
+
+pip install twine
 twine upload "$repo_path/dist/*"

@@ -198,14 +198,14 @@ runs.
 Releasing
 ~~~~~~~~~
 
-To generate `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__:
+To update `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__:
 
 ::
 
     scripts/genlibdoc
 
 
-To build and release Python package to PyPi:
+To create a new ``.venv``, build a Python package and upload it PyPi:
 
 ::
 

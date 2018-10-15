@@ -1,14 +1,15 @@
-*.egg-info
 *.pyc
 __pycache__
 
-*.private
-
 *.demo.json
+results/
 log.html
 report.html
 output.xml
 
-results/
+*.egg-info
 dist/
 build/
+.venv/
+
+*.private
