@@ -1032,31 +1032,27 @@ class Keywords(object):
         """
         if isinstance(what, (STRING_TYPES)):
             if what == "":
-                message = "\nThe current instance JSON Schema is:"
                 try:
                     json = self._last_instance_or_error()['schema']
                 except IndexError:
                     raise RuntimeError(no_instances_error)
             elif what.startswith(("request", "response", "$")):
                 self._last_instance_or_error()
-                message = "\n%s JSON Schema is:" % (what)
                 matches = self._find_by_field(what)
                 if len(matches) > 1:
                     json = [found['schema'] for found in matches]
                 else:
                     json = matches[0]['schema']
             else:
-                message = "\nJSON Schema for %s is:" % (what)
                 try:
                     json = self._new_schema(self._input_json_as_string(what))
                 except ValueError:
                     json = self._new_schema(self._input_string(what))
         else:
-            message = "\nJSON Schema for %s is:" % (what.__class__.__name__)
             json = self._new_schema(self._input_json_from_non_string(what))
         sort_keys = self._input_boolean(sort_keys)
         if not file_path:
-            self.log_json(json, message, sort_keys=sort_keys)
+            self.log_json(json, sort_keys=sort_keys)
         else:
             content = dumps(json, ensure_ascii=False, indent=4,
                             separators=(',', ': ' ), sort_keys=sort_keys)
@@ -1113,7 +1109,6 @@ class Keywords(object):
         """
         if isinstance(what, (STRING_TYPES)):
             if what == "":
-                message = "\nThe current instance is:"
                 try:
                     json = deepcopy(self._last_instance_or_error())
                     json.pop('schema')
@@ -1127,24 +1122,21 @@ class Keywords(object):
                     return self.output_schema(what, file_path, append, sort_keys)
             elif what.startswith(("request", "response", "$")):
                 self._last_instance_or_error()
-                message = "\n%s is:" % (what)
                 matches = self._find_by_field(what, return_schema=False)
                 if len(matches) > 1:
                     json = [found['reality'] for found in matches]
                 else:
                     json = matches[0]['reality']
             else:
-                message = "\nJSON for %s is:" % (what)
                 try:
                     json = self._input_json_as_string(what)
                 except ValueError:
                     json = self._input_string(what)
         else:
-            message = "\nJSON for %s is:" % (what.__class__.__name__)
             json = self._input_json_from_non_string(what)
         sort_keys = self._input_boolean(sort_keys)
         if not file_path:
-            self.log_json(json, message, sort_keys=sort_keys)
+            self.log_json(json, sort_keys=sort_keys)
         else:
             content = dumps(json, ensure_ascii=False, indent=4,
                             separators=(',', ': ' ), sort_keys=sort_keys)
