@@ -1302,7 +1302,7 @@ class Keywords(object):
     def _add_defaults_to_schema(self, schema, response):
         body = response['body']
         schema = schema['properties']['response']['properties']['body']
-        if isinstance(body, (dict)):
+        if isinstance(body, (dict)) and 'properties' in schema:
             self._add_property_defaults(body, schema['properties'])
 
     def _add_property_defaults(self, body, schema):
