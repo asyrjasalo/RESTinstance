@@ -10,6 +10,6 @@ output.xml
 *.egg-info
 dist/
 build/
-.venv/
+.venvs/
 
 *.private
