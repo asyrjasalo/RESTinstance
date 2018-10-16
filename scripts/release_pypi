@@ -6,19 +6,18 @@ set -e
 
 this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_path="$this_path/.."
+venv_path="$repo_path/.venvs/release"
 
 ### release ####################################################################
 
-rm -rf "$repo_path/.venv" "$repo_path/dist" "$repo_path/build" \
+rm -rf "$venv_path" "$repo_path/dist" "$repo_path/build" \
     "$repo_path/src/RESTinstance.egg-info"
 
-if ! which virtualenv >/dev/null ; then
-  pip install --user virtualenv
-fi
+export PATH="$HOME/.local/bin:$PATH"
+virtualenv --version >/dev/null || pip install --user virtualenv
 
-virtualenv "$repo_path/.venv"
-source "$repo_path/.venv/bin/activate"
-trap "deactivate ; echo 'Deactivated virtualenv .venv'" EXIT ERR
+virtualenv "$venv_path"
+source "$venv_path/bin/activate"
 
 pip install "$repo_path"
 
