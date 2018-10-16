@@ -215,9 +215,12 @@ class Keywords(object):
         | `Expect Response Body` | { "required": ["id", "token"] } | # Only these are required from this method |
         | `Expect Response Body` | { "additionalProperties": false } | # Nothing extra should be responded by this method |
         """
-        response_schema = self.schema['properties']['response']
-        response_schema['properties']['body'].update(self._input_object(schema))
-        return response_schema['properties']['body']
+        response_properties = self.schema['properties']['response']['properties']
+        if 'body' in response_properties:
+            response_properties['body'].update(self._input_object(schema))
+        else:
+            response_properties['body'] = self._input_object(schema)
+        return response_properties['body']
 
     @keyword(name=None, tags=("expectations",))
     def clear_expectations(self):
