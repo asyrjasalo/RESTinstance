@@ -51,12 +51,16 @@ As a Docker image
 
 ::
 
-   docker pull asyrjasalo/restinstance
-   docker run --rm -ti --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
-     --env HTTP_PROXY --env HTTPS_PROXY --network host \
-     --volume "$PWD/tests":/home/robot/tests \
-     --volume "$PWD/results":/home/robot/results \
-     asyrjasalo/restinstance tests
+    cd <path_where_your_tests_are>
+
+::
+
+    docker pull asyrjasalo/restinstance
+    docker run --rm -ti --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
+      --env HTTP_PROXY --env HTTPS_PROXY --network host \
+      --volume "$PWD/tests":/home/robot/tests \
+      --volume "$PWD/results":/home/robot/results \
+      asyrjasalo/restinstance tests
 
 Using rfdocker
 ~~~~~~~~~~~~~~
