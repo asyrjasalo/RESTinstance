@@ -141,8 +141,6 @@ class REST(Keywords):
         }
         if url:
             url = REST._input_string(url)
-            if url.endswith('/'):
-                url = url[:-1]
             if not url.startswith(("http://", "https://")):
                 url = "http://" + url
             url_parts = urlparse(url)
