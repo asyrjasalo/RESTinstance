@@ -1197,8 +1197,6 @@ class Keywords(object):
     ### Internal methods
 
     def _request(self, endpoint, request, validate=True):
-        if endpoint.endswith('/'):
-            endpoint = endpoint[:-1]
         if not endpoint.startswith(('http://', 'https://')):
             base_url = self.request['scheme'] + "://" + self.request['netloc']
             if not endpoint.startswith('/'):

@@ -13,3 +13,4 @@ build/
 .venvs/
 
 *.private
+.idea/
