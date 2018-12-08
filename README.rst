@@ -247,6 +247,8 @@ Contributors:
   for using and testing RESTinstance in early phase (also check
   `RESTinstance-wrapper <https://github.com/sqilz/RESTinstance-wrapper>`__)
 
+- `Vinh "vinhntb" Nguyen <https://github.com/vinhntb>`__, `#52 <https://github.com/asyrjasalo/RESTinstance/pull/52>`__.
+
 
 We use the following Python excellence under the hood:
 
