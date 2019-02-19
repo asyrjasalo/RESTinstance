@@ -315,8 +315,8 @@ class Keywords(object):
         return self._request(endpoint, request, validate)['response']
 
     @keyword(name=None, tags=("http",))
-    def get(self, endpoint, query=None, body=None, timeout=None, allow_redirects=None,
-            validate=True, headers=None):
+    def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
+            validate=True, headers=None, body=None):
         """*Sends a GET request to the endpoint.*
 
         The endpoint is joined with the URL given on library init (if any).
@@ -346,7 +346,7 @@ class Keywords(object):
         | `GET` | /users?_limit=2 |
         | `GET` | /users | _limit=2 |
         | `GET` | /users | { "_limit": "2" } |
-        | `GET` | /users | { "_limit": "2" } | { "actions": [ 1, 3, 5, 9 ] }
+        | `GET` | /users | { "_limit": "2" } | body={ "actions": [ 1, 3, 5, 9 ] }
         | `GET` | https://jsonplaceholder.typicode.com/users | headers={ "Authentication": "" } |
         """
         endpoint = self._input_string(endpoint)
