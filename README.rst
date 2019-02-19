@@ -3,6 +3,8 @@ RESTinstance
 
 `Robot Framework <http://robotframework.org>`__ test library for (RESTful) JSON APIs
 
+Forked from https://github.com/asyrjasalo/RESTinstance and modified to support HTTP GET requests with a JSON body.
+
 
 Advantages
 ----------
