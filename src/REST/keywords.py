@@ -315,7 +315,7 @@ class Keywords(object):
         return self._request(endpoint, request, validate)['response']
 
     @keyword(name=None, tags=("http",))
-    def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
+    def get(self, endpoint, query=None, body=None, timeout=None, allow_redirects=None,
             validate=True, headers=None):
         """*Sends a GET request to the endpoint.*
 
@@ -327,6 +327,8 @@ class Keywords(object):
 
         ``query``: Request query parameters as a JSON object or a dictionary.
         Alternatively, query parameters can be given as part of endpoint as well.
+
+	``body``: Request body parameters as a JSON object, file or a dictionary.
 
         ``timeout``: A number of seconds to wait for the response before failing the keyword.
 
@@ -340,6 +342,7 @@ class Keywords(object):
         *Examples*
 
         | `GET` | /users/1 |
+	| `GET` | /users/1 | { "actions": [1, 6, 7] }
         | `GET` | /users | timeout=2.5 |
         | `GET` | /users?_limit=2 |
         | `GET` | /users | _limit=2 |
@@ -349,6 +352,7 @@ class Keywords(object):
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "GET"
+	request['body'] = self.input(body)
         request['query'] = OrderedDict()
         query_in_url = OrderedDict(parse_qsl(urlparse(endpoint).query))
         if query_in_url:
