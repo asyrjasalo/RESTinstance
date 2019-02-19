@@ -328,7 +328,7 @@ class Keywords(object):
         ``query``: Request query parameters as a JSON object or a dictionary.
         Alternatively, query parameters can be given as part of endpoint as well.
 
-	``body``: Request body parameters as a JSON object, file or a dictionary.
+        ``body``: Request body parameters as a JSON object, file or a dictionary.
 
         ``timeout``: A number of seconds to wait for the response before failing the keyword.
 
@@ -342,18 +342,18 @@ class Keywords(object):
         *Examples*
 
         | `GET` | /users/1 |
-	| `GET` | /users/1 | { "actions": [1, 6, 7] }
         | `GET` | /users | timeout=2.5 |
         | `GET` | /users?_limit=2 |
         | `GET` | /users | _limit=2 |
         | `GET` | /users | { "_limit": "2" } |
+        | `GET` | /users | { "_limit": "2" } | { "actions": [ 1, 3, 5, 9 ] }
         | `GET` | https://jsonplaceholder.typicode.com/users | headers={ "Authentication": "" } |
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request['method'] = "GET"
-	request['body'] = self.input(body)
         request['query'] = OrderedDict()
+        request['body'] = self.input(body)
         query_in_url = OrderedDict(parse_qsl(urlparse(endpoint).query))
         if query_in_url:
             request['query'].update(query_in_url)
