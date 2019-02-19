@@ -123,12 +123,12 @@ Tip: Run this ``README.rst`` as a test suite with Robot Framework.
         [Teardown]  Output                    # note the updated response schema
 
     GET existing users, use JSONPath for very short but powerful queries
-        GET         /users?_limit=5           # further assertions are to this
+        GET         /users?_limit=5           body={ "body": true }  # further assertions are to this
         Array       response body
-        Integer     $[0].id                   1           # first id is 1
-        String      $[0]..lat                 -37.3159    # any matching child
-        Integer     $..id                     maximum=5   # multiple matches
-        [Teardown]  Output  $[*].email        # outputs all emails as an array
+        Integer     $[0].id                   1                      # first id is 1
+        String      $[0]..lat                 -37.3159               # any matching child
+        Integer     $..id                     maximum=5              # multiple matches
+        [Teardown]  Output  $[*].email                               # outputs all emails as an array
 
     POST with valid params to create a new user, can be output to a file
         POST        /users                    ${json}
