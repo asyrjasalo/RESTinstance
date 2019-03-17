@@ -47,7 +47,7 @@ On 3.x and 2.7, you can install or upgrade `from PyPi <https://pypi.org/project/
 As a Docker image
 ~~~~~~~~~~~~~~~~~
 
-`The RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ contains Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.0.4>`__:
+`The RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ contains Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.1.1>`__:
 
 ::
 
