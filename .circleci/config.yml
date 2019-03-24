@@ -2,7 +2,7 @@ version: 2
 
 jobs:
   build:
-    machine: true
+    machine:
       docker_layer_caching: true
 
     steps:
@@ -21,6 +21,6 @@ jobs:
 
 workflows:
   version: 2
-    rfdocker:
-      jobs:
-        - build
+  rfdocker:
+    jobs:
+      - build
