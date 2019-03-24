@@ -10,3 +10,6 @@ jobs:
       - run:
           name: Run tests
           command: ./scripts/test
+
+      - store_test_results:
+          path: results
