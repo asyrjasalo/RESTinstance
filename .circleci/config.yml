@@ -9,7 +9,7 @@ jobs:
 
       - run:
           name: Run tests
-          command: ./scripts/test
+          command: scripts/test --xunit xunit.xml tests/
 
       - store_test_results:
           path: results
