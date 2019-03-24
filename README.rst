@@ -3,6 +3,9 @@ RESTinstance
 
 `Robot Framework <http://robotframework.org>`__ test library for (RESTful) JSON APIs
 
+.. image:: https://circleci.com/gh/asyrjasalo/RESTinstance.svg?style=svg
+    :target: https://circleci.com/gh/asyrjasalo/RESTinstance
+
 
 Advantages
 ----------
