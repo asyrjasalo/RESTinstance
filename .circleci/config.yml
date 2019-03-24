@@ -8,8 +8,12 @@ jobs:
       - checkout
 
       - run:
-          name: Run tests
+          name: Run tests with rfdocker
           command: scripts/test --xunit xunit.xml tests/
 
       - store_test_results:
-          path: results
+          path: results/
+
+      - store_artifacts:
+          path: results/
+          destination: robot-results/
