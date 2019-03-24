@@ -3,6 +3,7 @@ version: 2
 jobs:
   build:
     machine: true
+      docker_layer_caching: true
 
     steps:
       - checkout
