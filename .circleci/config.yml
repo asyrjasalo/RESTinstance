@@ -18,3 +18,9 @@ jobs:
       - store_artifacts:
           path: results/
           destination: robot-results/
+
+workflows:
+  version: 2
+    rfdocker:
+      jobs:
+        - build
