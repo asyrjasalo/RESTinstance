@@ -1,3 +1,2 @@
 include LICENSE
 include requirements.txt
-include docs/index.html

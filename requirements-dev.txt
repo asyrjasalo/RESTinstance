@@ -1,0 +1,16 @@
+-r requirements.txt
+
+pur==5.2.1
+
+black==18.9b0
+check-manifest==0.37
+flake8==3.6.0
+isort==4.3.4
+mypy==0.650
+pyroma==2.4
+
+pytest==4.0.2
+pytest-clarity
+pytest-cov==2.6.0
+pytest-instafail==0.4.0
+pytest-spec==1.1.0

@@ -1,16 +1,22 @@
 *.pyc
 __pycache__
 
-*.demo.json
-results/
-log.html
-report.html
-output.xml
-
 *.egg-info
+.venvs/
 dist/
 build/
-.venvs/
+pip-wheel-metadata/
+
+log.html
+output.xml
+report.html
+results/
+
+.coverage
+.pytest_cache
+.mypy_cache
 
 *.private
 .idea/
+
+*.demo.json

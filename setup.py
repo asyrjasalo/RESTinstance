@@ -1,44 +1,50 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import re
+
 from io import open  # required for Python 2
 from os.path import abspath, dirname, join
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
-
-CURDIR = dirname(abspath(__file__))
-
-CLASSIFIERS = '''
-Development Status :: 4 - Beta
-License :: OSI Approved :: Apache Software License
+classifiers = """
+Development Status :: 5 - Production/Stable
+License :: OSI Approved :: Apache Software License 2.0
 Operating System :: POSIX
-Programming Language :: Python
 Programming Language :: Python :: 2.7
-Programming Language :: Python :: 3
+Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3.7
 Topic :: Software Development :: Testing
 Framework :: Robot Framework
 Framework :: Robot Framework :: Library
-'''.strip().splitlines()
-with open(join(CURDIR, 'src', 'REST', 'version.py'), encoding="utf-8") as f:
-    VERSION = re.search("__version__ = '(.*)'", f.read()).group(1)
-with open(join(CURDIR, 'README.rst'), encoding="utf-8") as f:
-    DESCRIPTION = f.read()
-with open(join(CURDIR, 'requirements.txt'), encoding="utf-8") as f:
-    REQUIREMENTS = f.read().splitlines()
+""".strip().splitlines()
+
+
+curdir = dirname(abspath(__file__))
+with open(join(curdir, "src", "REST", "version.py"), encoding="utf-8") as f:
+    for line in f:
+        if line.startswith("__version__"):
+            version = line.strip().split("=")[1].strip(" '\"")
+            break
+    else:
+        version = "0.0.1"
+with open(join(curdir, "README.rst"), encoding="utf-8") as f:
+    readme = f.read()
+with open(join(curdir, "requirements.txt"), encoding="utf-8") as f:
+    requirements = f.read()
 
 setup(
-    name             = 'RESTinstance',
-    version          = VERSION,
-    description      = 'Robot Framework test library for (RESTful) JSON APIs',
-    long_description = DESCRIPTION,
-    author           = 'Anssi Syrjäsalo',
-    author_email     = 'anssi.syrjasalo@gmail.com',
-    url              = 'https://github.com/asyrjasalo/RESTinstance',
-    license          = 'Apache License 2.0',
-    keywords         = 'robotframework test library testing rest http json api',
-    classifiers      = CLASSIFIERS,
-    install_requires = REQUIREMENTS,
-    package_dir      = {'': 'src'},
-    packages         = find_packages('src')
+    name="RESTinstance",
+    version=version,
+    description="Robot Framework test library for (RESTful) JSON APIs",
+    long_description=readme,
+    author="Anssi Syrjäsalo",
+    author_email="anssi.syrjasalo@gmail.com",
+    url="https://github.com/asyrjasalo/RESTinstance",
+    license="Apache License 2.0",
+    keywords="robotframework library http json api",
+    classifiers=classifiers,
+    install_requires=requirements,
+    zip_safe=False,
+    package_dir={"": "src"},
+    packages=find_packages("src"),
 )
