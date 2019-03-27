@@ -9,7 +9,7 @@ jobs:
       - checkout
 
       - run:
-          name: Make: test build install atest
+          name: make (test build install atest)
           command: make
 
       - store_test_results:
