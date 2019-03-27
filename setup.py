@@ -8,7 +8,7 @@ from setuptools import find_packages, setup
 
 classifiers = """
 Development Status :: 5 - Production/Stable
-License :: OSI Approved :: Apache Software License 2.0
+License :: OSI Approved :: Apache Software License
 Operating System :: POSIX
 Programming Language :: Python :: 2.7
 Programming Language :: Python :: 3.6
