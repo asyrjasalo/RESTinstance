@@ -9,8 +9,8 @@ jobs:
       - checkout
 
       - run:
-          name: Run tests with rfdocker
-          command: scripts/test --xunit xunit.xml tests/
+          name: Run acceptance tests
+          command: make atest
 
       - store_test_results:
           path: results/
