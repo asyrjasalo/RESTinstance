@@ -78,11 +78,11 @@ dc_rm: ## Stop and remove docker-compose env and volumes
 	docker-compose down --volumes
 
 .PHONY: libdoc
-libdoc: install ## Generate Robot Framework library documentation
+libdoc: install ## Regenerate library keyword documentation
 	python -m robot.libdoc REST docs/index.html
 
 .PHONY: atest
-atest: dc ## Run acceptance tests for the installed package
+atest: dc ## Run acceptance tests
 	# If not docker is available, you can use:
 	# robot --outputdir results tests/
 	RUN_ARGS="--network=host" ./rfdocker --xunit xunit.xml tests/
