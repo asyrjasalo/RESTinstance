@@ -1,0 +1,136 @@
+{
+  "imposters": [
+    {
+      "name": "default live server",
+      "port": 8080,
+      "protocol": "http",
+      "stubs": [
+        {
+          "responses": [
+            {
+              "proxy": {
+                "to": "http://jsonplaceholder.typicode.com",
+                "mode": "proxyAlways",
+                "injectHeaders": {
+                    "Accept-Encoding": "identity"
+                },
+                "predicateGenerators": [
+                  {
+                    "matches": {
+                      "method": true,
+                      "path": true,
+                      "body": true,
+                      "query": true
+                    },
+                    "caseSensitive": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "mounterest / states",
+      "port": 8273,
+      "protocol": "http",
+      "defaultResponse": {
+        "statusCode": 400,
+        "body": {
+          "error": "Bad request"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "stubs": [
+        {
+          "predicates": [
+            {
+              "equals": {
+                "method": "GET"
+              }
+            }
+          ],
+          "responses": [
+            {
+              "inject": "<%- stringify(filename, 'mocks/get.js') %>"
+            }
+          ]
+        },
+        {
+          "predicates": [
+            {
+              "equals": {
+                "method": "POST"
+              }
+            }
+          ],
+          "responses": [
+            {
+              "inject": "<%- stringify(filename, 'mocks/post.js') %>"
+            }
+          ]
+        },
+        {
+          "predicates": [
+            {
+              "equals": {
+                "method": "PUT"
+              }
+            }
+          ],
+          "responses": [
+            {
+              "inject": "<%- stringify(filename, 'mocks/put.js') %>"
+            }
+          ]
+        },
+        {
+          "predicates": [
+            {
+              "equals": {
+                "method": "PATCH"
+              }
+            }
+          ],
+          "responses": [
+            {
+              "inject": "<%- stringify(filename, 'mocks/patch.js') %>"
+            }
+          ]
+        },
+        {
+          "predicates": [
+            {
+              "equals": {
+                "method": "DELETE",
+                "path": "/state"
+              }
+            }
+          ],
+          "responses": [
+            {
+              "inject": "<%- stringify(filename, 'mocks/state.js') %>"
+            }
+          ]
+        },
+        {
+          "predicates": [
+            {
+              "equals": {
+                "method": "DELETE"
+              }
+            }
+          ],
+          "responses": [
+            {
+              "inject": "<%- stringify(filename, 'mocks/delete.js') %>"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

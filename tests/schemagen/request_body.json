@@ -56,6 +56,6 @@
             "type": "object"
         }
     },
-    "title": "POST http://mounterest:8273/users",
+    "title": "POST http://localhost:8273/users",
     "type": "object"
 }

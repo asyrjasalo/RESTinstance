@@ -172,19 +172,12 @@ listed below as contributors.
 Library's own tests
 ~~~~~~~~~~~~~~~~~~~
 
-For simplicity, `Docker <https://docs.docker.com/install>`__ is required for running `the library's own tests <https://github.com/asyrjasalo/RESTinstance/tree/master/tests>`__. No other requirements are needed.
-
-To spin up the environment and run the tests:
+To start the docker-compose environment and run the tests:
 
 ::
 
-    scripts/test
+    make atest
 
-To run them on Python 2.7:
-
-::
-
-    BUILD_ARGS="-f Dockerfile.python2" BUILD_NAME="restinstance-python2" scripts/test
 
 System under test
 ~~~~~~~~~~~~~~~~~
@@ -209,26 +202,22 @@ To update `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__:
 
 ::
 
-    scripts/genlibdoc
+    make libdoc
 
 
-To create a new ``.venv``, build a Python package and upload it PyPi:
-
-::
-
-    scripts/release_pypi
+See ``make help`` for all rules.
 
 To build a Docker image with ``/src``, tag it and push it to Docker registry:
 
 ::
 
-    scripts/release_docker https://your.private.registry.com/restinstance
+    ./release_docker https://your.private.registry.com/restinstance
 
 To do the same for Docker Hub you can use:
 
 ::
 
-    scripts/release_docker {{organization}}/restinstance
+    ./release_docker {{organization}}/restinstance
 
 
 Credits

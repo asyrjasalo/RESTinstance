@@ -1,6 +1,6 @@
 *** Settings ***
 Resource        resources/mounterest.robot
-Library         REST                mounterest:${api_port}/
+Library         REST                localhost:${api_port}/
 Suite setup     Reset state
 Suite teardown  Rest instances
 Test setup      Set expectations

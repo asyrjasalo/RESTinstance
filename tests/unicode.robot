@@ -1,6 +1,6 @@
 *** Settings ***
 Resource        resources/mounterest.robot
-Library         REST                    mounterest:${api_port}/
+Library         REST                    localhost:${api_port}/
 Suite teardown  Rest instances          ${OUTPUTDIR}/unicode_instances.json
 Test setup      Reset state
 

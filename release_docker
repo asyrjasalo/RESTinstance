@@ -5,8 +5,7 @@ set -e
 ### consts #####################################################################
 
 this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-repo_path="$this_path/.."
-
+x
 ## variables ###################################################################
 
 registry_url="$1"
@@ -14,7 +13,7 @@ registry_url="$1"
 ### release ####################################################################
 
 version=$(RUN_ARGS="--entrypoint entrypoint" \
-  "$repo_path/rfdocker" python -c "import REST; print(REST.__version__, end='')")
+  "$this_path/rfdocker" python -c "import REST; print(REST.__version__, end='')")
 version=$(echo "$version" | tail -n1)
 
 if [ -z "$registry_url" ]; then

@@ -1,6 +1,6 @@
 *** Settings ***
 Resource        resources/mounterest.robot
-Library         REST                            mounterest:${api_port}/
+Library         REST                            localhost:${api_port}/
 ...             spec=${CURDIR}/swagger/spec_20.json
 
 *** Test Cases ***

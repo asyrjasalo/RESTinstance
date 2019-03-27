@@ -6,7 +6,7 @@ Test setup      Reset state
 
 
 *** Variables ***
-${api_url}=     http://mounterest:${api_port}
+${api_url}=     http://localhost:${api_port}
 
 
 *** Keywords ***
