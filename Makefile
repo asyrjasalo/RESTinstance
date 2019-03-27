@@ -9,7 +9,7 @@ VENV_RELEASE_PATH := .venvs/release
 PACKAGE_NAME = RESTinstance
 
 # evaluate lazily: checks before build and after installed
-SANITY_CHECK = robot --version || true
+SANITY_CHECK = robot --outputdir results README.rst
 SMOKE_CHECK = python -c "import REST; print(REST.__version__)"
 
 
@@ -100,7 +100,7 @@ retest: ## Run failed tests only, if none, run all
 build: _venv_release ## Build source dist and wheel
 	. "${VENV_RELEASE_PATH}/bin/activate" && pip install .
 	##########################################
-	### Sanity check before building dists ###
+	### Sanity check by README.rst before building dists ###
 	. "${VENV_RELEASE_PATH}/bin/activate" && ${SANITY_CHECK} && \
 	python setup.py clean --all bdist_wheel sdist && \
 	pip install --upgrade twine
