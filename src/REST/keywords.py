@@ -50,10 +50,12 @@ from .schema_keywords import SCHEMA_KEYWORDS
 
 
 class Keywords(object):
-
     def get_keyword_names(self):
-        return [name for name in dir(self) if hasattr(getattr(self, name),
-            'robot_name')]
+        return [
+            name
+            for name in dir(self)
+            if hasattr(getattr(self, name), "robot_name")
+        ]
 
     ### Keywords start here
 
@@ -72,8 +74,8 @@ class Keywords(object):
         | `Set Client Cert` | ["${CURDIR}/client.cert", "${CURDIR}/client.key"] |
         | `Set Client Cert` | ${paths_list} |
         """
-        self.request['cert'] = self._input_client_cert(cert)
-        return self.request['cert']
+        self.request["cert"] = self._input_client_cert(cert)
+        return self.request["cert"]
 
     @keyword(name=None, tags=("settings",))
     def set_headers(self, headers):
@@ -88,8 +90,8 @@ class Keywords(object):
         | `Set Headers` | { "Accept-Encoding": "identity"} |
         | `Set Headers` | ${auth_dict} |
         """
-        self.request['headers'].update(self._input_object(headers))
-        return self.request['headers']
+        self.request["headers"].update(self._input_object(headers))
+        return self.request["headers"]
 
     @keyword(name=None, tags=("expectations",))
     def expect_request(self, schema, merge=False):
@@ -123,15 +125,15 @@ class Keywords(object):
         """
         schema = self._input_object(schema)
         if "properties" not in schema:
-            schema = { "properties": schema }
+            schema = {"properties": schema}
         if self._input_boolean(merge):
             new_schema = SchemaBuilder(schema_uri=False)
-            new_schema.add_schema(self.schema['properties']['request'])
+            new_schema.add_schema(self.schema["properties"]["request"])
             new_schema.add_schema(schema)
-            self.schema['properties']['request'] = new_schema.to_schema()
+            self.schema["properties"]["request"] = new_schema.to_schema()
         else:
-            self.schema['properties']['request'] = schema
-        return self.schema['properties']['request']
+            self.schema["properties"]["request"] = schema
+        return self.schema["properties"]["request"]
 
     @keyword(name=None, tags=("expectations",))
     def expect_response(self, schema, merge=False):
@@ -167,15 +169,15 @@ class Keywords(object):
         """
         schema = self._input_object(schema)
         if "properties" not in schema:
-            schema = { "properties": schema }
+            schema = {"properties": schema}
         if self._input_boolean(merge):
             new_schema = SchemaBuilder(schema_uri=False)
-            new_schema.add_schema(self.schema['properties']['response'])
+            new_schema.add_schema(self.schema["properties"]["response"])
             new_schema.add_schema(schema)
-            self.schema['properties']['response'] = new_schema.to_schema()
+            self.schema["properties"]["response"] = new_schema.to_schema()
         else:
-            self.schema['properties']['response'] = schema
-        return self.schema['properties']['response']
+            self.schema["properties"]["response"] = schema
+        return self.schema["properties"]["response"]
 
     @keyword(name=None, tags=("expectations",))
     def expect_response_body(self, schema):
@@ -215,12 +217,14 @@ class Keywords(object):
         | `Expect Response Body` | { "required": ["id", "token"] } | # Only these are required from this method |
         | `Expect Response Body` | { "additionalProperties": false } | # Nothing extra should be responded by this method |
         """
-        response_properties = self.schema['properties']['response']['properties']
-        if 'body' in response_properties:
-            response_properties['body'].update(self._input_object(schema))
+        response_properties = self.schema["properties"]["response"][
+            "properties"
+        ]
+        if "body" in response_properties:
+            response_properties["body"].update(self._input_object(schema))
         else:
-            response_properties['body'] = self._input_object(schema)
-        return response_properties['body']
+            response_properties["body"] = self._input_object(schema)
+        return response_properties["body"]
 
     @keyword(name=None, tags=("expectations",))
     def clear_expectations(self):
@@ -229,19 +233,25 @@ class Keywords(object):
         Using this keyword resets any expectations set with keywords
         `Expect Response`, `Expect Response Body` and `Expect Request`.
         """
-        self.schema['properties']['request'] = {
+        self.schema["properties"]["request"] = {
             "type": "object",
-            "properties": {}
+            "properties": {},
         }
-        self.schema['properties']['response'] = {
+        self.schema["properties"]["response"] = {
             "type": "object",
-            "properties": {}
+            "properties": {},
         }
         return self.schema
 
     @keyword(name=None, tags=("http",))
-    def head(self, endpoint, timeout=None, allow_redirects=None, validate=True,
-             headers=None):
+    def head(
+        self,
+        endpoint,
+        timeout=None,
+        allow_redirects=None,
+        validate=True,
+        headers=None,
+    ):
         """*Sends a HEAD request to the endpoint.*
 
         The endpoint is joined with the URL given on library init (if any).
@@ -267,19 +277,25 @@ class Keywords(object):
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
-        request['method'] = "HEAD"
+        request["method"] = "HEAD"
         if allow_redirects is not None:
-            request['allowRedirects'] = self._input_boolean(allow_redirects)
+            request["allowRedirects"] = self._input_boolean(allow_redirects)
         if timeout is not None:
-            request['timeout'] = self._input_timeout(timeout)
+            request["timeout"] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
         if headers:
-            request['headers'].update(self._input_object(headers))
-        return self._request(endpoint, request, validate)['response']
+            request["headers"].update(self._input_object(headers))
+        return self._request(endpoint, request, validate)["response"]
 
     @keyword(name=None, tags=("http",))
-    def options(self, endpoint, timeout=None, allow_redirects=None,
-                validate=True, headers=None):
+    def options(
+        self,
+        endpoint,
+        timeout=None,
+        allow_redirects=None,
+        validate=True,
+        headers=None,
+    ):
         """*Sends an OPTIONS request to the endpoint.*
 
         The endpoint is joined with the URL given on library init (if any).
@@ -304,19 +320,26 @@ class Keywords(object):
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
-        request['method'] = "OPTIONS"
+        request["method"] = "OPTIONS"
         if allow_redirects is not None:
-            request['allowRedirects'] = self._input_boolean(allow_redirects)
+            request["allowRedirects"] = self._input_boolean(allow_redirects)
         if timeout is not None:
-            request['timeout'] = self._input_timeout(timeout)
+            request["timeout"] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
         if headers:
-            request['headers'].update(self._input_object(headers))
-        return self._request(endpoint, request, validate)['response']
+            request["headers"].update(self._input_object(headers))
+        return self._request(endpoint, request, validate)["response"]
 
     @keyword(name=None, tags=("http",))
-    def get(self, endpoint, query=None, timeout=None, allow_redirects=None,
-            validate=True, headers=None):
+    def get(
+        self,
+        endpoint,
+        query=None,
+        timeout=None,
+        allow_redirects=None,
+        validate=True,
+        headers=None,
+    ):
         """*Sends a GET request to the endpoint.*
 
         The endpoint is joined with the URL given on library init (if any).
@@ -348,26 +371,33 @@ class Keywords(object):
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
-        request['method'] = "GET"
-        request['query'] = OrderedDict()
+        request["method"] = "GET"
+        request["query"] = OrderedDict()
         query_in_url = OrderedDict(parse_qsl(urlparse(endpoint).query))
         if query_in_url:
-            request['query'].update(query_in_url)
-            endpoint = endpoint.rsplit('?', 1)[0]
+            request["query"].update(query_in_url)
+            endpoint = endpoint.rsplit("?", 1)[0]
         if query:
-            request['query'].update(self._input_object(query))
+            request["query"].update(self._input_object(query))
         if allow_redirects is not None:
-            request['allowRedirects'] = self._input_boolean(allow_redirects)
+            request["allowRedirects"] = self._input_boolean(allow_redirects)
         if timeout is not None:
-            request['timeout'] = self._input_timeout(timeout)
+            request["timeout"] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
         if headers:
-            request['headers'].update(self._input_object(headers))
-        return self._request(endpoint, request, validate)['response']
+            request["headers"].update(self._input_object(headers))
+        return self._request(endpoint, request, validate)["response"]
 
     @keyword(name=None, tags=("http",))
-    def post(self, endpoint, body=None, timeout=None, allow_redirects=None,
-             validate=True, headers=None):
+    def post(
+        self,
+        endpoint,
+        body=None,
+        timeout=None,
+        allow_redirects=None,
+        validate=True,
+        headers=None,
+    ):
         """*Sends a POST request to the endpoint.*
 
         The endpoint is joined with the URL given on library init (if any).
@@ -394,20 +424,27 @@ class Keywords(object):
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
-        request['method'] = "POST"
-        request['body'] = self.input(body)
+        request["method"] = "POST"
+        request["body"] = self.input(body)
         if allow_redirects is not None:
-            request['allowRedirects'] = self._input_boolean(allow_redirects)
+            request["allowRedirects"] = self._input_boolean(allow_redirects)
         if timeout is not None:
-            request['timeout'] = self._input_timeout(timeout)
+            request["timeout"] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
         if headers:
-            request['headers'].update(self._input_object(headers))
-        return self._request(endpoint, request, validate)['response']
+            request["headers"].update(self._input_object(headers))
+        return self._request(endpoint, request, validate)["response"]
 
     @keyword(name=None, tags=("http",))
-    def put(self, endpoint, body=None, timeout=None, allow_redirects=None,
-            validate=True, headers=None):
+    def put(
+        self,
+        endpoint,
+        body=None,
+        timeout=None,
+        allow_redirects=None,
+        validate=True,
+        headers=None,
+    ):
         """*Sends a PUT request to the endpoint.*
 
         The endpoint is joined with the URL given on library init (if any).
@@ -434,20 +471,27 @@ class Keywords(object):
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
-        request['method'] = "PUT"
-        request['body'] = self.input(body)
+        request["method"] = "PUT"
+        request["body"] = self.input(body)
         if allow_redirects is not None:
-            request['allowRedirects'] = self._input_boolean(allow_redirects)
+            request["allowRedirects"] = self._input_boolean(allow_redirects)
         if timeout is not None:
-            request['timeout'] = self._input_timeout(timeout)
+            request["timeout"] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
         if headers:
-            request['headers'].update(self._input_object(headers))
-        return self._request(endpoint, request, validate)['response']
+            request["headers"].update(self._input_object(headers))
+        return self._request(endpoint, request, validate)["response"]
 
     @keyword(name=None, tags=("http",))
-    def patch(self, endpoint, body=None, timeout=None, allow_redirects=None,
-              validate=True, headers=None):
+    def patch(
+        self,
+        endpoint,
+        body=None,
+        timeout=None,
+        allow_redirects=None,
+        validate=True,
+        headers=None,
+    ):
         """*Sends a PATCH request to the endpoint.*
 
         The endpoint is joined with the URL given on library init (if any).
@@ -474,20 +518,26 @@ class Keywords(object):
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
-        request['method'] = "PATCH"
-        request['body'] = self.input(body)
+        request["method"] = "PATCH"
+        request["body"] = self.input(body)
         if allow_redirects is not None:
-            request['allowRedirects'] = self._input_boolean(allow_redirects)
+            request["allowRedirects"] = self._input_boolean(allow_redirects)
         if timeout is not None:
-            request['timeout'] = self._input_timeout(timeout)
+            request["timeout"] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
         if headers:
-            request['headers'].update(self._input_object(headers))
-        return self._request(endpoint, request, validate)['response']
+            request["headers"].update(self._input_object(headers))
+        return self._request(endpoint, request, validate)["response"]
 
     @keyword(name=None, tags=("http",))
-    def delete(self, endpoint, timeout=None, allow_redirects=None,
-               validate=True, headers=None):
+    def delete(
+        self,
+        endpoint,
+        timeout=None,
+        allow_redirects=None,
+        validate=True,
+        headers=None,
+    ):
         """*Sends a DELETE request to the endpoint.*
 
         The endpoint is joined with the URL given on library init (if any).
@@ -512,15 +562,15 @@ class Keywords(object):
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
-        request['method'] = "DELETE"
+        request["method"] = "DELETE"
         if allow_redirects is not None:
-            request['allowRedirects'] = self._input_boolean(allow_redirects)
+            request["allowRedirects"] = self._input_boolean(allow_redirects)
         if timeout is not None:
-            request['timeout'] = self._input_timeout(timeout)
+            request["timeout"] = self._input_timeout(timeout)
         validate = self._input_boolean(validate)
         if headers:
-            request['headers'].update(self._input_object(headers))
-        return self._request(endpoint, request, validate)['response']
+            request["headers"].update(self._input_object(headers))
+        return self._request(endpoint, request, validate)["response"]
 
     @keyword(name=None, tags=("assertions",))
     def missing(self, field):
@@ -552,10 +602,13 @@ class Keywords(object):
         except AssertionError:
             return
         for found in matches:
-            self.log_json(found['reality'],
-                "\n\nExpected '%s' to not exist, but it is:" % (field))
-        raise AssertionError("Expected '%s' to not exist, but it does." % (
-            field))
+            self.log_json(
+                found["reality"],
+                "\n\nExpected '%s' to not exist, but it is:" % (field),
+            )
+        raise AssertionError(
+            "Expected '%s' to not exist, but it does." % (field)
+        )
 
     @keyword(name=None, tags=("assertions",))
     def null(self, field, **validations):
@@ -591,9 +644,9 @@ class Keywords(object):
         """
         values = []
         for found in self._find_by_field(field):
-            reality = found['reality']
-            schema = { "type": "null" }
-            skip = self._input_boolean(validations.pop('skip', False))
+            reality = found["reality"]
+            schema = {"type": "null"}
+            skip = self._input_boolean(validations.pop("skip", False))
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -639,13 +692,13 @@ class Keywords(object):
         """
         values = []
         for found in self._find_by_field(field):
-            reality = found['reality']
-            schema = { "type": "boolean" }
+            reality = found["reality"]
+            schema = {"type": "boolean"}
             if value is not None:
-                schema['enum'] = [self._input_boolean(value)]
+                schema["enum"] = [self._input_boolean(value)]
             elif self._should_add_examples():
-                schema['examples'] = [reality]
-            skip = self._input_boolean(validations.pop('skip', False))
+                schema["examples"] = [reality]
+            skip = self._input_boolean(validations.pop("skip", False))
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -697,19 +750,19 @@ class Keywords(object):
         """
         values = []
         for found in self._find_by_field(field):
-            schema = found['schema']
-            reality = found['reality']
-            skip = self._input_boolean(validations.pop('skip', False))
+            schema = found["schema"]
+            reality = found["reality"]
+            skip = self._input_boolean(validations.pop("skip", False))
             self._set_type_validations("integer", schema, validations)
             if enum:
-                if 'enum' not in schema:
-                    schema['enum'] = []
+                if "enum" not in schema:
+                    schema["enum"] = []
                 for value in enum:
                     value = self._input_integer(value)
-                    if value not in schema['enum']:
-                        schema['enum'].append(value)
+                    if value not in schema["enum"]:
+                        schema["enum"].append(value)
             elif self._should_add_examples():
-                schema['examples'] = [reality]
+                schema["examples"] = [reality]
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -759,19 +812,19 @@ class Keywords(object):
         """
         values = []
         for found in self._find_by_field(field):
-            schema = found['schema']
-            reality = found['reality']
-            skip = self._input_boolean(validations.pop('skip', False))
+            schema = found["schema"]
+            reality = found["reality"]
+            skip = self._input_boolean(validations.pop("skip", False))
             self._set_type_validations("number", schema, validations)
             if enum:
-                if 'enum' not in schema:
-                    schema['enum'] = []
+                if "enum" not in schema:
+                    schema["enum"] = []
                 for value in enum:
                     value = self._input_number(value)
-                    if value not in schema['enum']:
-                        schema['enum'].append(value)
+                    if value not in schema["enum"]:
+                        schema["enum"].append(value)
             elif self._should_add_examples():
-                schema['examples'] = [reality]
+                schema["examples"] = [reality]
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -822,19 +875,19 @@ class Keywords(object):
         """
         values = []
         for found in self._find_by_field(field):
-            schema = found['schema']
-            reality = found['reality']
-            skip = self._input_boolean(validations.pop('skip', False))
+            schema = found["schema"]
+            reality = found["reality"]
+            skip = self._input_boolean(validations.pop("skip", False))
             self._set_type_validations("string", schema, validations)
             if enum:
-                if 'enum' not in schema:
-                    schema['enum'] = []
+                if "enum" not in schema:
+                    schema["enum"] = []
                 for value in enum:
                     value = self._input_string(value)
-                    if value not in schema['enum']:
-                        schema['enum'].append(value)
+                    if value not in schema["enum"]:
+                        schema["enum"].append(value)
             elif self._should_add_examples():
-                schema['examples'] = [reality]
+                schema["examples"] = [reality]
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -882,19 +935,19 @@ class Keywords(object):
         """
         values = []
         for found in self._find_by_field(field):
-            schema = found['schema']
-            reality = found['reality']
-            skip = self._input_boolean(validations.pop('skip', False))
+            schema = found["schema"]
+            reality = found["reality"]
+            skip = self._input_boolean(validations.pop("skip", False))
             self._set_type_validations("object", schema, validations)
             if enum:
-                if 'enum' not in schema:
-                    schema['enum'] = []
+                if "enum" not in schema:
+                    schema["enum"] = []
                 for value in enum:
                     value = self._input_object(value)
-                    if value not in schema['enum']:
-                        schema['enum'].append(value)
+                    if value not in schema["enum"]:
+                        schema["enum"].append(value)
             elif self._should_add_examples():
-                schema['examples'] = [reality]
+                schema["examples"] = [reality]
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -939,19 +992,19 @@ class Keywords(object):
         """
         values = []
         for found in self._find_by_field(field):
-            schema = found['schema']
-            reality = found['reality']
-            skip = self._input_boolean(validations.pop('skip', False))
+            schema = found["schema"]
+            reality = found["reality"]
+            skip = self._input_boolean(validations.pop("skip", False))
             self._set_type_validations("array", schema, validations)
             if enum:
-                if 'enum' not in schema:
-                    schema['enum'] = []
+                if "enum" not in schema:
+                    schema["enum"] = []
                 for value in enum:
                     value = self._input_array(value)
-                    if value not in schema['enum']:
-                        schema['enum'].append(value)
+                    if value not in schema["enum"]:
+                        schema["enum"].append(value)
             elif self._should_add_examples():
-                schema['examples'] = [reality]
+                schema["examples"] = [reality]
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
@@ -997,8 +1050,9 @@ class Keywords(object):
             return self._input_string(what)
 
     @keyword(name=None, tags=("I/O",))
-    def output_schema(self, what="", file_path=None, append=False,
-                      sort_keys=False):
+    def output_schema(
+        self, what="", file_path=None, append=False, sort_keys=False
+    ):
         """*Outputs JSON Schema to terminal or a file.*
 
         By default, the schema is output for the last request and response.
@@ -1033,16 +1087,16 @@ class Keywords(object):
         if isinstance(what, (STRING_TYPES)):
             if what == "":
                 try:
-                    json = self._last_instance_or_error()['schema']
+                    json = self._last_instance_or_error()["schema"]
                 except IndexError:
                     raise RuntimeError(no_instances_error)
             elif what.startswith(("request", "response", "$")):
                 self._last_instance_or_error()
                 matches = self._find_by_field(what)
                 if len(matches) > 1:
-                    json = [found['schema'] for found in matches]
+                    json = [found["schema"] for found in matches]
                 else:
-                    json = matches[0]['schema']
+                    json = matches[0]["schema"]
             else:
                 try:
                     json = self._new_schema(self._input_json_as_string(what))
@@ -1054,18 +1108,25 @@ class Keywords(object):
         if not file_path:
             self.log_json(json, sort_keys=sort_keys)
         else:
-            content = dumps(json, ensure_ascii=False, indent=4,
-                            separators=(',', ': ' ), sort_keys=sort_keys)
-            write_mode = 'a' if self._input_boolean(append) else 'w'
+            content = dumps(
+                json,
+                ensure_ascii=False,
+                indent=4,
+                separators=(",", ": "),
+                sort_keys=sort_keys,
+            )
+            write_mode = "a" if self._input_boolean(append) else "w"
             try:
-                with open(path.join(getcwd(), file_path), write_mode,
-                          encoding="utf-8") as file:
+                with open(
+                    path.join(getcwd(), file_path), write_mode, encoding="utf-8"
+                ) as file:
                     if IS_PYTHON_2:
                         content = unicode(content)
                     file.write(content)
             except IOError as e:
-                raise RuntimeError("Error outputting to file '%s':\n%s" % (
-                    file_path, e))
+                raise RuntimeError(
+                    "Error outputting to file '%s':\n%s" % (file_path, e)
+                )
         return json
 
     @keyword(name=None, tags=("I/O",))
@@ -1111,22 +1172,24 @@ class Keywords(object):
             if what == "":
                 try:
                     json = deepcopy(self._last_instance_or_error())
-                    json.pop('schema')
-                    json.pop('spec')
+                    json.pop("schema")
+                    json.pop("spec")
                 except IndexError:
                     raise RuntimeError(no_instances_error)
             elif what.startswith("schema"):
-                    logger.warn("Using `Output` for schema is deprecated. " +
-                        "Using `Output Schema` to handle schema paths better.")
-                    what = what.lstrip("schema").lstrip()
-                    return self.output_schema(what, file_path, append, sort_keys)
+                logger.warn(
+                    "Using `Output` for schema is deprecated. "
+                    + "Using `Output Schema` to handle schema paths better."
+                )
+                what = what.lstrip("schema").lstrip()
+                return self.output_schema(what, file_path, append, sort_keys)
             elif what.startswith(("request", "response", "$")):
                 self._last_instance_or_error()
                 matches = self._find_by_field(what, return_schema=False)
                 if len(matches) > 1:
-                    json = [found['reality'] for found in matches]
+                    json = [found["reality"] for found in matches]
                 else:
-                    json = matches[0]['reality']
+                    json = matches[0]["reality"]
             else:
                 try:
                     json = self._input_json_as_string(what)
@@ -1138,18 +1201,25 @@ class Keywords(object):
         if not file_path:
             self.log_json(json, sort_keys=sort_keys)
         else:
-            content = dumps(json, ensure_ascii=False, indent=4,
-                            separators=(',', ': ' ), sort_keys=sort_keys)
-            write_mode = 'a' if self._input_boolean(append) else 'w'
+            content = dumps(
+                json,
+                ensure_ascii=False,
+                indent=4,
+                separators=(",", ": "),
+                sort_keys=sort_keys,
+            )
+            write_mode = "a" if self._input_boolean(append) else "w"
             try:
-                with open(path.join(getcwd(), file_path), write_mode,
-                          encoding="utf-8") as file:
+                with open(
+                    path.join(getcwd(), file_path), write_mode, encoding="utf-8"
+                ) as file:
                     if IS_PYTHON_2:
                         content = unicode(content)
                     file.write(content)
             except IOError as e:
-                raise RuntimeError("Error outputting to file '%s':\n%s" % (
-                    file_path, e))
+                raise RuntimeError(
+                    "Error outputting to file '%s':\n%s" % (file_path, e)
+                )
         return json
 
     @keyword(name=None, tags=("I/O",))
@@ -1176,57 +1246,72 @@ class Keywords(object):
         """
         if not file_path:
             outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
-            if self.request['netloc']:
-                file_path = path.join(outputdir_path,
-                    self.request['netloc']) + '.json'
+            if self.request["netloc"]:
+                file_path = (
+                    path.join(outputdir_path, self.request["netloc"]) + ".json"
+                )
             else:
-                file_path = path.join(outputdir_path, "instances") + '.json'
+                file_path = path.join(outputdir_path, "instances") + ".json"
         sort_keys = self._input_boolean(sort_keys)
-        content = dumps(self.instances, ensure_ascii=False, indent=4,
-                        separators=(',', ': '), sort_keys=sort_keys)
+        content = dumps(
+            self.instances,
+            ensure_ascii=False,
+            indent=4,
+            separators=(",", ": "),
+            sort_keys=sort_keys,
+        )
         try:
-            with open(file_path, 'w', encoding="utf-8") as file:
+            with open(file_path, "w", encoding="utf-8") as file:
                 if IS_PYTHON_2:
                     content = unicode(content)
                 file.write(content)
         except IOError as e:
-            raise RuntimeError("Error exporting instances " +
-                "to file '%s':\n%s" % (file_path, e))
+            raise RuntimeError(
+                "Error exporting instances "
+                + "to file '%s':\n%s" % (file_path, e)
+            )
         return self.instances
 
     ### Internal methods
 
     def _request(self, endpoint, request, validate=True):
-        if not endpoint.startswith(('http://', 'https://')):
-            base_url = self.request['scheme'] + "://" + self.request['netloc']
-            if not endpoint.startswith('/'):
+        if not endpoint.startswith(("http://", "https://")):
+            base_url = self.request["scheme"] + "://" + self.request["netloc"]
+            if not endpoint.startswith("/"):
                 endpoint = "/" + endpoint
-            endpoint = urljoin(base_url, self.request['path']) + endpoint
-        request['url'] = endpoint
-        url_parts = urlparse(request['url'])
-        request['scheme'] = url_parts.scheme
-        request['netloc'] = url_parts.netloc
-        request['path'] = url_parts.path
+            endpoint = urljoin(base_url, self.request["path"]) + endpoint
+        request["url"] = endpoint
+        url_parts = urlparse(request["url"])
+        request["scheme"] = url_parts.scheme
+        request["netloc"] = url_parts.netloc
+        request["path"] = url_parts.path
         try:
-            response = client(request['method'], request['url'],
-                              params=request['query'],
-                              json=request['body'],
-                              headers=request['headers'],
-                              proxies=request['proxies'],
-                              cert=request['cert'],
-                              timeout=tuple(request['timeout']),
-                              allow_redirects=request['allowRedirects'],
-                              verify=request['sslVerify'])
+            response = client(
+                request["method"],
+                request["url"],
+                params=request["query"],
+                json=request["body"],
+                headers=request["headers"],
+                proxies=request["proxies"],
+                cert=request["cert"],
+                timeout=tuple(request["timeout"]),
+                allow_redirects=request["allowRedirects"],
+                verify=request["sslVerify"],
+            )
         except SSLError as e:
-            raise AssertionError("%s to %s SSL certificate verify failed:\n%s" %
-                (request['method'], request['url'], e))
+            raise AssertionError(
+                "%s to %s SSL certificate verify failed:\n%s"
+                % (request["method"], request["url"], e)
+            )
         except Timeout as e:
-            raise AssertionError("%s to %s timed out:\n%s" % (
-                request['method'], request['url'], e))
+            raise AssertionError(
+                "%s to %s timed out:\n%s"
+                % (request["method"], request["url"], e)
+            )
         utc_datetime = datetime.now(tz=utc)
-        request['timestamp'] = {
-            'utc': utc_datetime.isoformat(),
-            'local': utc_datetime.astimezone(get_localzone()).isoformat()
+        request["timestamp"] = {
+            "utc": utc_datetime.isoformat(),
+            "local": utc_datetime.astimezone(get_localzone()).isoformat(),
         }
         if validate and self.spec:
             self._assert_spec(self.spec, response)
@@ -1240,40 +1325,42 @@ class Keywords(object):
         except ValueError:
             response_body = response.text
             if response_body:
-                logger.warn("Response body content is not JSON. " +
-                    "Content-Type is: %s" % response.headers['Content-Type'])
+                logger.warn(
+                    "Response body content is not JSON. "
+                    + "Content-Type is: %s" % response.headers["Content-Type"]
+                )
         response = {
-            'seconds': response.elapsed.microseconds / 1000 / 1000,
-            'status': response.status_code,
-            'body': response_body,
-            'headers': dict(response.headers)
+            "seconds": response.elapsed.microseconds / 1000 / 1000,
+            "status": response.status_code,
+            "body": response_body,
+            "headers": dict(response.headers),
         }
         schema = deepcopy(self.schema)
-        schema['title'] = "%s %s" % (request['method'], request['url'])
+        schema["title"] = "%s %s" % (request["method"], request["url"])
         try:
-            schema['description'] = "%s: %s" % (
+            schema["description"] = "%s: %s" % (
                 BuiltIn().get_variable_value("${SUITE NAME}"),
-                BuiltIn().get_variable_value("${TEST NAME}")
+                BuiltIn().get_variable_value("${TEST NAME}"),
             )
         except RobotNotRunningError:
-            schema['description'] = ""
-        request_properties = schema['properties']['request']['properties']
-        response_properties = schema['properties']['response']['properties']
+            schema["description"] = ""
+        request_properties = schema["properties"]["request"]["properties"]
+        response_properties = schema["properties"]["response"]["properties"]
         if validate_schema:
             if request_properties:
                 self._validate_schema(request_properties, request)
             if response_properties:
                 self._validate_schema(response_properties, response)
-        request_properties['body'] = self._new_schema(request['body'])
-        request_properties['query'] = self._new_schema(request['query'])
-        response_properties['body'] = self._new_schema(response['body'])
-        if 'default' in schema and schema['default']:
+        request_properties["body"] = self._new_schema(request["body"])
+        request_properties["query"] = self._new_schema(request["query"])
+        response_properties["body"] = self._new_schema(response["body"])
+        if "default" in schema and schema["default"]:
             self._add_defaults_to_schema(schema, response)
         return {
-            'request': request,
-            'response': response,
-            'schema': schema,
-            'spec': self.spec
+            "request": request,
+            "response": response,
+            "schema": schema,
+            "spec": self.spec,
         }
 
     def _assert_spec(self, spec, response):
@@ -1301,60 +1388,70 @@ class Keywords(object):
         return builder.to_schema()
 
     def _add_defaults_to_schema(self, schema, response):
-        body = response['body']
-        schema = schema['properties']['response']['properties']['body']
-        if isinstance(body, (dict)) and 'properties' in schema:
-            self._add_property_defaults(body, schema['properties'])
+        body = response["body"]
+        schema = schema["properties"]["response"]["properties"]["body"]
+        if isinstance(body, (dict)) and "properties" in schema:
+            self._add_property_defaults(body, schema["properties"])
 
     def _add_property_defaults(self, body, schema):
-      for key in body:
-        if "properties" in schema[key]:
-            self._add_property_defaults(body[key], schema[key]['properties'])
-        else:
-            schema[key]['default'] = body[key]
+        for key in body:
+            if "properties" in schema[key]:
+                self._add_property_defaults(
+                    body[key], schema[key]["properties"]
+                )
+            else:
+                schema[key]["default"] = body[key]
 
     def _find_by_field(self, field, return_schema=True, print_found=True):
         last_instance = self._last_instance_or_error()
         schema = None
         paths = []
         if field.startswith("$"):
-            value = last_instance['response']['body']
+            value = last_instance["response"]["body"]
             if return_schema:
-                schema = last_instance['schema']['properties']['response']
-                schema = schema['properties']['body']
+                schema = last_instance["schema"]["properties"]["response"]
+                schema = schema["properties"]["body"]
             if field == "$":
-                return [{
-                    'path': ["response", "body"],
-                    'reality': value,
-                    'schema': schema
-                }]
+                return [
+                    {
+                        "path": ["response", "body"],
+                        "reality": value,
+                        "schema": schema,
+                    }
+                ]
             try:
                 query = parse_jsonpath(field)
             except Exception as e:
-                raise RuntimeError("Invalid JSONPath query '%s': %s" % (
-                    field, e))
+                raise RuntimeError(
+                    "Invalid JSONPath query '%s': %s" % (field, e)
+                )
             matches = [str(match.full_path) for match in query.find(value)]
             if not matches:
-                raise AssertionError("JSONPath query '%s' " % (field) +
-                    "did not match anything.")
+                raise AssertionError(
+                    "JSONPath query '%s' " % (field) + "did not match anything."
+                )
             for match in matches:
-                path = match.replace("[", "").replace("]", "").split('.')
+                path = match.replace("[", "").replace("]", "").split(".")
                 paths.append(path)
         else:
             value = last_instance
             if return_schema:
-                schema = last_instance['schema']['properties']
+                schema = last_instance["schema"]["properties"]
             path = field.split()
             paths.append(path)
-        return [self._find_by_path(field, path, value, schema, print_found)
-                for path in paths]
+        return [
+            self._find_by_path(field, path, value, schema, print_found)
+            for path in paths
+        ]
 
     def _last_instance_or_error(self):
         try:
             return self.instances[-1]
         except IndexError:
-            raise RuntimeError("No instances: No requests made, " +
-                "and no previous instances loaded in the library import.")
+            raise RuntimeError(
+                "No instances: No requests made, "
+                + "and no previous instances loaded in the library import."
+            )
 
     def _find_by_path(self, field, path, value, schema=None, print_found=True):
         for key in path:
@@ -1362,23 +1459,23 @@ class Keywords(object):
                 value = self._value_by_key(value, key)
             except (KeyError, TypeError):
                 if print_found:
-                    self.log_json(value,
-                        "\n\nProperty '%s' does not exist in:" % (key))
+                    self.log_json(
+                        value, "\n\nProperty '%s' does not exist in:" % (key)
+                    )
                 raise AssertionError(
-                    "\nExpected property '%s' was not found." % (field))
+                    "\nExpected property '%s' was not found." % (field)
+                )
             except IndexError:
                 if print_found:
-                    self.log_json(value,
-                        "\n\nIndex '%s' does not exist in:" % (key))
+                    self.log_json(
+                        value, "\n\nIndex '%s' does not exist in:" % (key)
+                    )
                 raise AssertionError(
-                    "\nExpected index '%s' did not exist." % (field))
+                    "\nExpected index '%s' did not exist." % (field)
+                )
             if schema:
                 schema = self._schema_by_key(schema, key, value)
-        found = {
-            'path': path,
-            'reality': value,
-            'schema': schema
-        }
+        found = {"path": path, "reality": value, "schema": schema}
         return found
 
     def _value_by_key(self, json, key):
@@ -1388,39 +1485,42 @@ class Keywords(object):
             return json[key]
 
     def _schema_by_key(self, schema, key, value):
-        if 'properties' in schema:
-            schema = schema['properties']
-        elif 'items' in schema:
-            if isinstance(schema['items'], (dict)):
-                schema['items'] = [schema['items']]
+        if "properties" in schema:
+            schema = schema["properties"]
+        elif "items" in schema:
+            if isinstance(schema["items"], (dict)):
+                schema["items"] = [schema["items"]]
             new_schema = self._new_schema(value)
             try:
-                return schema['items'][schema['items'].index(new_schema)]
+                return schema["items"][schema["items"].index(new_schema)]
             except ValueError:
-                schema['items'].append(new_schema)
-                return schema['items'][-1]
+                schema["items"].append(new_schema)
+                return schema["items"][-1]
         if key not in schema:
             schema[key] = self._new_schema(value)
         return schema[key]
 
     def _should_add_examples(self):
-        return 'examples' in self.schema and isinstance(
-            self.schema['examples'], (list))
+        return "examples" in self.schema and isinstance(
+            self.schema["examples"], (list)
+        )
 
     def _set_type_validations(self, json_type, schema, validations):
         if validations:
-            if "draft-04" in self.schema['$schema']:
+            if "draft-04" in self.schema["$schema"]:
                 schema_version = "draft-04"
-            elif "draft-06" in self.schema['$schema']:
+            elif "draft-06" in self.schema["$schema"]:
                 schema_version = "draft-06"
             else:
                 schema_version = "draft-07"
-            kws = list(SCHEMA_KEYWORDS['common'][schema_version])
+            kws = list(SCHEMA_KEYWORDS["common"][schema_version])
             kws.extend(SCHEMA_KEYWORDS[json_type][schema_version])
         for validation in validations:
             if validation not in kws:
-                raise RuntimeError("Unknown JSON Schema (%s)" % (
-                    schema_version) + " validation keyword " +
-                "for %s:\n%s" % (json_type, validation))
+                raise RuntimeError(
+                    "Unknown JSON Schema (%s)" % (schema_version)
+                    + " validation keyword "
+                    + "for %s:\n%s" % (json_type, validation)
+                )
             schema[validation] = self.input(validations[validation])
-        schema.update({ "type": json_type })
+        schema.update({"type": json_type})

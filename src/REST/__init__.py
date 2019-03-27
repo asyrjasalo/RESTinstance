@@ -100,7 +100,7 @@ class REST(Keywords):
     be useful for additional logging.
     """
 
-    ROBOT_LIBRARY_SCOPE = 'TEST SUITE'
+    ROBOT_LIBRARY_SCOPE = "TEST SUITE"
 
     # Altogether 24 keywords        context:
     # -------------------------------------------------------
@@ -111,45 +111,48 @@ class REST(Keywords):
     # 4 I/O keywords                the last instance or none
     # -------------------------------------------------------
 
-    def __init__(self, url=None,
-                 ssl_verify=True,
-                 accept="application/json, */*",
-                 content_type="application/json",
-                 user_agent="RESTinstance/%s" % (__version__),
-                 proxies={},
-                 schema={},
-                 spec={},
-                 instances=[]):
+    def __init__(
+        self,
+        url=None,
+        ssl_verify=True,
+        accept="application/json, */*",
+        content_type="application/json",
+        user_agent="RESTinstance/%s" % (__version__),
+        proxies={},
+        schema={},
+        spec={},
+        instances=[],
+    ):
         self.request = {
-            'method': None,
-            'url': None,
-            'scheme': "",
-            'netloc': "",
-            'path': "",
-            'query': {},
-            'body': None,
-            'headers': {
-                'Accept': REST._input_string(accept),
-                'Content-Type': REST._input_string(content_type),
-                'User-Agent': REST._input_string(user_agent)
+            "method": None,
+            "url": None,
+            "scheme": "",
+            "netloc": "",
+            "path": "",
+            "query": {},
+            "body": None,
+            "headers": {
+                "Accept": REST._input_string(accept),
+                "Content-Type": REST._input_string(content_type),
+                "User-Agent": REST._input_string(user_agent),
             },
-            'proxies': REST._input_object(proxies),
-            'timeout': [None, None],
-            'cert': None,
-            'sslVerify': REST._input_ssl_verify(ssl_verify),
-            'allowRedirects': True
+            "proxies": REST._input_object(proxies),
+            "timeout": [None, None],
+            "cert": None,
+            "sslVerify": REST._input_ssl_verify(ssl_verify),
+            "allowRedirects": True,
         }
         if url:
             url = REST._input_string(url)
-            if url.endswith('/'):
+            if url.endswith("/"):
                 url = url[:-1]
             if not url.startswith(("http://", "https://")):
                 url = "http://" + url
             url_parts = urlparse(url)
-            self.request['scheme'] = url_parts.scheme
-            self.request['netloc'] = url_parts.netloc
-            self.request['path'] = url_parts.path
-        if not self.request['sslVerify']:
+            self.request["scheme"] = url_parts.scheme
+            self.request["netloc"] = url_parts.netloc
+            self.request["path"] = url_parts.path
+        if not self.request["sslVerify"]:
             disable_warnings()
         self.schema = {
             "$schema": "http://json-schema.org/draft-07/schema#",
@@ -159,31 +162,29 @@ class REST(Keywords):
             "examples": [],
             "type": "object",
             "properties": {
-                "request": {
-                    "type": "object",
-                    "properties": {}
-                },
-                "response": {
-                    "type": "object",
-                    "properties": {}
-                }
-            }
+                "request": {"type": "object", "properties": {}},
+                "response": {"type": "object", "properties": {}},
+            },
         }
         self.schema.update(self._input_object(schema))
         self.spec = {}
         self.spec.update(self._input_object(spec))
         self.instances = self._input_array(instances)
 
-
     @staticmethod
     def log_json(json, header="", also_console=True, sort_keys=False):
-        json = dumps(json, ensure_ascii=False, indent=4,
-                     separators=(',', ': ' ), sort_keys=sort_keys)
-        logger.info("%s\n%s" % (header, json))    # no coloring for log.html
+        json = dumps(
+            json,
+            ensure_ascii=False,
+            indent=4,
+            separators=(",", ": "),
+            sort_keys=sort_keys,
+        )
+        logger.info("%s\n%s" % (header, json))  # no coloring for log.html
         if also_console:
-            json_data = highlight(json,
-                                  lexers.JsonLexer(),
-                                  formatters.TerminalFormatter())
+            json_data = highlight(
+                json, lexers.JsonLexer(), formatters.TerminalFormatter()
+            )
             logger.console("%s\n%s" % (header, json_data), newline=False)
         return json
 
@@ -240,7 +241,6 @@ class REST(Keywords):
             raise RuntimeError("Input not is valid JSON: %s" % (value))
         return json_value
 
-
     @staticmethod
     def _input_object(value):
         if isinstance(value, (dict)):
@@ -251,11 +251,13 @@ class REST(Keywords):
             else:
                 json_value = loads(value)
             if not isinstance(json_value, (dict)):
-                raise RuntimeError("Input or file has no JSON object: %s" % (
-                    value))
+                raise RuntimeError(
+                    "Input or file has no JSON object: %s" % (value)
+                )
         except ValueError:
-            raise RuntimeError("Input is not valid JSON or a file: %s" % (
-                value))
+            raise RuntimeError(
+                "Input is not valid JSON or a file: %s" % (value)
+            )
         return json_value
 
     @staticmethod
@@ -268,11 +270,13 @@ class REST(Keywords):
             else:
                 json_value = loads(value)
             if not isinstance(json_value, (list)):
-                raise RuntimeError("Input or file has no JSON array: %s" % (
-                    value))
+                raise RuntimeError(
+                    "Input or file has no JSON array: %s" % (value)
+                )
         except ValueError:
-            raise RuntimeError("Input is not valid JSON or a file: %s" % (
-                value))
+            raise RuntimeError(
+                "Input is not valid JSON or a file: %s" % (value)
+            )
         return json_value
 
     @staticmethod
@@ -287,8 +291,9 @@ class REST(Keywords):
                 with open(path, encoding="utf-8") as file:
                     return load_yaml(file, Loader=SafeLoader)
             except ValueError:
-                raise RuntimeError("File '%s' is not valid JSON or YAML:\n%s" %
-                    (path, e))
+                raise RuntimeError(
+                    "File '%s' is not valid JSON or YAML:\n%s" % (path, e)
+                )
 
     @staticmethod
     def _input_json_as_string(string):
@@ -309,21 +314,27 @@ class REST(Keywords):
             return value
         if isinstance(value, (list)):
             if len(value) != 2:
-                raise RuntimeError("Client cert given as a (Python) list, " +
-                    "must have length of 2: %s" % (value))
+                raise RuntimeError(
+                    "Client cert given as a (Python) list, "
+                    + "must have length of 2: %s" % (value)
+                )
             return value
         try:
             value = loads(value)
             if not isinstance(value, STRING_TYPES + (list)):
-                raise RuntimeError("Input is not a JSON string " +
-                    "or a list: %s" + (value))
+                raise RuntimeError(
+                    "Input is not a JSON string " + "or a list: %s" + (value)
+                )
         except ValueError:
-            raise RuntimeError("Input is not a JSON string " +
-                "or an array: %s " % (value))
+            raise RuntimeError(
+                "Input is not a JSON string " + "or an array: %s " % (value)
+            )
         if isinstance(value, (list)):
             if len(value) != 2:
-                raise RuntimeError("Client cert given as a JSON array, " +
-                    "must have length of 2: %s" % (value))
+                raise RuntimeError(
+                    "Client cert given as a JSON array, "
+                    + "must have length of 2: %s" % (value)
+                )
         return value
 
     @staticmethod
@@ -333,9 +344,11 @@ class REST(Keywords):
         except RuntimeError:
             value = REST._input_string(value)
             if not path.isfile(value):
-                raise RuntimeError("SSL verify option is not " +
-                    "a Python or a JSON boolean or a path to an existing " +
-                    "CA bundle file: %s" % (value))
+                raise RuntimeError(
+                    "SSL verify option is not "
+                    + "a Python or a JSON boolean or a path to an existing "
+                    + "CA bundle file: %s" % (value)
+                )
             return value
 
     @staticmethod
@@ -344,20 +357,26 @@ class REST(Keywords):
             return [value, value]
         if isinstance(value, (list)):
             if len(value) != 2:
-                raise RuntimeError("Timeout given as a (Python) list, " +
-                    "must have length of 2: %s" % (value))
+                raise RuntimeError(
+                    "Timeout given as a (Python) list, "
+                    + "must have length of 2: %s" % (value)
+                )
             return value
         try:
             value = loads(value)
             if not isinstance(value, (int, float, list)):
-                raise RuntimeError("Input is not a JSON integer, " +
-                    "number or a list: %s" % (value))
+                raise RuntimeError(
+                    "Input is not a JSON integer, "
+                    + "number or a list: %s" % (value)
+                )
         except ValueError:
             raise RuntimeError("Input is not valid JSON: %s" % (value))
         if isinstance(value, (list)):
             if len(value) != 2:
-                raise RuntimeError("Timeout given as a JSON array, " +
-                    "must have length of 2: %s" % (value))
+                raise RuntimeError(
+                    "Timeout given as a JSON array, "
+                    + "must have length of 2: %s" % (value)
+                )
             else:
                 return value
         return [value, value]
