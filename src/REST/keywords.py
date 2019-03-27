@@ -44,7 +44,7 @@ else:
 
 from robot.api import logger
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
+from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 
 from .schema_keywords import SCHEMA_KEYWORDS
 
@@ -1250,10 +1250,13 @@ class Keywords(object):
         }
         schema = deepcopy(self.schema)
         schema['title'] = "%s %s" % (request['method'], request['url'])
-        schema['description'] = "%s: %s" % (
-            BuiltIn().get_variable_value("${SUITE NAME}"),
-            BuiltIn().get_variable_value("${TEST NAME}")
-        )
+        try:
+            schema['description'] = "%s: %s" % (
+                BuiltIn().get_variable_value("${SUITE NAME}"),
+                BuiltIn().get_variable_value("${TEST NAME}")
+            )
+        except RobotNotRunningError:
+            schema['description'] = ""
         request_properties = schema['properties']['request']['properties']
         response_properties = schema['properties']['response']['properties']
         if validate_schema:
