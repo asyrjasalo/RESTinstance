@@ -68,9 +68,6 @@ pyroma: ## Run pyroma for Python packaging best practices
 
 .PHONY: dc
 dc: ## Start docker-compose env on background
-	# If no docker-compose is available, you can use:
-	#	npm install -g mountebank
-	#	mb --allowInjection --configfile testapi/apis.ejs
 	docker-compose up -d
 
 .PHONY: dc_rm
@@ -83,7 +80,9 @@ libdoc: install ## Regenerate library keyword documentation
 
 .PHONY: atest
 atest: dc ## Run acceptance tests
-	# If not docker is available, you can use:
+	# If not docker or docker-compose is available, you can use:
+	#	npm install -g mountebank
+	#	mb --allowInjection --configfile testapi/apis.ejs
 	# robot --outputdir results tests/
 	RUN_ARGS="--network=host" ./rfdocker --xunit xunit.xml tests/
 

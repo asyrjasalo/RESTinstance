@@ -178,15 +178,21 @@ To start the docker-compose environment and run the tests:
 
     make atest
 
+If no docker is available, you can use:
+
+::
+
+    npm install -g mountebank
+    mb --allowInjection --configfile testapi/apis.ejs
+    robot --outputdir results tests/
+
 
 System under test
 ~~~~~~~~~~~~~~~~~
 
-The test API is implemented by
-`mounterest <https://github.com/asyrjasalo/mounterest>`__, which in turn
-bases on `mountebank <https://www.mbtest.org>`__.
+The test API is built on `mountebank <https://www.mbtest.org>`__.
 
-In the scope of library's tests, mounterest acts as a HTTP proxy to
+In the scope of library's tests, it acts as a HTTP proxy to
 `Typicode's live JSON server <https://jsonplaceholder.typicode.com>`__ and uses
 mountebank's injections to enrich responses slightly, so that they
 better match to this library's testing needs. Particularly, it allows
