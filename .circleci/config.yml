@@ -9,8 +9,8 @@ jobs:
       - checkout
 
       - run:
-          name: Run acceptance tests
-          command: make atest
+          name: Make: test build install atest
+          command: make
 
       - store_test_results:
           path: results/
