@@ -21,6 +21,6 @@ jobs:
 
 workflows:
   version: 2
-  make:
+  build:
     jobs:
-      - build
+      - make
