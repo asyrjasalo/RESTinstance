@@ -26,13 +26,13 @@ if [ -z "$registry_url" ]; then
 fi
 
 echo "### Tagging image 'rfdocker:restinstance' to '$registry_url:$version'"
-docker tag "rfdocker:restinstance" "$registry_url:$version"
+docker tag "rfdocker:RESTinstance" "$registry_url:$version"
 
 echo "### Pushing image 'restinstance:$version' to registry..."
 docker push "$registry_url:$version"
 
 echo "### Tagging image 'rfdocker:restinstance' to '$registry_url:latest'"
-docker tag "rfdocker:restinstance" "$registry_url:latest"
+docker tag "rfdocker:RESTinstance" "$registry_url:latest"
 
 echo "### Pushing image 'rfdocker:restinstance' to '$registry_url:latest'"
 docker push "$registry_url:latest"
