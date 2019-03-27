@@ -14,7 +14,7 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 : ${BUILD_ARGS:=""}
 : ${BUILD_DIR:="$this_path"}
 : ${BUILD_NAME:=${PWD##*/}}
-: ${RUN_ARGS:='--network=host'}
+: ${RUN_ARGS:=''}
 
 ### build and run tests ########################################################
 

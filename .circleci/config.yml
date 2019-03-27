@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  build:
+  make:
     machine:
       docker_layer_caching: true
 
@@ -9,8 +9,8 @@ jobs:
       - checkout
 
       - run:
-          name: make (test build install atest)
-          command: make
+          name: Run acceptance tests
+          command: make atest
 
       - store_test_results:
           path: results/
@@ -21,6 +21,6 @@ jobs:
 
 workflows:
   version: 2
-  rfdocker:
+  make:
     jobs:
       - build

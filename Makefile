@@ -68,7 +68,7 @@ pyroma: ## Run pyroma for Python packaging best practices
 
 .PHONY: dc
 dc: ## Start docker-compose env on background
-	# If no docker-compose is available, use:
+	# If no docker-compose is available, you can use:
 	#	npm install -g mountebank
 	#	mb --allowInjection --configfile testapi/apis.ejs
 	docker-compose up -d
@@ -83,7 +83,9 @@ libdoc: install ## Generate Robot Framework library documentation
 
 .PHONY: atest
 atest: dc ## Run acceptance tests for the installed package
-	. "${VENV_RELEASE_PATH}/bin/activate" && robot --outputdir=results/ tests/
+	# If not docker is available, you can use:
+	# robot --outputdir results tests/
+	RUN_ARGS="--network=host" ./rfdocker --xunit xunit.xml tests/
 
 .PHONY: test
 test: _venv_dev ## Run tests, installs requirements(-dev) first
