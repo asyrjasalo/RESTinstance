@@ -22,7 +22,7 @@ from .compat import IS_PYTHON_2, STRING_TYPES
 
 from json import dumps, load, loads
 from os import path
-from yaml import load as load_yaml, FullLoader
+from yaml import load as load_yaml, SafeLoader
 
 from pygments import highlight, lexers, formatters
 from requests.packages.urllib3 import disable_warnings
@@ -285,7 +285,7 @@ class REST(Keywords):
         except ValueError as e:
             try:
                 with open(path, encoding="utf-8") as file:
-                    return load_yaml(file, Loader=FullLoader)
+                    return load_yaml(file, Loader=SafeLoader)
             except ValueError:
                 raise RuntimeError("File '%s' is not valid JSON or YAML:\n%s" %
                     (path, e))
