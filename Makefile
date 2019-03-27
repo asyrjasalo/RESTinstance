@@ -87,6 +87,10 @@ atest: dc ## Run acceptance tests
 	# robot --outputdir results tests/
 	RUN_ARGS="--network=host" ./rfdocker --xunit xunit.xml tests/
 
+.PHONY: atest_py2
+atest_py2: dc ## Run acceptance tests on Python 2
+	RUN_ARGS="--network=host" BUILD_ARGS="-f Dockerfile.python2" BUILD_NAME="restinstance-python2" ./rfdocker tests/
+
 .PHONY: test
 test: _venv_dev ## Run tests, installs requirements(-dev) first
 	. "${VENV_DEV_PATH}/bin/activate" && pytest
