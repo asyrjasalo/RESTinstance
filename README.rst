@@ -215,7 +215,7 @@ Running ``make`` runs rules ``test``, ``build``, ``install`` and ``atest``
 at once, and uses separate virtualenvs ``./venvs/dev`` and ``./venvs/release``
 to ensure that no (user or system level) dependencies interfere with the process.
 
-If ``make`` is not available, you have to a little more setup for dev work:
+If ``make`` is not available you have to a little more dev setup:
 
 ::
 
@@ -223,7 +223,9 @@ If ``make`` is not available, you have to a little more setup for dev work:
     source .venvs/dev/bin/activate
     pip install --editable .
 
-Still, to run the acceptance tests and (re)generate the keyword documentation:
+Still, to run acceptance tests and (re)generate the keyword documentation:
+
+::
 
     python -m robot --outputdir results tests/
     python -m robot.libdoc REST docs/index.html
@@ -235,17 +237,17 @@ Tip: Windows has come far from being development show shopper - but you may want
 Acceptance tests
 ~~~~~~~~~~~~~~~~
 
-The ``testapi/`` is built on `mountebank <https://www.mbtest.org>`__.
+The ``testapi/`` is built on top of `mountebank <https://www.mbtest.org>`__.
 You can monitor requests and responses at `localhost:2525 <http://localhost:2525/imposters>`__
 
-To start the test API in ``docker-compose`` (on background) and run acceptance tests:
+To start the test API in ``docker-compose`` (daemonized) and run acceptance tests:
 
 ::
 
     make atest
 
-For the best level of isolation, the Docker container with Robot Framework and
-the library is recreated each time the command is ran (more on the next chapter).
+For the best level of isolation, the Docker container both with Robot Framework and
+the library is recreated each time the command is ran (more in the next chapter).
 
 If Docker (Compose) is not available, use ``npm`` to install
 `mountebank <http://www.mbtest.org>`__ and run the very same test API:
@@ -264,18 +266,18 @@ Running on Docker
 is built with `rfdocker <https://github.com/asyrjasalo/rfdocker>`__ and the script
 is included. The image is instantiated as a new container on each atest run.
 
-The container only has the source and the run time dependencies installed,
-no ``requirements-dev.txt`` or any Python packaging related files, and it only
+The container has only the source and the run time dependencies installed,
+no ``requirements-dev.txt`` or Python packaging related files, and it only
 reads ``tests/`` and writes ``results/`` on the host via the respective Docker volumes.
 
-The image is built as part of ``make atest` and the part is essentially:
+The image is built as part of ``make atest``, essentially with:
 
 ::
 
     RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker
 
-Note that all containers, including the test API's, are ran in the host network:
-This is to have the network layer as identical as possible on different host OSes.
+Note that all containers, including the test API's, are ran in the host network,
+to have the network layer as identical as possible on different host OSes.
 
 To tag the image as "latest" and push it to a registry (remember to `docker login`):
 
@@ -283,7 +285,7 @@ To tag the image as "latest" and push it to a registry (remember to `docker logi
 
     ./release_docker https://your.docker.registry.com/restinstance
 
-For `Docker Hub <<https://hub.docker.com>`__ you can use:
+For `Docker Hub <https://hub.docker.com>`__ you can use:
 
 ::
 
