@@ -28,7 +28,8 @@ Advantages
 
 3. **It generates JSON Schema for requests and responses automatically,
    and the schema gets more accurate by your tests.**
-   Output the schema to a file and reuse it as expectations to test the other methods, as most of them respond similarly with only minor differences.
+   Output the schema to a file and reuse it as expectations to test the other
+   methods, as most of them respond similarly with only minor differences.
    Or extend the schema further to a full Swagger spec (version 2.0,
    OpenAPI 3.0 also planned), which RESTinstance can test requests and
    responses against. All this leads to reusability, getting great test
@@ -72,7 +73,7 @@ Quick start
 
 1. Create two new (empty) directories ``tests`` and ``results``.
 
-2. Create a new file ``tests/YOURNAME.robot`` with this content:
+2. Create a new file ``tests/YOURNAME.robot`` with content:
 
 .. code:: robotframework
 
@@ -151,7 +152,7 @@ Quick start
 
     robot --outputdir results tests/
 
-If you chose Docker method instead, this is quaranteed to work in most environments:
+If you chose the Docker method instead, this is quaranteed to work in most environments:
 
 ::
 
@@ -180,7 +181,7 @@ available automatically for your GitHub pull requests as well.
 
 
 Local development
-~~~~~~~~~"~~"~~"~
+~~~~~~~~~~~~~~~~~
 On Linux distros and on OS X, may ``make`` rules ease the repetitive workflows:
 
 ::
@@ -227,12 +228,12 @@ Still, to run the acceptance tests and (re)generate the keyword documentation:
     python -m robot --outputdir results tests/
     python -m robot.libdoc REST docs/index.html
 
-Tip: Windows has gone far from being a development show shopper - but you may want to try
+Tip: Windows has come far from being development show shopper - but you may want to try
 `Windows Subsystem for Linux <https://docs.microsoft.com/en-us/windows/wsl/install-win10>`__.
 
 
 Acceptance tests
-~~~~"~~~~"~~~~~~
+~~~~~~~~~~~~~~~~
 
 The ``testapi/`` is built on `mountebank <https://www.mbtest.org>`__.
 You can monitor requests and responses at `localhost:2525 <http://localhost:2525/imposters>`__
@@ -243,7 +244,7 @@ To start the test API in ``docker-compose`` (on background) and run acceptance t
 
     make atest
 
-For the best level of isolation, a Docker container with Robot Framework and
+For the best level of isolation, the Docker container with Robot Framework and
 the library is recreated each time the command is ran (more on the next chapter).
 
 If Docker (Compose) is not available, use ``npm`` to install
@@ -257,7 +258,7 @@ If Docker (Compose) is not available, use ``npm`` to install
 
 
 Running on Docker
-~~~~"~~~~~~~~~~~"
+~~~~~~~~~~~~~~~~~
 
 `RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
 is built with `rfdocker <https://github.com/asyrjasalo/rfdocker>`__ and the script
@@ -274,7 +275,7 @@ The image is built as part of ``make atest` and the part is essentially:
     RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker
 
 Note that all containers, including the test API's, are ran in the host network:
-This is to have network layer as identical as possible on different host OSes.
+This is to have the network layer as identical as possible on different host OSes.
 
 To tag the image as "latest" and push it to a registry (remember to `docker login`):
 
