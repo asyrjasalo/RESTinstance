@@ -212,7 +212,7 @@ On Linux distros and on OS X, may ``make`` rules ease the repetitive workflows:
     uninstall                      Uninstall the package, regardless of its origin
 
 Running ``make`` runs rules ``test``, ``build``, ``install`` and ``atest``
-at once, and uses separate virtualenvs ``./venvs/dev`` and ``./venvs/release``
+at once, and uses separate virtualenvs ``.venvs/dev/`` and ``.venvs/release/``
 to ensure that no (user or system level) dependencies interfere with the process.
 
 If ``make`` is not available you have to a little more dev setup:
