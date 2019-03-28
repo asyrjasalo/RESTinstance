@@ -7,6 +7,7 @@ RESTinstance
     :target: https://circleci.com/gh/asyrjasalo/RESTinstance
 
 
+
 Advantages
 ----------
 
@@ -34,10 +35,11 @@ Advantages
    coverage with minimum number of keystrokes and very clean tests.
 
 
+
 Installation
 ------------
 
-Three installation methods are supported. Pick the one that suits you best.
+Pick the one that suits you and your environment best.
 
 As a Python package
 ~~~~~~~~~~~~~~~~~~~
@@ -50,44 +52,27 @@ On 3.x and 2.7, you can install or upgrade `from PyPi <https://pypi.org/project/
 As a Docker image
 ~~~~~~~~~~~~~~~~~
 
-`The RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__ contains Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.1.1>`__:
-
-::
-
-    cd <path_where_your_tests_are>
+`The RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
+bundles Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.1.1>`__:
 
 ::
 
     docker pull asyrjasalo/restinstance
-    docker run --rm -ti --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
-      --env HTTP_PROXY --env HTTPS_PROXY --network host \
-      --volume "$PWD/tests":/home/robot/tests \
-      --volume "$PWD/results":/home/robot/results \
-      asyrjasalo/restinstance tests
 
-Using rfdocker
-~~~~~~~~~~~~~~
-If already using `rfdocker <https://github.com/asyrjasalo/rfdocker>`__,
-add ``RESTinstance`` to ``requirements.txt`` and uncomment the lines
-in ``Dockerfile``.  It is installed next time ``./rfdocker`` is ran.
-
-To pass the proxy settings to the container and run it on the host network:
-
-::
-
-    RUN_ARGS="--env HTTP_PROXY,HTTPS_PROXY --network=host" ./rfdocker
 
 
 Usage
 -----
 
 There is a `step-by-step tutorial <https://github.com/asyrjasalo/RESTinstance/blob/master/examples>`__
-in the making, best accompanied with the  `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
+in the making, best accompanied with the `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
 
 Quick start
 ~~~~~~~~~~~
 
-Tip: Run this ``README.rst`` as a test suite with Robot Framework.
+1. Create two new (empty) directories ``tests`` and ``results``.
+
+2. Create a new file ``tests/YOURNAME.robot`` with this content:
 
 .. code:: robotframework
 
@@ -160,8 +145,29 @@ Tip: Run this ``README.rst`` as a test suite with Robot Framework.
         Rest instances  ${OUTPUTDIR}/all.demo.json  # all the instances so far
 
 
-Development
------------
+3. Chose Python installation? Let's go (not that language):
+
+::
+
+    robot --outputdir results tests/
+
+If you chose Docker method instead, this is quaranteed to work in most environments:
+
+::
+
+    docker run --rm -ti --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
+      --env HTTP_PROXY --env HTTPS_PROXY --network host \
+      --volume "$PWD/tests":/home/robot/tests \
+      --volume "$PWD/results":/home/robot/results \
+      asyrjasalo/restinstance tests/
+
+Tip: If you cloned the git repository, you can run ``README.rst`` itself as
+a test suite with Robot Framework (install from source with ``pip install -e .``).
+
+
+
+Contributing
+------------
 
 Bug reports and feature requests are tracked in
 `GitHub <https://github.com/asyrjasalo/RESTinstance/issues>`__.
@@ -169,16 +175,79 @@ Bug reports and feature requests are tracked in
 We do respect pull request(er)s. Please mention if you do not want to be
 listed below as contributors.
 
-Library's own tests
-~~~~~~~~~~~~~~~~~~~
+A `CircleCI <https://circleci.com/gh/asyrjasalo/RESTinstance>`__ job is
+available automatically for your GitHub pull requests as well.
 
-To start the docker-compose environment and run the tests:
+
+Local development
+~~~~~~~~~"~~"~~"~
+On Linux distros and on OS X, may ``make`` rules ease the repetitive workflows:
+
+::
+
+    $ make help
+    all                            Run test, build, install and atest (default)
+    atest                          Run acceptance tests
+    atest_py2                      Run acceptance tests on Python 2
+    black                          Reformat source code in-place
+    build                          Build source dist and wheel
+    check-manifest                 Run check-manifest for MANIFEST.in completeness
+    clean                          Remove .venvs, builds, dists, and caches
+    dc_rm                          Stop and remove docker-compose env and volumes
+    dc                             Start docker-compose env on background
+    flake8                         Run flake8 for static code analysis
+    install                        Install package from source tree, as --editable
+    install_pypi                   Install the latest PyPI release
+    install_test                   Install the latest test.pypi.org release
+    isort                          Run isort for sorting import statements in-place
+    libdoc                         Regenerate library keyword documentation
+    mypy                           Run mypy for static type checking
+    publish_pypi                   Publish dists to PyPI
+    publish_test                   Publish dists to test.pypi.org
+    pur                            Update requirements(-dev) for locked versions
+    pyroma                         Run pyroma for Python packaging best practices
+    retest                         Run failed tests only, if none, run all
+    test                           Run tests, installs requirements(-dev) first
+    uninstall                      Uninstall the package, regardless of its origin
+
+Running ``make`` runs rules ``test``, ``build``, ``install`` and ``atest``
+at once, and uses separate virtualenvs ``./venvs/dev`` and ``./venvs/release``
+to ensure that no (user or system level) dependencies interfere with the process.
+
+If ``make`` is not available, you have to a little more setup for dev work:
+
+::
+
+    virtualenv --no-site-packages .venvs/dev
+    source .venvs/dev/bin/activate
+    pip install --editable .
+
+Still, to run the acceptance tests and (re)generate the keyword documentation:
+
+    python -m robot --outputdir results tests/
+    python -m robot.libdoc REST docs/index.html
+
+Tip: Windows has gone far from being a development show shopper - but you may want to try
+`Windows Subsystem for Linux <https://docs.microsoft.com/en-us/windows/wsl/install-win10>`__.
+
+
+Acceptance tests
+~~~~"~~~~"~~~~~~
+
+The ``testapi/`` is built on `mountebank <https://www.mbtest.org>`__.
+You can monitor requests and responses at `localhost:2525 <http://localhost:2525/imposters>`__
+
+To start the test API in ``docker-compose`` (on background) and run acceptance tests:
 
 ::
 
     make atest
 
-If no docker is available, you can use:
+For the best level of isolation, a Docker container with Robot Framework and
+the library is recreated each time the command is ran (more on the next chapter).
+
+If Docker (Compose) is not available, use ``npm`` to install
+`mountebank <http://www.mbtest.org>`__ and run the very same test API:
 
 ::
 
@@ -187,50 +256,45 @@ If no docker is available, you can use:
     robot --outputdir results tests/
 
 
-System under test
-~~~~~~~~~~~~~~~~~
+Running on Docker
+~~~~"~~~~~~~~~~~"
 
-The test API is built on `mountebank <https://www.mbtest.org>`__.
+`RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
+is built with `rfdocker <https://github.com/asyrjasalo/rfdocker>`__ and the script
+is included. The image is instantiated as a new container on each atest run.
 
-In the scope of library's tests, it acts as a HTTP proxy to
-`Typicode's live JSON server <https://jsonplaceholder.typicode.com>`__ and uses
-mountebank's injections to enrich responses slightly, so that they
-better match to this library's testing needs. Particularly, it allows
-to test the library with non-safe HTTP methods (POST, PUT, PATCH,
-DELETE) by mimicking their changes, instead of trying
-to issue them on the live server. The changes are cleared between the test
-runs.
+The container only has the source and the run time dependencies installed,
+no ``requirements-dev.txt`` or any Python packaging related files, and it only
+reads ``tests/`` and writes ``results/`` on the host via the respective Docker volumes.
 
-Releasing
-~~~~~~~~~
-
-To update `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__:
+The image is built as part of ``make atest` and the part is essentially:
 
 ::
 
-    make libdoc
+    RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker
 
+Note that all containers, including the test API's, are ran in the host network:
+This is to have network layer as identical as possible on different host OSes.
 
-See ``make help`` for all rules.
-
-To build a Docker image with ``/src``, tag it and push it to Docker registry:
+To tag the image as "latest" and push it to a registry (remember to `docker login`):
 
 ::
 
-    ./release_docker https://your.private.registry.com/restinstance
+    ./release_docker https://your.docker.registry.com/restinstance
 
-To do the same for Docker Hub you can use:
+For `Docker Hub <<https://hub.docker.com>`__ you can use:
 
 ::
 
     ./release_docker {{organization}}/restinstance
 
 
+
 Credits
 -------
 
-RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__ and was originally written by
-`Anssi Syrjäsalo <https://github.com/asyrjasalo>`__.
+RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__
+and was originally written by `Anssi Syrjäsalo <https://github.com/asyrjasalo>`__.
 
 It was presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
 
@@ -263,4 +327,5 @@ We use the following Python excellence under the hood:
 -  `requests <https://github.com/requests/requests>`__, by Kenneth
    Reitz et al., for making HTTP requests
 
-See `requirements.txt <https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt>`__ for all the direct dependencies.
+See `requirements.txt <https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt>`__
+for all the direct dependencies.
