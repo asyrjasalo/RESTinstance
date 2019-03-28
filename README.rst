@@ -50,11 +50,13 @@ On 3.x and 2.7, you can install or upgrade `from PyPi <https://pypi.org/project/
 
     pip install --upgrade RESTinstance
 
+This installs Robot Framework as well, if you do not have it already installed.
+
 As a Docker image
 ~~~~~~~~~~~~~~~~~
 
-`The RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
-bundles Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.1.1>`__:
+`RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
+contains Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.1.1>`__:
 
 ::
 
@@ -66,7 +68,7 @@ Usage
 -----
 
 There is a `step-by-step tutorial <https://github.com/asyrjasalo/RESTinstance/blob/master/examples>`__
-in the making, best accompanied with the `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
+in the making, best accompanied with `keyword documentation <https://asyrjasalo.github.io/RESTinstance>`__.
 
 Quick start
 ~~~~~~~~~~~
@@ -103,11 +105,11 @@ Quick start
     *** Test Cases ***
     GET an existing user, notice how the schema gets more accurate
         GET         /users/1                  # this creates a new instance
-        Output      schema response body
+        Output schema   response body
         Object      response body             # values are fully optional
         Integer     response body id          1
         String      response body name        Leanne Graham
-        [Teardown]  Output                    # note the updated response schema
+        [Teardown]  Output schema             # note the updated response schema
 
     GET existing users, use JSONPath for very short but powerful queries
         GET         /users?_limit=5           # further assertions are to this
@@ -163,7 +165,8 @@ If you chose the Docker method instead, this is quaranteed to work in most envir
       asyrjasalo/restinstance tests/
 
 Tip: If you cloned the git repository, you can run ``README.rst`` itself as
-a test suite with Robot Framework (install from source with ``pip install -e .``).
+a test suite with Robot Framework (and install from source with
+``pip install --editable .``).
 
 
 
@@ -237,8 +240,11 @@ Tip: Windows has come far from being development show shopper - but you may want
 Acceptance tests
 ~~~~~~~~~~~~~~~~
 
-The ``testapi/`` is built on top of `mountebank <https://www.mbtest.org>`__.
+The ``testapi/`` is built on `mountebank <https://www.mbtest.org>`__.
 You can monitor requests and responses at `localhost:2525 <http://localhost:2525/imposters>`__
+
+For the best level of isolation, the Docker container both with Robot Framework and
+the library is recreated each time the command is ran (more in the next chapter).
 
 To start the test API in ``docker-compose`` (daemonized) and run acceptance tests:
 
@@ -246,11 +252,9 @@ To start the test API in ``docker-compose`` (daemonized) and run acceptance test
 
     make atest
 
-For the best level of isolation, the Docker container both with Robot Framework and
-the library is recreated each time the command is ran (more in the next chapter).
-
 If Docker (Compose) is not available, use ``npm`` to install
-`mountebank <http://www.mbtest.org>`__ and run the very same test API:
+`mountebank Node.js package <https://www.npmjs.com/package/mountebank>`__
+and run the very same test API and tests:
 
 ::
 
@@ -263,29 +267,29 @@ Running on Docker
 ~~~~~~~~~~~~~~~~~
 
 `RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
-is built with `rfdocker <https://github.com/asyrjasalo/rfdocker>`__ and the script
-is included. The image is instantiated as a new container on each atest run.
+is built with `rfdocker <https://github.com/asyrjasalo/rfdocker>`__ which is included
+in the git repository. The image is instantiated as a new container on each atest run.
 
-The container has only the source and the run time dependencies installed,
+The container only has the source and the run time dependencies installed,
 no ``requirements-dev.txt`` or Python packaging related files, and it only
 reads ``tests/`` and writes ``results/`` on the host via the respective Docker volumes.
 
-The image is built as part of ``make atest``, essentially with:
+The image is built as part of ``make atest``, if you want to do it separately:
 
 ::
 
     RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker
 
 Note that all containers, including the test API's, are ran in the host network,
-to have the network layer as identical as possible on different host OSes.
+to have the network layer as identical as possible between different host OSes.
 
-To tag the image as "latest" and push it to a registry (remember to `docker login`):
+To tag the image as "latest" and push it to a registry (remember to ``docker login``):
 
 ::
 
     ./release_docker https://your.docker.registry.com/restinstance
 
-For `Docker Hub <https://hub.docker.com>`__ you can use:
+For `Docker Hub <https://hub.docker.com>`__ you can just use your org or username:
 
 ::
 
