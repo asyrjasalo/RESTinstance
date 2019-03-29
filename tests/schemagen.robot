@@ -1,7 +1,6 @@
 *** Settings ***
-Resource        resources/mounterest.robot
-Library         REST                    localhost:${api_port}/
-Test setup      Reset state
+Library         REST                    localhost:8273/
+Test setup      DELETE                  http://localhost:8273/state
 
 
 *** Test cases ***

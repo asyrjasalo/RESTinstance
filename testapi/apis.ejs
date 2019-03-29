@@ -1,7 +1,7 @@
 {
   "imposters": [
     {
-      "name": "default live server",
+      "name": "proxy -> jsonplaceholder",
       "port": 8080,
       "protocol": "http",
       "stubs": [
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "name": "mounterest / states",
+      "name": "stateful response fakers",
       "port": 8273,
       "protocol": "http",
       "defaultResponse": {
@@ -55,7 +55,7 @@
           ],
           "responses": [
             {
-              "inject": "<%- stringify(filename, 'mocks/get.js') %>"
+              "inject": "<%- stringify(filename, 'responders/get.js') %>"
             }
           ]
         },
@@ -69,7 +69,7 @@
           ],
           "responses": [
             {
-              "inject": "<%- stringify(filename, 'mocks/post.js') %>"
+              "inject": "<%- stringify(filename, 'responders/post.js') %>"
             }
           ]
         },
@@ -83,7 +83,7 @@
           ],
           "responses": [
             {
-              "inject": "<%- stringify(filename, 'mocks/put.js') %>"
+              "inject": "<%- stringify(filename, 'responders/put.js') %>"
             }
           ]
         },
@@ -97,7 +97,7 @@
           ],
           "responses": [
             {
-              "inject": "<%- stringify(filename, 'mocks/patch.js') %>"
+              "inject": "<%- stringify(filename, 'responders/patch.js') %>"
             }
           ]
         },
@@ -112,7 +112,7 @@
           ],
           "responses": [
             {
-              "inject": "<%- stringify(filename, 'mocks/state.js') %>"
+              "inject": "<%- stringify(filename, 'responders/state.js') %>"
             }
           ]
         },
@@ -126,7 +126,7 @@
           ],
           "responses": [
             {
-              "inject": "<%- stringify(filename, 'mocks/delete.js') %>"
+              "inject": "<%- stringify(filename, 'responders/delete.js') %>"
             }
           ]
         }

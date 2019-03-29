@@ -1,7 +1,6 @@
 *** Settings ***
-Resource        resources/mounterest.robot
-Library         REST                localhost:${api_port}/
-Suite setup     Reset state
+Library         REST                localhost:8273/
+Suite setup     DELETE              http://localhost:8273/state
 Suite teardown  Rest instances
 Test setup      Set expectations
 Test teardown   Clear expectations

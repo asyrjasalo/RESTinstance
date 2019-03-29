@@ -1,6 +1,6 @@
 function(request, state, logger, callback) {
 
-  const proxy = require(`${process.cwd()}/testapi/mocks/proxy.js`);
+  const proxy = require(`${process.cwd()}/testapi/responders/proxy.js`);
 
   var propertyId = "id";
   if (request.headers && request.headers['X-Mounterest-Property-ID']) {

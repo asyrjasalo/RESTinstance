@@ -1,12 +1,11 @@
 *** Settings ***
-Resource        resources/mounterest.robot
 Library         REST        schema={ "examples": null }
 Suite setup     Set expectations
-Test setup      Reset state
+Test setup      DELETE      http://localhost:8273/state
 
 
 *** Variables ***
-${api_url}=     http://localhost:${api_port}
+${api_url}=     http://localhost:8273
 
 
 *** Keywords ***

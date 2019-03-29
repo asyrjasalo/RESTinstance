@@ -1,6 +1,6 @@
 function(request, state, logger, callback) {
 
-  const proxy = require(`${process.cwd()}/testapi/mocks/proxy.js`);
+  const proxy = require(`${process.cwd()}/testapi/responders/proxy.js`);
 
   proxy.fetch_response(request, state, logger, response => {
     const state_was = state.instances[response.token].responses;

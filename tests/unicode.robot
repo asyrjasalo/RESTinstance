@@ -1,8 +1,7 @@
 *** Settings ***
-Resource        resources/mounterest.robot
-Library         REST                    localhost:${api_port}/
+Library         REST                    localhost:8273/
 Suite teardown  Rest instances          ${OUTPUTDIR}/unicode_instances.json
-Test setup      Reset state
+Test setup      DELETE                  http://localhost:8273/state
 
 
 *** Test Cases ***
