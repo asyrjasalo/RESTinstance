@@ -216,7 +216,7 @@ at once, and uses separate virtualenvs ``.venvs/dev/`` and ``.venvs/release/``
 to ensure that no (user or system level) dependencies interfere with the
 process.
 
-If ``make`` is not available you can do the dev setup with:
+If ``make`` is not available, you can setup for development with:
 
 ::
 
