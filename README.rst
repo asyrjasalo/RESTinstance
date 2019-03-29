@@ -190,28 +190,28 @@ On Linux distros and on OS X, may ``make`` rules ease the repetitive workflows:
 ::
 
     $ make help
-    all                            Run test, build, install and atest (default)
-    atest                          Run acceptance tests
-    atest_py2                      Run acceptance tests on Python 2
-    black                          Reformat source code in-place
-    build                          Build source dist and wheel
-    check-manifest                 Run check-manifest for MANIFEST.in completeness
-    clean                          Remove .venvs, builds, dists, and caches
-    dc_rm                          Stop and remove docker-compose env and volumes
-    dc                             Start docker-compose env on background
-    flake8                         Run flake8 for static code analysis
-    install                        Install package from source tree, as --editable
-    install_pypi                   Install the latest PyPI release
-    install_test                   Install the latest test.pypi.org release
-    libdoc                         Regenerate library keyword documentation
-    mypy                           Run mypy for static type checking
-    publish_pypi                   Publish dists to PyPI
-    publish_test                   Publish dists to test.pypi.org
-    pur                            Update requirements(-dev) for locked versions
-    pyroma                         Run pyroma for Python packaging best practices
-    retest                         Run failed tests only, if none, run all
-    test                           Run tests, installs requirements(-dev) first
-    uninstall                      Uninstall the package, regardless of its origin
+    all                  Run test, build, install and atest (default)
+    atest                Run acceptance tests
+    atest_py2            Run acceptance tests on Python 2
+    black                Reformat source code in-place
+    build                Build source dist and wheel
+    check-manifest       Run check-manifest for MANIFEST.in completeness
+    clean                Remove .venvs, builds, dists, and caches
+    dc                   Start docker-composed test API on background
+    dc_rm                Stop and remove docker-composed test API
+    flake8               Run flake8 for static code analysis
+    install              Install package from source tree, as --editable
+    install_pypi         Install the latest PyPI release
+    install_test         Install the latest test.pypi.org release
+    libdoc               Regenerate library keyword documentation
+    mypy                 Run mypy for static type checking
+    publish_pypi         Publish dists to PyPI
+    publish_test         Publish dists to test.pypi.org
+    pur                  Update requirements-dev for locked versions
+    pyroma               Run pyroma for Python packaging best practices
+    retest               Run failed tests only, if none, run all
+    test                 Run tests, installs requirements(-dev) first
+    uninstall            Uninstall the package, regardless of its origin
 
 Running ``make`` runs rules ``test``, ``build``, ``install`` and ``atest``
 at once, and uses separate virtualenvs ``.venvs/dev/`` and ``.venvs/release/``
@@ -305,7 +305,7 @@ Credits
 RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__
 and was originally written by `Anssi Syrjäsalo <https://github.com/asyrjasalo>`__.
 
-It was presented at (the first) `RoboCon 2018 <https://robocon.io>`__.
+It was presented at the first `RoboCon <https://robocon.io>`__, 2018.
 
 
 Contributors:
@@ -321,7 +321,7 @@ Contributors:
 - `Vinh "vinhntb" Nguyen <https://github.com/vinhntb>`__, `#52 <https://github.com/asyrjasalo/RESTinstance/pull/52>`__.
 
 
-We use the following Python excellence under the hood:
+We use following Python excellence under the hood:
 
 -  `Flex <https://github.com/pipermerriam/flex>`__, by Piper Merriam,
    for Swagger 2.0 validation
@@ -336,5 +336,4 @@ We use the following Python excellence under the hood:
 -  `requests <https://github.com/requests/requests>`__, by Kenneth
    Reitz et al., for making HTTP requests
 
-See `requirements.txt <https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt>`__
-for all the direct dependencies.
+See `requirements.txt <https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt>`__ for all the direct run time dependencies.

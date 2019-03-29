@@ -38,7 +38,7 @@ _venv_release:
 	pip install --upgrade pip setuptools wheel
 
 .PHONY: pur
-pur: _venv_dev ## Update requirements(-dev) for locked versions
+pur: _venv_dev ## Update requirements-dev for locked versions
 	. "${VENV_DEV_PATH}/bin/activate" && \
 	pur -r requirements-dev.txt --no-recursive
 
@@ -63,7 +63,7 @@ pyroma: ## Run pyroma for Python packaging best practices
 	. "${VENV_DEV_PATH}/bin/activate" && pyroma .
 
 .PHONY: dc
-dc: ## Start docker-compose env on background
+dc: ## Start docker-composed test API on background
 	# If you have no docker(-compose), run acceptance tests with:
 	#
 	# npm install -g mountebank
@@ -72,7 +72,7 @@ dc: ## Start docker-compose env on background
 	docker-compose up -d
 
 .PHONY: dc_rm
-dc_rm: ## Stop and remove docker-compose env and volumes
+dc_rm: ## Stop and remove docker-composed test API
 	docker-compose down --volumes
 
 .PHONY: libdoc
