@@ -5,7 +5,7 @@ services:
     image: andyrbell/mountebank
     command: mb --allowInjection --configfile /testapi/apis.ejs
     volumes:
-      - ./testapi:/testapi
+      - ./testapi:/testapi:ro
     ports:
       - 2525:2525
       - 8273:8273
