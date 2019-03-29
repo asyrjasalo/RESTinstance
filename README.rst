@@ -240,58 +240,56 @@ Acceptance tests
 ~~~~~~~~~~~~~~~~
 
 The ``testapi/`` is built on `mountebank <https://www.mbtest.org>`__.
-You can monitor requests and responses at `localhost:2525 <http://localhost:2525/imposters>`__
+You can monitor captured requests and responses at
+`localhost:2525 <http://localhost:2525/imposters>`__
 
-For the best level of isolation, the Docker container both with Robot Framework and
-the library is recreated each time the command is ran (more in the next chapter).
-
-To start the test API in ``docker-compose`` (daemonized) and run acceptance tests:
+To start it in ``docker-compose`` (daemonized) and run all acceptance tests:
 
 ::
 
     make atest
 
+This uses ``rfdocker`` underneath to build a yet another container for tests.
+Host directories ``tests/`` and ``results/`` are accessed inside the container
+via the respective Docker volumes. Same arguments are accepted as for ``robot``.
+
+To run only specific test suite(s):
+
+::
+
+    RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker tests/output.robot
+
+Host network is used to minimize divergence between different host OSes.
+
 If Docker (Compose) is not available, you can use npm's ``npx`` to install
 `mountebank npm package <https://www.npmjs.com/package/mountebank>`__
-and start the very same test API (note ``--localOnly`` for security):
+and start the very same test API (remember ``--localOnly`` for security):
 
 ::
 
     npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs
 
-And then run acceptance tests the Pythonic way:
+And then run as with Python installation method:
 
 ::
 
     robot --outputdir results tests/
 
 
-Running on Docker
-~~~~~~~~~~~~~~~~~
+Docker images
+~~~~~~~~~~~~~
 
-`RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
-is built with `rfdocker <https://github.com/asyrjasalo/rfdocker>`__ which is included
-in the git repository. The image is instantiated as a new container on each atest run.
+`The Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
+is built by `rfdocker <https://github.com/asyrjasalo/rfdocker>`__
+(regarding the changed parts) each time ``make atest`` is run.
 
-The container only has the source and the run time dependencies installed,
-no ``requirements-dev.txt`` or Python packaging related files, and it accesses
-host directories ``tests/`` and ``results/`` via the respective Docker volumes.
-
-The image is built as part of ``make atest``, if you want to do it separately:
-
-::
-
-    RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker
-
-Host network is used to minimize divergence between different host OSes.
-
-To tag the image as "latest" and push it to a registry (remember to ``docker login``):
+Tag image as "latest" and push it to a registry (remember to ``docker login``):
 
 ::
 
     ./release_docker https://your.docker.registry.com/restinstance
 
-For `Docker Hub <https://hub.docker.com>`__ you can just use your org or username:
+For `Docker Hub <https://hub.docker.com>`__ your org/username will do as well:
 
 ::
 
@@ -302,10 +300,10 @@ For `Docker Hub <https://hub.docker.com>`__ you can just use your org or usernam
 Credits
 -------
 
-RESTinstance is licensed under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__
+RESTinstance is under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__
 and was originally written by `Anssi Syrjäsalo <https://github.com/asyrjasalo>`__.
 
-It was presented at the first `RoboCon <https://robocon.io>`__, 2018.
+It was originally presented at the first `RoboCon <https://robocon.io>`__, 2018.
 
 
 Contributors:
@@ -337,3 +335,5 @@ We use following Python excellence under the hood:
    Reitz et al., for making HTTP requests
 
 See `requirements.txt <https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt>`__ for all the direct run time dependencies.
+
+REST your mind, OSS got your back.
