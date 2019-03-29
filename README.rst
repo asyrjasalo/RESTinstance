@@ -225,15 +225,11 @@ If ``make`` is not available you have to a little more dev setup:
     source .venvs/dev/bin/activate
     pip install --editable .
 
-Still, to run acceptance tests and (re)generate the keyword documentation:
+To recreate the keyword documentation from source (equals to ``make libdoc``):
 
 ::
 
-    python -m robot --outputdir results tests/
     python -m robot.libdoc REST docs/index.html
-
-Tip: Windows has come far from being development show shopper - but you may want to try
-`Windows Subsystem for Linux <https://docs.microsoft.com/en-us/windows/wsl/install-win10>`__.
 
 
 Acceptance tests
@@ -260,6 +256,8 @@ To run only specific test suite(s):
     RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker tests/output.robot
 
 Host network is used to minimize divergence between different host OSes.
+It may or may not be necessary to pass any of ``RUN_ARGS`` in your environment,
+but there should be no downside either (on OS X ``--network=host`` is required).
 
 If Docker (Compose) is not available, you can use npm's ``npx`` to install
 `mountebank npm package <https://www.npmjs.com/package/mountebank>`__
@@ -269,11 +267,11 @@ and start the very same test API (remember ``--localOnly`` for security):
 
     npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs
 
-And then run as with Python installation method:
+And run tests on Python:
 
 ::
 
-    robot --outputdir results tests/
+    python -m robot --outputdir results tests/
 
 
 Docker images
@@ -283,7 +281,7 @@ Docker images
 is built by `rfdocker <https://github.com/asyrjasalo/rfdocker>`__
 (regarding the changed parts) each time ``make atest`` is run.
 
-Tag image as "latest" and push it to a registry (remember to ``docker login``):
+To tag it as "latest" and push it to a registry (remember to ``docker login``):
 
 ::
 
