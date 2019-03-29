@@ -54,10 +54,6 @@ check-manifest: ## Run check-manifest for MANIFEST.in completeness
 flake8: ## Run flake8 for static code analysis
 	. "${VENV_DEV_PATH}/bin/activate" && flake8
 
-.PHONY: isort
-isort: ## Run isort for sorting import statements in-place
-	. "${VENV_DEV_PATH}/bin/activate" && isort --recursive --atomic .
-
 .PHONY: mypy
 mypy: ## Run mypy for static type checking
 	. "${VENV_DEV_PATH}/bin/activate" && mypy .

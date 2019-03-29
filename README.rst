@@ -203,7 +203,6 @@ On Linux distros and on OS X, may ``make`` rules ease the repetitive workflows:
     install                        Install package from source tree, as --editable
     install_pypi                   Install the latest PyPI release
     install_test                   Install the latest test.pypi.org release
-    isort                          Run isort for sorting import statements in-place
     libdoc                         Regenerate library keyword documentation
     mypy                           Run mypy for static type checking
     publish_pypi                   Publish dists to PyPI
