@@ -44,13 +44,13 @@ Pick the one that suits you and your environment best.
 
 As a Python package
 ~~~~~~~~~~~~~~~~~~~
-On 3.x and 2.7, you can install or upgrade `from PyPi <https://pypi.org/project/RESTinstance>`__:
+On 3.6, 3.7 and 2.7, you can install and upgrade `from PyPi <https://pypi.org/project/RESTinstance>`__:
 
 ::
 
     pip install --upgrade RESTinstance
 
-This installs Robot Framework as well, if you do not have it already installed.
+This also installs `Robot Framework <https://pypi.org/project/robotframework>`__ if you do not have it already.
 
 As a Docker image
 ~~~~~~~~~~~~~~~~~
@@ -154,7 +154,7 @@ Quick start
 
     robot --outputdir results tests/
 
-If you chose the Docker method instead, this is quaranteed to work in most environments:
+If you chose the Docker method instead (recall the story about red and blue pill here, if you want), this is quaranteed to work in most environments:
 
 ::
 
