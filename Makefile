@@ -143,4 +143,5 @@ clean: ## Remove .venvs, builds, dists, and caches
 	rm -rf .pytest_cache .mypy_cache
 	rm -rf results
 	rm -f log.html output.xml report.html *.demo.json
+	rm -f mb.log mb1.log mb.pid
 	rm -f .coverage
