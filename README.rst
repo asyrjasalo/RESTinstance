@@ -40,7 +40,7 @@ Advantages
 Installation
 ------------
 
-Pick the one that suits you and your environment best.
+Pick the one that suits your environment best.
 
 As a Python package
 ~~~~~~~~~~~~~~~~~~~
@@ -164,8 +164,9 @@ If you chose the Docker method instead (recall the story about red and blue pill
       --volume "$PWD/results":/home/robot/results \
       asyrjasalo/restinstance tests/
 
-Tip: If you prefer installing from source, you can ``pip install --editable .``
-and verify the installation by running ``robot README.rst``.
+Tip: If you prefer installing from source, ``pip install --editable .``
+and verify the installation with ``robot README.rst``
+
 
 
 Contributing
@@ -178,12 +179,12 @@ We do respect pull request(er)s. Please mention if you do not want to be
 listed below as contributors.
 
 A `CircleCI <https://circleci.com/gh/asyrjasalo/RESTinstance>`__ job is
-available automatically for your GitHub pull requests as well.
+created automatically for your GitHub pull requests as well.
 
 
 Local development
 ~~~~~~~~~~~~~~~~~
-On Linux distros and on OS X, may ``make`` rules ease the repetitive workflows:
+On Linux distros and on OS X, may ``make`` rules ease repetitive workflows:
 
 ::
 
@@ -235,10 +236,10 @@ Acceptance tests
 ~~~~~~~~~~~~~~~~
 
 The ``testapi/`` is built on `mountebank <https://www.mbtest.org>`__.
-You can monitor captured requests and responses at
+You can monitor requests and responses at
 `localhost:2525 <http://localhost:2525/imposters>`__
 
-To start it in ``docker-compose`` (daemonized) and run all acceptance tests:
+To start it with ``docker-compose`` (daemonized) and run all acceptance tests:
 
 ::
 
@@ -260,7 +261,7 @@ but there should be no downside either (on OS X ``--network=host`` is required).
 
 If Docker (Compose) is not available, you can use npm's ``npx`` to install
 `mountebank npm package <https://www.npmjs.com/package/mountebank>`__
-and start the very same test API (remember ``--localOnly`` for security):
+and start the very same test API (keep ``--localOnly`` for security):
 
 ::
 
@@ -273,20 +274,20 @@ And run tests on Python:
     python -m robot --outputdir results tests/
 
 
-Docker images
-~~~~~~~~~~~~~
+Docker releases
+~~~~~~~~~~~~~~~
 
 `The Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
-is built by `rfdocker <https://github.com/asyrjasalo/rfdocker>`__
+is built with (included) `rfdocker <https://github.com/asyrjasalo/rfdocker>`__
 (regarding the changed parts) each time ``make atest`` is run.
 
-To tag it as "latest" and push it to a registry (remember to ``docker login``):
+To push it to your Docker registry as "latest" (remember to ``docker login``):
 
 ::
 
     ./release_docker https://your.docker.registry.com/restinstance
 
-For `Docker Hub <https://hub.docker.com>`__ your org/username will do as well:
+For `Docker Hub <https://hub.docker.com>`__, just org/username will do:
 
 ::
 
@@ -300,7 +301,7 @@ Credits
 RESTinstance is under `Apache License 2.0 <https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE>`__
 and was originally written by `Anssi Syrjäsalo <https://github.com/asyrjasalo>`__.
 
-It was originally presented at the first `RoboCon <https://robocon.io>`__, 2018.
+It was first presented at the first `RoboCon <https://robocon.io>`__, 2018.
 
 
 Contributors:
