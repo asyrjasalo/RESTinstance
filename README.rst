@@ -164,10 +164,8 @@ If you chose the Docker method instead (recall the story about red and blue pill
       --volume "$PWD/results":/home/robot/results \
       asyrjasalo/restinstance tests/
 
-Tip: If you cloned the git repository, you can run ``README.rst`` itself as
-a test suite with Robot Framework (and install from source with
-``pip install --editable .``).
-
+Tip: If you prefer installing from source, you can ``pip install --editable .``
+and verify the installation by running ``robot README.rst``.
 
 
 Contributing
@@ -215,9 +213,10 @@ On Linux distros and on OS X, may ``make`` rules ease the repetitive workflows:
 
 Running ``make`` runs rules ``test``, ``build``, ``install`` and ``atest``
 at once, and uses separate virtualenvs ``.venvs/dev/`` and ``.venvs/release/``
-to ensure that no (user or system level) dependencies interfere with the process.
+to ensure that no (user or system level) dependencies interfere with the
+process.
 
-If ``make`` is not available you have to a little more dev setup:
+If ``make`` is not available you can do the dev setup with:
 
 ::
 
