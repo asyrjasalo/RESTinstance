@@ -251,14 +251,18 @@ To start the test API in ``docker-compose`` (daemonized) and run acceptance test
 
     make atest
 
-If Docker (Compose) is not available, use ``npm`` to install
-`mountebank Node.js package <https://www.npmjs.com/package/mountebank>`__
-and run the very same test API and tests:
+If Docker (Compose) is not available, you can use npm's ``npx`` to install
+`mountebank npm package <https://www.npmjs.com/package/mountebank>`__
+and start the very same test API (note ``--localOnly`` for security):
 
 ::
 
-    npm install -g mountebank
-    mb --allowInjection --configfile testapi/apis.ejs
+    npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs
+
+And then run acceptance tests the Pythonic way:
+
+::
+
     robot --outputdir results tests/
 
 
@@ -270,8 +274,8 @@ is built with `rfdocker <https://github.com/asyrjasalo/rfdocker>`__ which is inc
 in the git repository. The image is instantiated as a new container on each atest run.
 
 The container only has the source and the run time dependencies installed,
-no ``requirements-dev.txt`` or Python packaging related files, and it only
-reads ``tests/`` and writes ``results/`` on the host via the respective Docker volumes.
+no ``requirements-dev.txt`` or Python packaging related files, and it accesses
+host directories ``tests/`` and ``results/`` via the respective Docker volumes.
 
 The image is built as part of ``make atest``, if you want to do it separately:
 
@@ -279,8 +283,7 @@ The image is built as part of ``make atest``, if you want to do it separately:
 
     RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker
 
-Note that all containers, including the test API's, are ran in the host network,
-to have the network layer as identical as possible between different host OSes.
+Host network is used to minimize divergence between different host OSes.
 
 To tag the image as "latest" and push it to a registry (remember to ``docker login``):
 
