@@ -7,16 +7,20 @@ dist/
 build/
 pip-wheel-metadata/
 
+*.demo.json
+results/
 log.html
 output.xml
 report.html
-results/
+
+mb.log
+mb1.log
+mb.pid
 
 .coverage
 .pytest_cache
 .mypy_cache
 
 *.private
-.idea/
 
-*.demo.json
+.idea/
