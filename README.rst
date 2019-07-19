@@ -316,6 +316,7 @@ Contributors:
 
 - `Vinh "vinhntb" Nguyen <https://github.com/vinhntb>`__, `#52 <https://github.com/asyrjasalo/RESTinstance/pull/52>`__.
 
+- `Stavros "stdedos" Ntentos <https://github.com/stdedos>`__, `#75 <https://github.com/asyrjasalo/RESTinstance/pull/75>`__.
 
 We use following Python excellence under the hood:
 
