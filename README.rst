@@ -56,7 +56,7 @@ As a Docker image
 ~~~~~~~~~~~~~~~~~
 
 `RESTinstance Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
-contains Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.1.1>`__:
+contains Python 3.6 and `the latest Robot Framework <https://pypi.org/project/robotframework/3.1.2>`__:
 
 ::
 
