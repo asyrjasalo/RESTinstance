@@ -75,7 +75,7 @@ Quick start
 
 1. Create two new (empty) directories ``tests`` and ``results``.
 
-2. Create a new file ``tests/YOURNAME.robot`` with content:
+2. Create a new file ``atest/YOURNAME.robot`` with content:
 
 .. code:: robotframework
 
@@ -152,7 +152,7 @@ Quick start
 
 ::
 
-    robot --outputdir results tests/
+    robot --outputdir results atest/
 
 If you chose the Docker method instead (recall the story about red and blue pill here, if you want), this is quaranteed to work in most environments:
 
@@ -160,9 +160,9 @@ If you chose the Docker method instead (recall the story about red and blue pill
 
     docker run --rm -ti --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
       --env HTTP_PROXY --env HTTPS_PROXY --network host \
-      --volume "$PWD/tests":/home/robot/tests \
+      --volume "$PWD/atest":/home/robot/atest \
       --volume "$PWD/results":/home/robot/results \
-      asyrjasalo/restinstance tests/
+      asyrjasalo/restinstance atest/
 
 Tip: If you prefer installing from source, ``pip install --editable .``
 and verify the installation with ``robot README.rst``
@@ -250,9 +250,9 @@ To run acceptance test from Docker, and limit to only specific test suite(s):
 
 ::
 
-    RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker tests/output.robot
+    RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker atest/output.robot
 
-Host directories ``tests/`` and ``results/`` are accessed inside the container
+Host directories ``atest/`` and ``results/`` are accessed inside the container
 via the respective Docker volumes. Same arguments are accepted as for ``robot``.
 
 Host network is used to minimize divergence between different host OSes.
@@ -271,7 +271,7 @@ And run tests on Python:
 
 ::
 
-    python -m robot --outputdir results tests/
+    python -m robot --outputdir results atest/
 
 
 Docker releases
