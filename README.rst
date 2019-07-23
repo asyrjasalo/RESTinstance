@@ -226,7 +226,7 @@ If ``make`` is not available, you can setup for development with:
     source .venv/dev/bin/activate
     pip install --editable .
 
-To recreate the keyword documentation from source (equals to ``make libdoc``):
+To recreate the keyword documentation from source (equals to ``make docs``):
 
 ::
 

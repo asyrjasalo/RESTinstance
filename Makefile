@@ -83,7 +83,7 @@ testenv_rm: ## Stop and remove the running ( ) testenv if any
 
 .PHONY: docs
 docs: ## Regenerate (library) documentation in this source tree
-	python -m robot.libdoc REST docs/index.html
+	python -m robot.libdoc ${MODULE_NAME} docs/index.html
 
 .PHONY: atest
 atest: testenv ## Run Robot atests for the currently installed package
