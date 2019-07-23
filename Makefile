@@ -87,11 +87,7 @@ docs: ## Regenerate (library) documentation in this source tree
 
 .PHONY: atest
 atest: testenv ## Run Robot atests for the currently installed package
-	# If you have no docker run acceptance tests with:
-	#
-	#pip install --upgrade robotframework
-	#python -m robot.run --outputdir results atest
-	RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker --xunit xunit.xml atest
+	python -m robot.run --outputdir results --xunit xunit.xml atest
 
 .PHONY: test
 test: _venv_dev ## Run utests, upgrades .venv/dev with requirements(-dev)

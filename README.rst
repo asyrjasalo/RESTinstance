@@ -240,21 +240,20 @@ The ``testapi/`` is built on `mountebank <https://www.mbtest.org>`__.
 You can monitor requests and responses at
 `localhost:2525 <http://localhost:2525/imposters>`__
 
-To start it with ``docker`` (daemonized) and run all acceptance tests:
+To start it with ``docker`` (daemonized) and run ``robot`` acceptance tests:
 
 ::
 
     make atest
 
-This uses ``rfdocker`` underneath to build a yet another container for tests.
-Host directories ``tests/`` and ``results/`` are accessed inside the container
-via the respective Docker volumes. Same arguments are accepted as for ``robot``.
-
-To run only specific test suite(s):
+To run acceptance test from Docker, and limit to only specific test suite(s):
 
 ::
 
     RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker tests/output.robot
+
+Host directories ``tests/`` and ``results/`` are accessed inside the container
+via the respective Docker volumes. Same arguments are accepted as for ``robot``.
 
 Host network is used to minimize divergence between different host OSes.
 It may or may not be necessary to pass any of ``RUN_ARGS`` in your environment,
