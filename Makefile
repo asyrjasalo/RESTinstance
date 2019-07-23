@@ -87,7 +87,7 @@ docs: ## Regenerate (library) documentation in this source tree
 
 .PHONY: atest
 atest: testenv ## Run Robot atests for the currently installed package
-	pip install --no-cache-dir --upgrade robotframework && \
+	pip install --no-cache-dir --upgrade --user robotframework RESTinstance && \
 	python -m robot.run --outputdir results --xunit xunit.xml atest
 
 .PHONY: test
