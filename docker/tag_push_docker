@@ -24,3 +24,6 @@ docker login "$REGISTRY_URL"
 
 docker tag "$IMAGE_NAME:$FROM_IMAGE_TAG" "$IMAGE_REF:$TO_IMAGE_TAG"
 docker push "$IMAGE_REF:$TO_IMAGE_TAG"
+
+docker tag "$IMAGE_NAME:$FROM_IMAGE_TAG" "$IMAGE_REF:latest"
+docker push "$IMAGE_REF:latest"

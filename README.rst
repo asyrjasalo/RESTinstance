@@ -246,11 +246,14 @@ To start it with ``docker`` (daemonized) and run ``robot`` acceptance tests:
 
     make atest
 
-To run acceptance test from Docker, and limit to only specific test suite(s):
+To run acceptance tests from Docker, and limit only specific test suite(s):
 
 ::
 
-    RUN_ARGS="--network=host --env HTTP_PROXY --env HTTPS_PROXY" ./rfdocker atest/output.robot
+    RUN_ARGS="--rm --network=host --env HTTP_PROXY --env HTTPS_PROXY \
+      -v $PWD/atest:/home/robot/atest \
+      -v $PWD/results:/home/robot/results" \
+      ./docker/build_run_docker atest/output.robot
 
 Host directories ``atest/`` and ``results/`` are accessed inside the container
 via the respective Docker volumes. Same arguments are accepted as for ``robot``.
@@ -278,20 +281,21 @@ Docker releases
 ~~~~~~~~~~~~~~~
 
 `The Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
-is built with (included) `rfdocker <https://github.com/asyrjasalo/rfdocker>`__
-(regarding the changed parts) each time ``make atest`` is run.
+is built with ``./docker/build_run-docker`` using ``./docker/Dockerfile``.
 
-To push it to your Docker registry as "latest" (remember to ``docker login``):
+To push the image to your Docker registry as "latest" (remember to ``docker login``):
 
 ::
 
-    ./release_docker https://your.docker.registry.com/restinstance
+    REGISTRY_USERNAME=yourname \
+    REGISTRY_URL=https://private.registry.com/ \
+      ./docker/tag_and_push_docker
 
 For `Docker Hub <https://hub.docker.com>`__, just org/username will do:
 
 ::
 
-    ./release_docker {{organization}}/restinstance
+    REGISTRY_USERNAME=yourname ./docker/tag_and_push_docker
 
 
 
