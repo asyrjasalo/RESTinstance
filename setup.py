@@ -26,7 +26,9 @@ Topic :: Software Development :: Libraries :: Python Modules
 """.strip().splitlines()
 
 CURDIR = dirname(abspath(__file__))
-with open(join(CURDIR, "src", MODULE_NAME, "version.py"), encoding="utf-8") as f:
+with open(
+    join(CURDIR, "src", MODULE_NAME, "version.py"), encoding="utf-8"
+) as f:
     for line in f:
         if line.startswith("__version__"):
             VERSION = line.strip().split("=")[1].strip(" '\"")
@@ -55,8 +57,5 @@ setup(
     package_dir={"": "src"},
     packages=find_packages("src"),
     zip_safe=False,
-    entry_points={
-        "console_scripts": ["robot = robot.run:run_cli"]
-    },
-
+    entry_points={"console_scripts": ["robot = robot.run:run_cli"]},
 )

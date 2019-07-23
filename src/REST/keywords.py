@@ -1312,10 +1312,11 @@ class Keywords(object):
         request["timestamp"] = {}
         request["timestamp"]["utc"] = utc_datetime.isoformat()
         try:
-            request["timestamp"]["local"] = \
-                utc_datetime.astimezone(get_localzone()).isoformat()
+            request["timestamp"]["local"] = utc_datetime.astimezone(
+                get_localzone()
+            ).isoformat()
         except UnknownTimeZoneError as e:
-            logger.info('Cannot infer local timestamp! tzlocal:%s' % str(e))
+            logger.info("Cannot infer local timestamp! tzlocal:%s" % str(e))
         if validate and self.spec:
             self._assert_spec(self.spec, response)
         instance = self._instantiate(request, response, validate)
