@@ -240,13 +240,14 @@ The ``testapi/`` is built on `mountebank <https://www.mbtest.org>`__.
 You can monitor requests and responses at
 `localhost:2525 <http://localhost:2525/imposters>`__
 
-To start it with ``docker`` (daemonized) and run ``robot`` acceptance tests:
+To start mountebank with ``docker`` and use local ``robot`` for acceptance tests:
 
 ::
 
     make atest
 
-To run acceptance tests from Docker, and limit only specific test suite(s):
+To run the acceptance tests from a dedicated Docker container, built and ran
+outside the the test API, and limit only to specific suite(s):
 
 ::
 
@@ -281,9 +282,10 @@ Docker releases
 ~~~~~~~~~~~~~~~
 
 `The Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
-is built with ``./docker/build_run-docker`` using ``./docker/Dockerfile``.
+is built with script ``./docker/build_run-docker`` using ``docker/Dockerfile``.
 
-To push the image to your Docker registry as "latest" (remember to ``docker login``):
+To tag the built image with tags for timestamp and "latest",
+and push it to a Docker registry:
 
 ::
 
