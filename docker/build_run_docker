@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -e
+
+### constants ##################################################################
+
+this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root_path="$(cd "$this_path/.." && pwd)"
+
+### variables ##################################################################
+
+: ${BUILD_ARGS:="--build-arg ADD_PY_PACKAGES=RESTinstance"}
+: ${BUILD_DIR:="$repo_root_path"}
+
+: ${IMAGE_NAME:="restinstance"}
+: ${IMAGE_TAG:="latest"}
+
+: ${RUN_ARGS:=""}
+: ${RUN_CMD:="robot.run"}
+
+### build and run ##############################################################
+
+# NOTE1: pass your host machine user's UID build-time
+docker build --file "$this_path/Dockerfile" \
+  --build-arg HOST_UID=$(id -u) $BUILD_ARGS \
+  --tag "$IMAGE_NAME:$IMAGE_TAG" \
+  "$BUILD_DIR"
+
+# NOTE2: no --rm here, can do via RUN_ARGS like volumes, ports, envvars etc.
+docker run -ti \
+  $RUN_ARGS \
+  "$IMAGE_NAME:$IMAGE_TAG" "$RUN_CMD" "${@:---help}"

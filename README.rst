@@ -1,7 +1,7 @@
 RESTinstance
 ============
 
-`Robot Framework <http://robotframework.org>`__ test library for (RESTful) JSON APIs
+`Robot Framework <http://robotframework.org>`__ library for RESTful JSON APIs
 
 .. image:: https://circleci.com/gh/asyrjasalo/RESTinstance.svg?style=svg
     :target: https://circleci.com/gh/asyrjasalo/RESTinstance
@@ -189,31 +189,32 @@ On Linux distros and on OS X, may ``make`` rules ease repetitive workflows:
 ::
 
     $ make help
-    all                  Run test, build, install and atest (default)
-    atest                Run acceptance tests
-    atest_py2            Run acceptance tests on Python 2
-    black                Reformat source code in-place
-    build                Build source dist and wheel
-    check-manifest       Run check-manifest for MANIFEST.in completeness
-    clean                Remove .venvs, builds, dists, and caches
-    dc                   Start docker-composed test API on background
-    dc_rm                Stop and remove docker-composed test API
-    flake8               Run flake8 for static code analysis
-    install              Install package from source tree, as --editable
-    install_pypi         Install the latest PyPI release
-    install_test         Install the latest test.pypi.org release
-    libdoc               Regenerate library keyword documentation
-    mypy                 Run mypy for static type checking
-    publish_pypi         Publish dists to PyPI
-    publish_test         Publish dists to test.pypi.org
-    pur                  Update requirements-dev for locked versions
-    pyroma               Run pyroma for Python packaging best practices
-    retest               Run failed tests only, if none, run all
-    test                 Run tests, installs requirements(-dev) first
-    uninstall            Uninstall the package, regardless of its origin
+    all_local            (DEFAULT / make): test, build, install, atest, flake8
+    all_premerge         For PRs: black, test, docs, build, install, atest
+    all_prepypi          test.pypi.org: prospector, publish_pre, install_pre, atest
+    all_prod             PyPI: publish_prod, install_prod, final atest and pur
+    atest                Run Robot atests for the currently installed package
+    black                Reformat ("blacken") all Python source code in-place
+    build                Build source and wheel dists, recreates .venv/release
+    clean                Pip uninstall, rm .venv/s, build, dist, eggs, .caches
+    docs                 Regenerate (library) documentation in this source tree
+    flake8               Run flake8 for detecting flaws via static code analysis
+    install              (Re)install package as --editable from this source tree
+    install_pre          (Re)install the latest test.pypi.org (pre-)release
+    install_prod         Install/upgrade to the latest final release in PyPI
+    prospector           Runs static analysis using dodgy, mypy, pyroma and vulture
+    publish_pre          Publish dists to test.pypi.org, use for pre: aX, bX, rcX
+    publish_prod         Publish dists to live PyPI, use for final, e.g. 1.0.1
+    pur                  Update requirements-dev.txt's deps having fixed versions
+    retest               Run only failed utests if any, otherwise all
+    test                 Run utests, upgrades .venv/dev with requirements(-dev)
+    testenv              Start testenv in docker if available, otherwise local
+    testenv_rm           Stop and remove the running (docker) testenv if any
+    uninstall            Uninstall the Python package, regardless of its origin
 
-Running ``make`` runs rules ``test``, ``build``, ``install`` and ``atest``
-at once, and uses separate virtualenvs ``.venvs/dev/`` and ``.venvs/release/``
+
+Running ``make`` runs rules ``test``, ``build``, ``install``, and so on,
+at once, and uses separate virtualenvs ``.venv/dev/`` and ``.venv/release/``
 to ensure that no (user or system level) dependencies interfere with the
 process.
 
@@ -221,8 +222,8 @@ If ``make`` is not available, you can setup for development with:
 
 ::
 
-    virtualenv --no-site-packages .venvs/dev
-    source .venvs/dev/bin/activate
+    virtualenv --no-site-packages .venv/dev
+    source .venv/dev/bin/activate
     pip install --editable .
 
 To recreate the keyword documentation from source (equals to ``make libdoc``):

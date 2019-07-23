@@ -1,11 +1,11 @@
 *.pyc
 __pycache__
 
-*.egg-info
-.venvs/
-dist/
+.venv/
 build/
+dist/
 pip-wheel-metadata/
+src/*.egg-info
 
 *.demo.json
 results/

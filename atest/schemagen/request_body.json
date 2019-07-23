@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "default": true,
-    "description": "Tests.Schemagen: Method with body parameters",
+    "description": "Atest.Schemagen: Method with body parameters",
     "examples": [],
     "properties": {
         "request": {

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -e
+
+### constants ##################################################################
+
+this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd "$this_path/.." && pwd)"
+
+### variables ##################################################################
+
+: ${IMAGE_NAME:=${repo_root##*/}}
+: ${FROM_IMAGE_TAG:="latest"}
+
+: ${REGISTRY_URL:="registry.raas.dev"}
+: ${REGISTRY_USERNAME:=$USER}
+
+: ${IMAGE_REF:="${REGISTRY_URL}/$REGISTRY_USERNAME/${IMAGE_NAME}"}
+: ${TO_IMAGE_TAG:="$(date +%y.%m.%d.%H%M)"}
+
+### tag and push ###############################################################
+
+docker login "$REGISTRY_URL"
+
+docker tag "$IMAGE_NAME:$FROM_IMAGE_TAG" "$IMAGE_REF:$TO_IMAGE_TAG"
+docker push "$IMAGE_REF:$TO_IMAGE_TAG"
