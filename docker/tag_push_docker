@@ -9,13 +9,13 @@ repo_root="$(cd "$this_path/.." && pwd)"
 
 ### variables ##################################################################
 
-: ${IMAGE_NAME:=${repo_root##*/}}
+: ${IMAGE_NAME:="restinstance"}
 : ${FROM_IMAGE_TAG:="latest"}
 
-: ${REGISTRY_URL:="registry.raas.dev"}
-: ${REGISTRY_USERNAME:=$USER}
+: ${REGISTRY_URL:=""}
+: ${REGISTRY_USERNAME:="$USER"}
 
-: ${IMAGE_REF:="${REGISTRY_URL}/$REGISTRY_USERNAME/${IMAGE_NAME}"}
+: ${IMAGE_REF:="${REGISTRY_URL}$REGISTRY_USERNAME/${IMAGE_NAME}"}
 : ${TO_IMAGE_TAG:="$(date +%y.%m.%d.%H%M)"}
 
 ### tag and push ###############################################################
