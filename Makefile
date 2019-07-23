@@ -69,17 +69,17 @@ prospector: ## Runs static analysis using dodgy, mypy, pyroma and vulture
 		prospector --tool dodgy --tool mypy --tool pyroma --tool vulture src
 
 .PHONY: testenv
-testenv: ## Start testenv in docker if available, otherwise local
-	# If you have no docker(-compose), run acceptance tests with:
+testenv: testenv_rm ## Start testenv in docker if available, otherwise local
+	# If you have no docker, run acceptance tests with:
 	#
 	# npm install -g mountebank
 	# mb --localOnly  --allowInjection --configfile testapi/apis.ejs
 	# robot --outputdir results tests/
-	docker-compose up -d
+	docker run -d --name "mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/testapi:ro andyrbell/mountebank mb --allowInjection --configfile /testapi/apis.ejs
 
 .PHONY: testenv_rm
-testenv_rm: ## Stop and remove the running (docker) testenv if any
-	docker-compose down --volumes
+testenv_rm: ## Stop and remove the running ( ) testenv if any
+	docker rm --force "mountebank" || true
 
 .PHONY: docs
 docs: ## Regenerate (library) documentation in this source tree

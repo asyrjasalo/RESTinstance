@@ -240,7 +240,7 @@ The ``testapi/`` is built on `mountebank <https://www.mbtest.org>`__.
 You can monitor requests and responses at
 `localhost:2525 <http://localhost:2525/imposters>`__
 
-To start it with ``docker-compose`` (daemonized) and run all acceptance tests:
+To start it with ``docker`` (daemonized) and run all acceptance tests:
 
 ::
 
@@ -260,7 +260,7 @@ Host network is used to minimize divergence between different host OSes.
 It may or may not be necessary to pass any of ``RUN_ARGS`` in your environment,
 but there should be no downside either (on OS X ``--network=host`` is required).
 
-If Docker (Compose) is not available, you can use npm's ``npx`` to install
+If Docker is not available, you can use npm's ``npx`` to install
 `mountebank npm package <https://www.npmjs.com/package/mountebank>`__
 and start the very same test API (keep ``--localOnly`` for security):
 
