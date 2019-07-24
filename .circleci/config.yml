@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  make:
+  all_github:
     machine:
       docker_layer_caching: true
 
@@ -9,22 +9,51 @@ jobs:
       - checkout
 
       - run:
-          name: Install from source
-          command: make install
-
-      - run:
-          name: Run acceptance tests
-          command: make atest
+          name: make black test docs build install atest
+          command: make all_github
 
       - store_test_results:
           path: results/
 
       - store_artifacts:
           path: results/
-          destination: robot-results/
+
+  all_prepypi:
+    machine:
+      docker_layer_caching: true
+
+    steps:
+      - checkout
+
+      - run:
+          name: make publish_pre install_pre atest
+          command: make all_prepypi
+
+      - store_test_results:
+          path: results/
+
+      - store_artifacts:
+          path: results/
+
+  all_pypi:
+    machine:
+      docker_layer_caching: true
+
+    steps:
+      - checkout
+
+      - run:
+          name: make publish_prod install_prod atest
+          command: make all_pypi
+
+      - store_test_results:
+          path: results/
+
+      - store_artifacts:
+          path: results/
 
 workflows:
   version: 2
-  build:
+  make:
     jobs:
-      - make
+      - all_github
