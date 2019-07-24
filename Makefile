@@ -62,17 +62,17 @@ flake8: _venv_dev ## Run flake8 for detecting flaws via static code analysis
 .PHONY: prospector
 prospector: _venv_dev ## Runs static analysis using dodgy, mypy, pyroma and vulture
 	. "${VENV_DEV_PATH}/bin/activate" && \
-		prospector --tool dodgy --tool mypy --tool pyroma --tool vulture src
+	prospector --tool dodgy --tool mypy --tool pyroma --tool vulture src
 
 .PHONY: testenv
 testenv: testenv_rm ## Start new testenv in docker if available, otherwise local
-	which docker >/dev/null && \
-		(docker run -d --name "mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/testapi:ro andyrbell/mountebank mb --allowInjection --configfile /testapi/apis.ejs) || \
-		(nohup npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs > results/testenv_npx_mountebank.log &)
+	docker -v >/dev/null && \
+	(docker run -d --name "${PACKAGE_NAME}_mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/testapi:ro andyrbell/mountebank mb --allowInjection --configfile /testapi/apis.ejs) || \
+	(nohup npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs > results/testenv_npx_mountebank.log &)
 
 .PHONY: testenv_rm
 testenv_rm: ## Stop and remove the running docker testenv if any
-	which docker >/dev/null && docker rm --force "mountebank" || true
+	docker -v >/dev/null && docker rm --force "${PACKAGE_NAME}_mountebank" || true
 
 .PHONY: docs
 docs: ## Regenerate (library) documentation in this source tree
