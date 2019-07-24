@@ -6,11 +6,11 @@ VENV_DEV_PATH := .venv/dev
 VENV_RELEASE_PATH := .venv/release
 
 # evaluate lazily: package name when installing from PyPIs
-PACKAGE_NAME = RESTinstance
+PACKAGE_NAME = python setup.py --name
 MODULE_NAME = REST
 
 # evaluate lazily: check version before building and after installation
-VERSION_TO_BUILD = python -c "import ${MODULE_NAME}; print(${MODULE_NAME}.__version__)"
+VERSION_TO_BUILD = python setup.py --version
 VERSION_INSTALLED = python -c "import ${MODULE_NAME}; print(${MODULE_NAME}.__version__)"
 
 
