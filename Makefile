@@ -122,11 +122,12 @@ uninstall: ## Uninstall the Python package, regardless of its origin
 
 .PHONY: publish_pre
 publish_pre: ## Publish dists to test.pypi.org - for pre, e.g. aX, bX, rcX
+	pipx run twine check dist/* && \
 	pipx run twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 .PHONY: publish_prod
 publish_prod: ## Publish dists to live PyPI - for final only, e.g. 1.0.1
-	pipx run twine upload dist/*
+	pipx run twine check dist/* && pipx run twine upload dist/*
 
 .PHONY: clean
 clean: uninstall ## Pip uninstall, rm .venv/s, build, dist, eggs, .caches
