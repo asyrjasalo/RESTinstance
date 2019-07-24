@@ -6,7 +6,7 @@ VENV_DEV_PATH := .venv/dev
 VENV_RELEASE_PATH := .venv/release
 
 # evaluate lazily: package name when installing from PyPIs
-PACKAGE_NAME = python setup.py --name
+PACKAGE_NAME = RESTinstance
 MODULE_NAME = REST
 
 # evaluate lazily: check version before building and after installation
