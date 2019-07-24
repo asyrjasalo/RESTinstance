@@ -9,7 +9,7 @@ repo_root_path="$(cd "$this_path/.." && pwd)"
 
 ### variables ##################################################################
 
-: ${BUILD_ARGS:="--build-arg ADD_PY_PACKAGES=RESTinstance"}
+: ${BUILD_ARGS:=""} # --build-arg ADD_PY_PACKAGES=tzdata
 : ${BUILD_DIR:="$repo_root_path"}
 
 : ${IMAGE_NAME:="restinstance"}

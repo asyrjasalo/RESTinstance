@@ -9,7 +9,7 @@ FROM python:${PYTHON_VERSION}-alpine
 #
 # then pass tzdata as ADD_APK_PACKAGES
 
-ARG ADD_APK_PACKAGES="bash"
+ARG ADD_APK_PACKAGES=""
 RUN apk add --no-cache ${ADD_APK_PACKAGES} && \
     rm -rf /var/cache/* /tmp/* /var/log/* ~/.cache
 
