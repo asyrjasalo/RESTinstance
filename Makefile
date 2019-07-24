@@ -36,14 +36,14 @@ help:
 .PHONY: _venv_dev
 _venv_dev:
 	pipx --version >/dev/null || pip install --user pipx
-	test -d "${VENV_DEV_PATH}" || pipx run virtualenv --no-site-packages "${VENV_DEV_PATH}"
+	test -d "${VENV_DEV_PATH}" || pipx run virtualenv "${VENV_DEV_PATH}"
 	. "${VENV_DEV_PATH}/bin/activate" && \
 	pip install --quiet -r requirements-dev.txt
 
 .PHONY: _venv_release
 _venv_release:
 	pipx --version >/dev/null || pip install --user pipx
-	pipx run virtualenv --clear --no-site-packages "${VENV_RELEASE_PATH}"
+	pipx run virtualenv --clear "${VENV_RELEASE_PATH}"
 	. "${VENV_RELEASE_PATH}/bin/activate" && \
 	pip install --upgrade pip setuptools wheel
 
