@@ -14,19 +14,19 @@ VERSION_TO_BUILD = python -c "import ${MODULE_NAME}; print(${MODULE_NAME}.__vers
 VERSION_INSTALLED = python -c "import ${MODULE_NAME}; print(${MODULE_NAME}.__version__)"
 
 
-.DEFAULT_GOAL := all_local
+.DEFAULT_GOAL := all_dev
 
-.PHONY: all_local
-all_local: test build install atest ## (DEFAULT / make): test, build, install, atest
+.PHONY: all_dev
+all_dev: test build install atest ## (DEFAULT / make): test, build, install, atest
 
-.PHONY: all_premerge
-all_premerge: black test docs build install atest ## For PRs: black, test, docs, build, install, atest
+.PHONY: all_github
+all_github: black, test, docs, build, install, atest ## All branches/PRs: black, test, docs, build, install, atest
 
 .PHONY: all_prepypi
-all_prepypi: prospector publish_pre install_pre atest ## test.pypi.org: prospector, publish_pre, install_pre, atest
+all_prepypi: publish_pre install_pre atest ## Prerelease to TestPyPI: publish_pre, install_pre, atest
 
-.PHONE: all_prod
-all_prod: publish_prod install_prod atest pur ## PyPI: publish_prod, install_prod, final atest and pur
+.PHONE: all_pypi
+all_pypi: publish_prod install_prod atest ## Final release to PyPI: publish_prod, install_prod, atest
 
 .PHONY: help
 help:
@@ -35,51 +35,44 @@ help:
 
 .PHONY: _venv_dev
 _venv_dev:
-	virtualenv --version >/dev/null || pip install --user virtualenv
-	test -d "${VENV_DEV_PATH}" || virtualenv --no-site-packages "${VENV_DEV_PATH}"
+	pipx --version >/dev/null || pip install --user pipx
+	test -d "${VENV_DEV_PATH}" || pipx run virtualenv --no-site-packages "${VENV_DEV_PATH}"
 	. "${VENV_DEV_PATH}/bin/activate" && \
 	pip install --quiet -r requirements-dev.txt
 
 .PHONY: _venv_release
 _venv_release:
-	virtualenv --version >/dev/null || pip install --user virtualenv
-	virtualenv --clear --no-site-packages "${VENV_RELEASE_PATH}"
+	pipx --version >/dev/null || pip install --user pipx
+	pipx run virtualenv --clear --no-site-packages "${VENV_RELEASE_PATH}"
 	. "${VENV_RELEASE_PATH}/bin/activate" && \
 	pip install --upgrade pip setuptools wheel
 
 .PHONY: pur
-pur: _venv_dev ## Update requirements-dev.txt's deps having fixed versions
-	. "${VENV_DEV_PATH}/bin/activate" && \
-	pur -r requirements-dev.txt --no-recursive
+pur: _venv_dev ## Update requirements-dev's deps that have versions defined
+	pipx run pur -r requirements-dev.txt --no-recursive
 
 .PHONY: black
-black: ## Reformat ("blacken") all Python source code in-place
-	. "${VENV_DEV_PATH}/bin/activate" && black .
+black: _venv_dev ## Reformat ("blacken") all Python source code in-place
+	pipx run black .
 
 .PHONY: flake8
-flake8: ## Run flake8 for detecting flaws via static code analysis
-	###
-	###
-	### These are from flake8 - not necessary fatal but worth considering:
-	. "${VENV_DEV_PATH}/bin/activate" && flake8
+flake8: _venv_dev ## Run flake8 for detecting flaws via static code analysis
+	pipx run flake8
 
 .PHONY: prospector
-prospector: ## Runs static analysis using dodgy, mypy, pyroma and vulture
+prospector: _venv_dev ## Runs static analysis using dodgy, mypy, pyroma and vulture
 	. "${VENV_DEV_PATH}/bin/activate" && \
 		prospector --tool dodgy --tool mypy --tool pyroma --tool vulture src
 
 .PHONY: testenv
-testenv: testenv_rm ## Start testenv in docker if available, otherwise local
-	# If you have no docker, run acceptance tests with:
-	#
-	# npm install -g mountebank
-	# mb --localOnly  --allowInjection --configfile testapi/apis.ejs
-	# robot --outputdir results tests/
-	docker run -d --name "mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/testapi:ro andyrbell/mountebank mb --allowInjection --configfile /testapi/apis.ejs
+testenv: testenv_rm ## Start new testenv in docker if available, otherwise local
+	which docker >/dev/null && \
+		(docker run -d --name "mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/testapi:ro andyrbell/mountebank mb --allowInjection --configfile /testapi/apis.ejs) || \
+		(nohup npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs > results/testenv_npx_mountebank.log &)
 
 .PHONY: testenv_rm
-testenv_rm: ## Stop and remove the running ( ) testenv if any
-	docker rm --force "mountebank" || true
+testenv_rm: ## Stop and remove the running docker testenv if any
+	which docker >/dev/null && docker rm --force "mountebank" || true
 
 .PHONY: docs
 docs: ## Regenerate (library) documentation in this source tree
@@ -87,15 +80,14 @@ docs: ## Regenerate (library) documentation in this source tree
 
 .PHONY: atest
 atest: testenv ## Run Robot atests for the currently installed package
-	pip install --no-cache-dir --upgrade --user robotframework RESTinstance && \
 	python -m robot.run --outputdir results --xunit xunit.xml atest
 
 .PHONY: test
-test: _venv_dev ## Run utests, upgrades .venv/dev with requirements(-dev)
+test: _venv_dev ## Run unit tests, upgrades .venv/dev with requirements(-dev)
 	. "${VENV_DEV_PATH}/bin/activate" && pytest
 
 .PHONY: retest
-retest: ## Run only failed utests if any, otherwise all
+retest: ## Run only failed unit tests if any, otherwise all
 	. "${VENV_DEV_PATH}/bin/activate" && \
 	pytest --last-failed --last-failed-no-failures all
 
@@ -105,8 +97,7 @@ build: _venv_release ## Build source and wheel dists, recreates .venv/release
 	#####################################
 	### Version check before building ###
 	. "${VENV_RELEASE_PATH}/bin/activate" && ${VERSION_TO_BUILD} && \
-	python setup.py clean --all bdist_wheel sdist && \
-	pip install --upgrade twine
+	python setup.py clean --all bdist_wheel sdist
 
 .PHONY: install
 install: uninstall ## (Re)install package as --editable from this source tree
@@ -130,13 +121,12 @@ uninstall: ## Uninstall the Python package, regardless of its origin
 	pip uninstall --yes ${PACKAGE_NAME}
 
 .PHONY: publish_pre
-publish_pre: ## Publish dists to test.pypi.org, use for pre: aX, bX, rcX
-	. "${VENV_RELEASE_PATH}/bin/activate" && \
-	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+publish_pre: ## Publish dists to test.pypi.org - for pre, e.g. aX, bX, rcX
+	pipx run twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 .PHONY: publish_prod
-publish_prod: ## Publish dists to live PyPI, use for final, e.g. 1.0.1
-	. "${VENV_RELEASE_PATH}/bin/activate" && twine upload dist/*
+publish_prod: ## Publish dists to live PyPI - for final only, e.g. 1.0.1
+	pipx run twine upload dist/*
 
 .PHONY: clean
 clean: uninstall ## Pip uninstall, rm .venv/s, build, dist, eggs, .caches

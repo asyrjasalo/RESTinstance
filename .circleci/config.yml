@@ -9,6 +9,10 @@ jobs:
       - checkout
 
       - run:
+          name: Install from source
+          command: make install
+
+      - run:
           name: Run acceptance tests
           command: make atest
 

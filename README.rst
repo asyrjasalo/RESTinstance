@@ -189,10 +189,10 @@ On Linux distros and on OS X, may ``make`` rules ease repetitive workflows:
 ::
 
     $ make help
-    all_local            (DEFAULT / make): test, build, install, atest, flake8
-    all_premerge         For PRs: black, test, docs, build, install, atest
-    all_prepypi          test.pypi.org: prospector, publish_pre, install_pre, atest
-    all_prod             PyPI: publish_prod, install_prod, final atest and pur
+    all_dev              (DEFAULT / make): test, build, install, atest
+    all_github           All branches/PRs: black, test, docs, build, install, atest
+    all_prepypi          Prerelease to TestPyPI: publish_pre, install_pre, atest
+    all_pypi             Final release to PyPI: publish_prod, install_prod, atest
     atest                Run Robot atests for the currently installed package
     black                Reformat ("blacken") all Python source code in-place
     build                Build source and wheel dists, recreates .venv/release
@@ -203,13 +203,13 @@ On Linux distros and on OS X, may ``make`` rules ease repetitive workflows:
     install_pre          (Re)install the latest test.pypi.org (pre-)release
     install_prod         Install/upgrade to the latest final release in PyPI
     prospector           Runs static analysis using dodgy, mypy, pyroma and vulture
-    publish_pre          Publish dists to test.pypi.org, use for pre: aX, bX, rcX
-    publish_prod         Publish dists to live PyPI, use for final, e.g. 1.0.1
-    pur                  Update requirements-dev.txt's deps having fixed versions
-    retest               Run only failed utests if any, otherwise all
-    test                 Run utests, upgrades .venv/dev with requirements(-dev)
-    testenv              Start testenv in docker if available, otherwise local
-    testenv_rm           Stop and remove the running (docker) testenv if any
+    publish_pre          Publish dists to test.pypi.org - for pre, e.g. aX, bX, rcX
+    publish_prod         Publish dists to live PyPI - for final only, e.g. 1.0.1
+    pur                  Update requirements-dev's deps that have versions defined
+    retest               Run only failed unit tests if any, otherwise all
+    test                 Run unit tests, upgrades .venv/dev with requirements(-dev)
+    testenv              Start new testenv in docker if available, otherwise local
+    testenv_rm           Stop and remove the running docker testenv if any
     uninstall            Uninstall the Python package, regardless of its origin
 
 
@@ -240,11 +240,27 @@ The ``testapi/`` is built on `mountebank <https://www.mbtest.org>`__.
 You can monitor requests and responses at
 `localhost:2525 <http://localhost:2525/imposters>`__
 
-To start mountebank with ``docker`` and use local ``robot`` for acceptance tests:
+To start the testenv and ran ``robot`` for acceptance tests:
 
 ::
 
     make atest
+
+If you have Docker available, then testenv is ran in Docker container which is
+recreated each time the above make rule is ran.
+
+If Docker is not available, then testenv is ran using local ``mb`` which is
+installed and started as following (ran by the make rule, here for reference):
+
+::
+
+    npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs
+
+The tests are ran as following (ran by the make rule, here for reference):
+
+::
+
+    python -m robot --outputdir results atest/
 
 To run the acceptance tests from a dedicated Docker container, built and ran
 outside the the test API, and limit only to specific suite(s):
@@ -262,20 +278,6 @@ via the respective Docker volumes. Same arguments are accepted as for ``robot``.
 Host network is used to minimize divergence between different host OSes.
 It may or may not be necessary to pass any of ``RUN_ARGS`` in your environment,
 but there should be no downside either (on OS X ``--network=host`` is required).
-
-If Docker is not available, you can use npm's ``npx`` to install
-`mountebank npm package <https://www.npmjs.com/package/mountebank>`__
-and start the very same test API (keep ``--localOnly`` for security):
-
-::
-
-    npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs
-
-And run tests on Python:
-
-::
-
-    python -m robot --outputdir results atest/
 
 
 Docker releases
