@@ -9,6 +9,10 @@ jobs:
       - checkout
 
       - run:
+          name: upgrade pip
+          command: pip install --no-cache-dir --upgrade pip
+
+      - run:
           name: make black test docs build install atest
           command: make all_github
 
