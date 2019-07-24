@@ -1,6 +1,23 @@
 version: 2
 
 jobs:
+  atest:
+    machine:
+      docker_layer_caching: true
+
+    steps:
+      - checkout
+
+      - run:
+          name: make install atest
+          command: make install atest
+
+      - store_test_results:
+          path: results/
+
+      - store_artifacts:
+          path: results/
+
   all_github:
     machine:
       docker_layer_caching: true
@@ -60,4 +77,4 @@ workflows:
   version: 2
   make:
     jobs:
-      - all_github
+      - atest
