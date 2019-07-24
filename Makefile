@@ -118,7 +118,7 @@ install_prod: ## Install/upgrade to the latest final release in PyPI
 
 .PHONY: uninstall
 uninstall: ## Uninstall the Python package, regardless of its origin
-	pip uninstall --yes ${PACKAGE_NAME}
+	pip uninstall --yes ${PACKAGE_NAME} || true
 
 .PHONY: publish_pre
 publish_pre: ## Publish dists to test.pypi.org - for pre, e.g. aX, bX, rcX
