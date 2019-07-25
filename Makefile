@@ -19,16 +19,16 @@ VERSION_INSTALLED = python -c "import ${MODULE_NAME}; print(${MODULE_NAME}.__ver
 .DEFAULT_GOAL := all_dev
 
 .PHONY: all_dev
-all_dev: test install atest ## (DEFAULT / make): test, install, atest
+all_dev: test install_e atest ## (DEFAULT / make): test, install_e, atest
 
 .PHONY: all_github
 all_github: black test build install atest ## All branches/PRs: black, test, build, install, atest
 
 .PHONY: all_prepypi
-all_prepypi: build publish_pre install_pre atest ## Prerelease to TestPyPI: build, publish_pre, install_pre, atest
+all_prepypi: build publish_pre install_pre atest ## Pre to TestPyPI: build, publish_pre, install_pre, atest
 
 .PHONE: all_pypi
-all_pypi: build publish_prod install_prod atest ## Final release to PyPI: build, publish_prod, install_prod, atest
+all_pypi: build publish_prod install_prod atest ## Final to PyPI: build, publish_prod, install_prod, atest
 
 .PHONY: help
 help:
@@ -102,11 +102,18 @@ build: _venv_release ## Build source and wheel dists, recreates .venv/release
 	. "${VENV_RELEASE_PATH}/bin/activate" && ${VERSION_TO_BUILD} && \
 	python setup.py clean --all bdist_wheel sdist
 
-.PHONY: install
-install: ## (Re)install package as --editable from this source tree
+.PHONY: install_e
+install_e: ## Install the package as --editable from this source tree
 	pip install --no-cache-dir --editable .
-	######################################
-	### Version check after installing ###
+	###############################
+	### Version after installed ###
+	${VERSION_INSTALLED}
+
+.PHONY: install
+install: uninstall ## (Re)install the package from this source tree
+	pip install --no-cache-dir --user .
+	###############################
+	### Version after installed ###
 	${VERSION_INSTALLED}
 
 .PHONY: install_pre
@@ -114,10 +121,16 @@ install_pre: uninstall ## (Re)install the latest test.pypi.org (pre-)release
 	pip install --no-cache-dir --pre \
 		--index-url https://test.pypi.org/simple/ \
 		--extra-index-url https://pypi.org/simple ${PACKAGE_NAME}
+	###############################
+	### Version after installed ###
+	${VERSION_INSTALLED}
 
 .PHONY: install_prod
 install_prod: ## Install/upgrade to the latest final release in PyPI
 	pip install --no-cache-dir --upgrade ${PACKAGE_NAME}
+	###############################
+	### Version after installed ###
+	${VERSION_INSTALLED}
 
 .PHONY: uninstall
 uninstall: ## Uninstall the Python package, regardless of its origin
