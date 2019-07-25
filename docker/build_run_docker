@@ -29,4 +29,4 @@ docker build --file "$this_path/Dockerfile" \
 # NOTE2: no --rm here, can do via RUN_ARGS like volumes, ports, envvars etc.
 docker run -ti \
   $RUN_ARGS \
-  "$IMAGE_NAME:$IMAGE_TAG" "$RUN_CMD" "${@:---help}"
+  "$IMAGE_NAME:$IMAGE_TAG" $RUN_CMD "${@:---help}"

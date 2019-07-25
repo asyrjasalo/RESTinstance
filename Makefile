@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 # get OS X to have `pip install --user` target in $PATH
 PATH := ${HOME}/.local/bin:${PATH}
 
@@ -17,16 +19,16 @@ VERSION_INSTALLED = python -c "import ${MODULE_NAME}; print(${MODULE_NAME}.__ver
 .DEFAULT_GOAL := all_dev
 
 .PHONY: all_dev
-all_dev: test install atest ## (DEFAULT / make): test, install, atest
+all_dev: test install_e atest ## (DEFAULT / make): test, install_e, atest
 
 .PHONY: all_github
-all_github: black test docs build install atest ## All branches/PRs: black, test, docs, build, install, atest
+all_github: black test build install atest ## All branches/PRs: black, test, build, install, atest
 
 .PHONY: all_prepypi
-all_prepypi: build publish_pre install_pre atest ## Prerelease to TestPyPI: build, publish_pre, install_pre, atest
+all_prepypi: build publish_pre install_pre atest ## Pre to TestPyPI: build, publish_pre, install_pre, atest
 
 .PHONE: all_pypi
-all_pypi: build publish_prod install_prod atest ## Final release to PyPI: build, publish_prod, install_prod, atest
+all_pypi: build publish_prod install_prod atest ## Final to PyPI: build, publish_prod, install_prod, atest
 
 .PHONY: help
 help:
@@ -66,13 +68,14 @@ prospector: _venv_dev ## Runs static analysis using dodgy, mypy, pyroma and vult
 
 .PHONY: testenv
 testenv: testenv_rm ## Start new testenv in docker if available, otherwise local
-	docker -v >/dev/null && \
-	(docker run -d --name "${PACKAGE_NAME}_mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/testapi:ro andyrbell/mountebank mb --allowInjection --configfile /testapi/apis.ejs) || \
-	(nohup npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs > results/testenv_npx_mountebank.log &)
+	pgrep -f docker >/dev/null && \
+	(docker run -d --name "${PACKAGE_NAME}_mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/home/mb/testapi:ro asyrjasalo/mountebank --allowInjection --configfile testapi/apis.ejs) || \
+	(nohup npx mountebank --localOnly --allowInjection --configfile testapi/apis.ejs > testenv_npx_mb.log &)
 
 .PHONY: testenv_rm
 testenv_rm: ## Stop and remove the running docker testenv if any
-	docker -v >/dev/null && docker rm --force "${PACKAGE_NAME}_mountebank" || true
+	pgrep -f docker >/dev/null && \
+	docker rm --force "${PACKAGE_NAME}_mountebank" || true
 
 .PHONY: docs
 docs: ## Regenerate (library) documentation in this source tree
@@ -100,11 +103,18 @@ build: _venv_release ## Build source and wheel dists, recreates .venv/release
 	. "${VENV_RELEASE_PATH}/bin/activate" && ${VERSION_TO_BUILD} && \
 	python setup.py clean --all bdist_wheel sdist
 
-.PHONY: install
-install: ## (Re)install package as --editable from this source tree
+.PHONY: install_e
+install_e: ## Install the package as --editable from this source tree
 	pip install --no-cache-dir --editable .
-	######################################
-	### Version check after installing ###
+	###############################
+	### Version after installed ###
+	${VERSION_INSTALLED}
+
+.PHONY: install
+install: uninstall ## (Re)install the package from this source tree
+	pip install --no-cache-dir --user .
+	###############################
+	### Version after installed ###
 	${VERSION_INSTALLED}
 
 .PHONY: install_pre
@@ -112,10 +122,16 @@ install_pre: uninstall ## (Re)install the latest test.pypi.org (pre-)release
 	pip install --no-cache-dir --pre \
 		--index-url https://test.pypi.org/simple/ \
 		--extra-index-url https://pypi.org/simple ${PACKAGE_NAME}
+	###############################
+	### Version after installed ###
+	${VERSION_INSTALLED}
 
 .PHONY: install_prod
 install_prod: ## Install/upgrade to the latest final release in PyPI
 	pip install --no-cache-dir --upgrade ${PACKAGE_NAME}
+	###############################
+	### Version after installed ###
+	${VERSION_INSTALLED}
 
 .PHONY: uninstall
 uninstall: ## Uninstall the Python package, regardless of its origin
@@ -138,4 +154,4 @@ clean: uninstall ## Pip uninstall, rm .venv/s, build, dist, eggs, .caches
 	rm -rf "${VENV_DEV_PATH}" "${VENV_RELEASE_PATH}"
 	rm -rf results
 	rm -f log.html output.xml report.html *.demo.json
-	rm -f mb.log mb1.log mb.pid
+	rm -f *.log mb.pid

@@ -3,11 +3,10 @@
 ARG PYTHON_VERSION=3.7.4
 FROM python:${PYTHON_VERSION}-alpine
 
-# remove comments from two lines below for testing timezones other than UTC
-# RUN cp /usr/share/zoneinfo/Europe/Helsinki /etc/localtime
-# RUN echo "Europe/Helsinki" >  /etc/timezone
-#
-# then pass tzdata as ADD_APK_PACKAGES
+RUN cp /usr/share/zoneinfo/Europe/Helsinki /etc/localtime
+RUN echo "Europe/Helsinki" >  /etc/timezone
+
+# pass tzdata as ADD_APK_PACKAGE for testing on these timezones rather than UTC
 
 ARG ADD_APK_PACKAGES=""
 RUN apk add --no-cache ${ADD_APK_PACKAGES} && \

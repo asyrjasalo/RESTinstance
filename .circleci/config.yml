@@ -1,36 +1,20 @@
 version: 2
 
 jobs:
-  atest:
-    machine:
-      docker_layer_caching: true
-
-    steps:
-      - checkout
-
-      - run:
-          name: make install atest
-          command: make install atest
-
-      - store_test_results:
-          path: results/
-
-      - store_artifacts:
-          path: results/
 
   all_github:
     machine:
+      image: ubuntu-1604:201903-01
       docker_layer_caching: true
-
     steps:
       - checkout
 
       - run:
-          name: upgrade pip
-          command: pip install --no-cache-dir --upgrade pip
+          name: Use Python 3.7.0
+          command: pyenv versions && pyenv global 3.7.0
 
       - run:
-          name: make black test docs build install atest
+          name: make black test build install atest
           command: make all_github
 
       - store_test_results:
@@ -39,12 +23,17 @@ jobs:
       - store_artifacts:
           path: results/
 
+
   all_prepypi:
     machine:
+      image: ubuntu-1604:201903-01
       docker_layer_caching: true
-
     steps:
       - checkout
+
+      - run:
+          name: Use Python 3.7.0
+          command: pyenv versions && pyenv global 3.7.0
 
       - run:
           name: make build publish_pre install_pre atest
@@ -56,12 +45,17 @@ jobs:
       - store_artifacts:
           path: results/
 
+
   all_pypi:
     machine:
+      image: ubuntu-1604:201903-01
       docker_layer_caching: true
-
     steps:
       - checkout
+
+      - run:
+          name: Use Python 3.7.0
+          command: pyenv versions && pyenv global 3.7.0
 
       - run:
           name: make build publish_prod install_prod atest
@@ -73,8 +67,9 @@ jobs:
       - store_artifacts:
           path: results/
 
+
 workflows:
   version: 2
   make:
     jobs:
-      - atest
+      - all_github
