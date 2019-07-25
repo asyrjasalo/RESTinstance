@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 # get OS X to have `pip install --user` target in $PATH
 PATH := ${HOME}/.local/bin:${PATH}
 
