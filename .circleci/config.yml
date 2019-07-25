@@ -27,8 +27,12 @@ jobs:
       - checkout
 
       - run:
-          name: debug version
-          command: python --version && python3 --version && pip3 --version
+          name: List python versions
+          command: pyenv versions
+
+      - run:
+          name: Use python 3.7.0
+          command: pyenv global 3.7.0
 
       - run:
           name: make black test build install atest
