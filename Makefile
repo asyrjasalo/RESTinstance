@@ -69,7 +69,7 @@ prospector: _venv_dev ## Runs static analysis using dodgy, mypy, pyroma and vult
 .PHONY: testenv
 testenv: testenv_rm ## Start new testenv in docker if available, otherwise local
 	pgrep -f docker >/dev/null && \
-	(docker run --name "${PACKAGE_NAME}_mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/testapi:ro andyrbell/mountebank mb --allowInjection --configfile /testapi/apis.ejs) || \
+	(docker run --name "${PACKAGE_NAME}_mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/home/mb/testapi:ro asyrjasalo/mountebank --allowInjection --configfile testapi/apis.ejs) || \
 	(nohup npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs > testenv_npx_mb.log &)
 
 .PHONY: testenv_rm
