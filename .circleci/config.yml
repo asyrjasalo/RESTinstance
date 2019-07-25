@@ -74,10 +74,10 @@ workflows:
     jobs:
       - all_github
       - all_prepypi
-        filters:
-          branches:
-            only: master
+          filters:
+            branches:
+              only: master
       - all_pypi
-        filters:
-          tags:
-            only: /^\\d\.\\d\.\\d/
+          filters:
+            tags:
+              only: /^\\d\.\\d\.\\d/
