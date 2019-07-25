@@ -21,6 +21,7 @@ jobs:
 
   all_github:
     machine:
+      image: ubuntu-1604:201903-01
       docker_layer_caching: true
 
     steps:
@@ -28,7 +29,7 @@ jobs:
 
       - run:
           name: Use Python 3
-          command: pyenv global 3.5.2
+          command: pyenv shell 3.7.4
 
       - run:
           name: make black test build install atest
