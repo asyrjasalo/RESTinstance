@@ -18,16 +18,13 @@ jobs:
       - store_artifacts:
           path: results/
 
+
   all_github:
-    machine:
-      docker_layer_caching: true
+    docker:
+      - image: circleci/python:3.7
 
     steps:
       - checkout
-
-      - run:
-          name: upgrade pip
-          command: pip install --no-cache-dir --upgrade pip
 
       - run:
           name: make black test docs build install atest
@@ -39,9 +36,10 @@ jobs:
       - store_artifacts:
           path: results/
 
+
   all_prepypi:
-    machine:
-      docker_layer_caching: true
+    docker:
+      - image: circleci/python:3.7
 
     steps:
       - checkout
@@ -56,9 +54,10 @@ jobs:
       - store_artifacts:
           path: results/
 
+
   all_pypi:
-    machine:
-      docker_layer_caching: true
+    docker:
+      - image: circleci/python:3.7
 
     steps:
       - checkout
@@ -77,4 +76,4 @@ workflows:
   version: 2
   make:
     jobs:
-      - atest
+      - all_github
