@@ -22,7 +22,7 @@ VERSION_INSTALLED = python -c "import ${MODULE_NAME}; print(${MODULE_NAME}.__ver
 all_dev: test install atest ## (DEFAULT / make): test, install, atest
 
 .PHONY: all_github
-all_github: black test docs build install atest ## All branches/PRs: black, test, docs, build, install, atest
+all_github: black test build install atest ## All branches/PRs: black, test, build, install, atest
 
 .PHONY: all_prepypi
 all_prepypi: build publish_pre install_pre atest ## Prerelease to TestPyPI: build, publish_pre, install_pre, atest

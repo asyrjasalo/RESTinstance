@@ -27,7 +27,7 @@ jobs:
       - checkout
 
       - run:
-          name: make black test docs build install atest
+          name: make black test build install atest
           command: make all_github
 
       - store_test_results:
