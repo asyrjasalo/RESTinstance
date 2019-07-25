@@ -28,11 +28,11 @@ jobs:
 
       - run:
           name: install python 3
-          command: sudo apt-get update && sudo apt-get install python3.6
+          command: sudo apt-get update && sudo apt-get install python3
 
       - run:
           name: set python 3 as the default
-          command: sudo update-alternatives  --set python /usr/bin/python3.6
+          command: sudo update-alternatives --set python /usr/bin/python3
 
       - run:
           name: make black test build install atest
