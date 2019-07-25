@@ -1,29 +1,11 @@
 version: 2
 
 jobs:
-  atest:
-    machine:
-      docker_layer_caching: true
-
-    steps:
-      - checkout
-
-      - run:
-          name: make install atest
-          command: make install atest
-
-      - store_test_results:
-          path: results/
-
-      - store_artifacts:
-          path: results/
-
 
   all_github:
     machine:
       image: ubuntu-1604:201903-01
       docker_layer_caching: true
-
     steps:
       - checkout
 
@@ -43,11 +25,15 @@ jobs:
 
 
   all_prepypi:
-    docker:
-      - image: circleci/python:3.7
-
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true
     steps:
       - checkout
+
+      - run:
+          name: Use Python 3.7.0
+          command: pyenv versions && pyenv global 3.7.0
 
       - run:
           name: make build publish_pre install_pre atest
@@ -61,11 +47,15 @@ jobs:
 
 
   all_pypi:
-    docker:
-      - image: circleci/python:3.7
-
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true
     steps:
       - checkout
+
+      - run:
+          name: Use Python 3.7.0
+          command: pyenv versions && pyenv global 3.7.0
 
       - run:
           name: make build publish_prod install_prod atest
@@ -77,8 +67,17 @@ jobs:
       - store_artifacts:
           path: results/
 
+
 workflows:
   version: 2
   make:
     jobs:
       - all_github
+      - all_prepypi
+        filters:
+          branches:
+            only: master
+      - all_pypi
+        filters:
+          tags:
+            only: /^\\d\.\\d\.\\d/
