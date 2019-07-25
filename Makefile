@@ -68,13 +68,13 @@ prospector: _venv_dev ## Runs static analysis using dodgy, mypy, pyroma and vult
 
 .PHONY: testenv
 testenv: testenv_rm ## Start new testenv in docker if available, otherwise local
-	docker -v >/dev/null && \
+	pgrep -f docker >/dev/null && \
 	(docker run -d --name "${PACKAGE_NAME}_mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/testapi:ro andyrbell/mountebank mb --allowInjection --configfile /testapi/apis.ejs) || \
 	(nohup npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs > results/testenv_npx_mountebank.log &)
 
 .PHONY: testenv_rm
 testenv_rm: ## Stop and remove the running docker testenv if any
-	docker -v >/dev/null && docker rm --force "${PACKAGE_NAME}_mountebank" || true
+	pgrep -f docker >/dev/null && docker rm --force "${PACKAGE_NAME}_mountebank" || true
 
 .PHONY: docs
 docs: ## Regenerate (library) documentation in this source tree
