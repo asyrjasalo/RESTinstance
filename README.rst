@@ -189,17 +189,18 @@ On Linux distros and on OS X, may ``make`` rules ease repetitive workflows:
 ::
 
     $ make help
-    all_dev              (DEFAULT / make): test, install, atest
-    all_github           All branches/PRs: black, test, docs, build, install, atest
-    all_prepypi          Prerelease to TestPyPI: build, publish_pre, install_pre, atest
-    all_pypi             Final release to PyPI: build, publish_prod, install_prod, atest
+    all_dev              (DEFAULT / make): test, install_e, atest
+    all_github           All branches/PRs: black, test, build, install, atest
+    all_prepypi          Pre to TestPyPI: build, publish_pre, install_pre, atest
+    all_pypi             Final to PyPI: build, publish_prod, install_prod, atest
     atest                Run Robot atests for the currently installed package
     black                Reformat ("blacken") all Python source code in-place
     build                Build source and wheel dists, recreates .venv/release
     clean                Pip uninstall, rm .venv/s, build, dist, eggs, .caches
     docs                 Regenerate (library) documentation in this source tree
     flake8               Run flake8 for detecting flaws via static code analysis
-    install              (Re)install package as --editable from this source tree
+    install              (Re)install the package from this source tree
+    install_e            Install the package as --editable from this source tree
     install_pre          (Re)install the latest test.pypi.org (pre-)release
     install_prod         Install/upgrade to the latest final release in PyPI
     prospector           Runs static analysis using dodgy, mypy, pyroma and vulture
@@ -213,7 +214,8 @@ On Linux distros and on OS X, may ``make`` rules ease repetitive workflows:
     uninstall            Uninstall the Python package, regardless of its origin
 
 
-Running ``make`` runs rules ``test``, ``install`` and ``atest`` at once,
+
+Running ``make`` runs rules ``test``, ``install_e`` and ``atest`` at once,
 creates and uses virtualenv ``.venv/dev/`` to ensure that no
 (user or system level) dependencies interfere with the process.
 
