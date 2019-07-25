@@ -27,8 +27,8 @@ jobs:
       - checkout
 
       - run:
-          name: List python versions
-          command: pyenv versions
+          name: Use Python 3
+          command: pyenv shell 3.5.2
 
       - run:
           name: make black test build install atest
