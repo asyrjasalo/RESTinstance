@@ -16,6 +16,7 @@ report.html
 mb.log
 mb1.log
 mb.pid
+testenv_npx_mb.log
 
 .coverage
 .pytest_cache
