@@ -70,7 +70,7 @@ prospector: _venv_dev ## Runs static analysis using dodgy, mypy, pyroma and vult
 testenv: testenv_rm ## Start new testenv in docker if available, otherwise local
 	pgrep -f docker >/dev/null && \
 	(docker run -d --name "${PACKAGE_NAME}_mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/testapi:ro andyrbell/mountebank mb --allowInjection --configfile /testapi/apis.ejs) || \
-	(nohup npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs > results/testenv_npx_mountebank.log &)
+	(nohup npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs > testenv_npx_mb.log &)
 
 .PHONY: testenv_rm
 testenv_rm: ## Stop and remove the running docker testenv if any
@@ -153,4 +153,4 @@ clean: uninstall ## Pip uninstall, rm .venv/s, build, dist, eggs, .caches
 	rm -rf "${VENV_DEV_PATH}" "${VENV_RELEASE_PATH}"
 	rm -rf results
 	rm -f log.html output.xml report.html *.demo.json
-	rm -f mb.log mb1.log mb.pid
+	rm -f *.log mb.pid
