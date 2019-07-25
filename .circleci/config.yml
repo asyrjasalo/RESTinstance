@@ -27,20 +27,8 @@ jobs:
       - checkout
 
       - run:
-          name: Install libssl
-          command: sudo apt update && sudo apt install -y libssl-dev python-openssl
-
-      - run:
-          name: Pyenv upgrade Python version list
-          command: cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
-
-      - run:
-          name: Install Python 3.7.4
-          command: pyenv install 3.7.4
-
-      - run:
-          name: Use Python 3.7.4
-          command: pyenv shell 3.7.4
+          name: List python versions
+          command: pyenv versions
 
       - run:
           name: make black test build install atest
