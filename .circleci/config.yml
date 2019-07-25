@@ -20,14 +20,19 @@ jobs:
 
 
   all_github:
-    docker:
-      - image: circleci/python:3.7
+    machine:
+      docker_layer_caching: true
 
     steps:
       - checkout
 
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - run:
+          name: install python 3
+          command: sudo apt-get update && sudo apt-get install python3.6
+
+      - run:
+          name: set python 3 as the default
+          command: sudo update-alternatives  --set python /usr/bin/python3.6
 
       - run:
           name: make black test build install atest
