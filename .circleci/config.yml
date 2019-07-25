@@ -27,6 +27,14 @@ jobs:
       - checkout
 
       - run:
+          name: Show versions
+          command: pyenv install --list
+
+      - run:
+          name: Upgrade pyenv versions
+          command: cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
+
+      - run:
           name: Install Python 3.7.4
           command: pyenv install 3.7.4
 
