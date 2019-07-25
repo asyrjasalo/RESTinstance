@@ -28,7 +28,7 @@ jobs:
 
       - run:
           name: Use Python 3
-          command: pyenv shell 3.5.2
+          command: pyenv global 3.5.2
 
       - run:
           name: make black test build install atest
