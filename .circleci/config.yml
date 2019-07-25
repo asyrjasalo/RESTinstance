@@ -27,12 +27,8 @@ jobs:
       - checkout
 
       - run:
-          name: install python 3
-          command: sudo apt-get update && sudo apt-get install python3
-
-      - run:
-          name: set python 3 as the default
-          command: sudo update-alternatives --set python /usr/bin/python3
+          name: debug version
+          command: python --version && python3 --version && pip3 --version
 
       - run:
           name: make black test build install atest
