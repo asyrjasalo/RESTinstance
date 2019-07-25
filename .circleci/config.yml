@@ -28,8 +28,8 @@ jobs:
       - checkout
 
       - run:
-          name: Use Python 3
-          command: pyenv versions && pyenv global 3.7.4
+          name: Use Python 3.7.0
+          command: pyenv versions && pyenv global 3.7.0
 
       - run:
           name: make black test build install atest
