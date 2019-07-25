@@ -28,7 +28,7 @@ jobs:
 
       - run:
           name: Install libssl
-          command: sudo apt update && sudo apt install --yes libssl1.0-dev
+          command: sudo apt update && sudo apt install --yes libssl-dev
 
       - run:
           name: Pyenv upgrade Python version list
