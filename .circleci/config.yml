@@ -47,7 +47,7 @@ jobs:
       - checkout
 
       - run:
-          name: make publish_pre install_pre atest
+          name: make build publish_pre install_pre atest
           command: make all_prepypi
 
       - store_test_results:
@@ -64,7 +64,7 @@ jobs:
       - checkout
 
       - run:
-          name: make publish_prod install_prod atest
+          name: make build publish_prod install_prod atest
           command: make all_pypi
 
       - store_test_results:

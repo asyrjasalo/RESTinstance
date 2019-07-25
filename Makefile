@@ -17,16 +17,16 @@ VERSION_INSTALLED = python -c "import ${MODULE_NAME}; print(${MODULE_NAME}.__ver
 .DEFAULT_GOAL := all_dev
 
 .PHONY: all_dev
-all_dev: test build install atest ## (DEFAULT / make): test, build, install, atest
+all_dev: test install atest ## (DEFAULT / make): test, install, atest
 
 .PHONY: all_github
 all_github: black test docs build install atest ## All branches/PRs: black, test, docs, build, install, atest
 
 .PHONY: all_prepypi
-all_prepypi: publish_pre install_pre atest ## Prerelease to TestPyPI: publish_pre, install_pre, atest
+all_prepypi: build publish_pre install_pre atest ## Prerelease to TestPyPI: build, publish_pre, install_pre, atest
 
 .PHONE: all_pypi
-all_pypi: publish_prod install_prod atest ## Final release to PyPI: publish_prod, install_prod, atest
+all_pypi: build publish_prod install_prod atest ## Final release to PyPI: build, publish_prod, install_prod, atest
 
 .PHONY: help
 help:
@@ -76,6 +76,7 @@ testenv_rm: ## Stop and remove the running docker testenv if any
 
 .PHONY: docs
 docs: ## Regenerate (library) documentation in this source tree
+	. "${VENV_DEV_PATH}/bin/activate" && \
 	python -m robot.libdoc ${MODULE_NAME} docs/index.html
 
 .PHONY: atest
@@ -100,7 +101,7 @@ build: _venv_release ## Build source and wheel dists, recreates .venv/release
 	python setup.py clean --all bdist_wheel sdist
 
 .PHONY: install
-install: uninstall ## (Re)install package as --editable from this source tree
+install: ## (Re)install package as --editable from this source tree
 	pip install --no-cache-dir --editable .
 	######################################
 	### Version check after installing ###

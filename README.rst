@@ -189,10 +189,10 @@ On Linux distros and on OS X, may ``make`` rules ease repetitive workflows:
 ::
 
     $ make help
-    all_dev              (DEFAULT / make): test, build, install, atest
+    all_dev              (DEFAULT / make): test, install, atest
     all_github           All branches/PRs: black, test, docs, build, install, atest
-    all_prepypi          Prerelease to TestPyPI: publish_pre, install_pre, atest
-    all_pypi             Final release to PyPI: publish_prod, install_prod, atest
+    all_prepypi          Prerelease to TestPyPI: build, publish_pre, install_pre, atest
+    all_pypi             Final release to PyPI: build, publish_prod, install_prod, atest
     atest                Run Robot atests for the currently installed package
     black                Reformat ("blacken") all Python source code in-place
     build                Build source and wheel dists, recreates .venv/release
@@ -213,17 +213,17 @@ On Linux distros and on OS X, may ``make`` rules ease repetitive workflows:
     uninstall            Uninstall the Python package, regardless of its origin
 
 
-Running ``make`` runs rules ``test``, ``build``, ``install``, and so on,
-at once, and uses separate virtualenvs ``.venv/dev/`` and ``.venv/release/``
-to ensure that no (user or system level) dependencies interfere with the
-process.
+Running ``make`` runs rules ``test``, ``install`` and ``atest`` at once,
+creates and uses virtualenv ``.venv/dev/`` to ensure that no
+(user or system level) dependencies interfere with the process.
 
 If ``make`` is not available, you can setup for development with:
 
 ::
 
-    virtualenv --no-site-packages .venv/dev
+    virtualenv .venv/dev
     source .venv/dev/bin/activate
+    pip install -r requirements-dev.txt
     pip install --editable .
 
 To recreate the keyword documentation from source (equals to ``make docs``):
