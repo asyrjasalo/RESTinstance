@@ -27,12 +27,12 @@ jobs:
       - checkout
 
       - run:
-          name: List python versions
-          command: pyenv versions
+          name: Install Python 3.7.4
+          command: pyenv install 3.7.4
 
       - run:
-          name: Use python 3.7.0
-          command: pyenv global 3.7.0
+          name: Use Python 3.7.4
+          command: pyenv shell 3.7.4
 
       - run:
           name: make black test build install atest
