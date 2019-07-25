@@ -27,11 +27,11 @@ jobs:
       - checkout
 
       - run:
-          name: Show versions
-          command: pyenv install --list
+          name: Install libssl
+          name: sudo apt update && sudo apt install --yes libssl1.0-dev
 
       - run:
-          name: Upgrade pyenv versions
+          name: Pyenv upgrade Python version list
           command: cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
 
       - run:
