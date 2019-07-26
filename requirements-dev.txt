@@ -1,5 +1,6 @@
 -r requirements.txt
 
+pre-commit==1.17.0
 prospector[with_mypy, with_pyroma, with_vulture]==1.1.6.4
 
 pytest==5.0.1

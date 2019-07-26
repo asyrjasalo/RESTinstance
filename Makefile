@@ -40,7 +40,7 @@ _venv_dev:
 	pipx --version >/dev/null || pip install --user pipx
 	test -d "${VENV_DEV_PATH}" || pipx run virtualenv "${VENV_DEV_PATH}"
 	. "${VENV_DEV_PATH}/bin/activate" && \
-	pip install --quiet -r requirements-dev.txt
+	pip install --quiet -r requirements-dev.txt && pre-commit install
 
 .PHONY: _venv_release
 _venv_release:
