@@ -14,7 +14,7 @@ jobs:
           command: pyenv versions && pyenv global 3.7.0
 
       - run:
-          name: make black test build install atest
+          name: make test build install atest
           command: make all_github
 
       - store_test_results:
