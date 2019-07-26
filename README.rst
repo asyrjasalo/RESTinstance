@@ -190,7 +190,7 @@ On Linux distros and on OS X, may ``make`` rules ease repetitive workflows:
 
     $ make help
     all_dev              (DEFAULT / make): test, install_e, atest
-    all_github           All branches/PRs: black, test, build, install, atest
+    all_github           All branches/PRs: test, build, install, atest
     all_prepypi          Pre to TestPyPI: build, publish_pre, install_pre, atest
     all_pypi             Final to PyPI: build, publish_prod, install_prod, atest
     atest                Run Robot atests for the currently installed package
