@@ -1,27 +1,59 @@
-*.pyc
-__pycache__
+### OS #########################################################################
 
+# OS specific
+.DS_Store
+
+# IDEs
+.idea/
+
+### Python #####################################################################
+
+# byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# virtualenv(s)
 .venv/
+
+# setuptools
 build/
 dist/
 pip-wheel-metadata/
-src/*.egg-info
+*.egg-info/
 
-*.demo.json
-results/
+# requirements-dev.txt
+.coverage
+.coverage.*
+.pytest_cache/
+
+# mypy
+.dmypy.json
+dmypy.json
+.mypy_cache/
+
+# pyenv
+.python-version
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+### Project ####################################################################
+
+# Robot Framework
 log.html
 output.xml
 report.html
 
-mb.log
-mb1.log
-mb.pid
-testenv_npx_mb.log
+# make atest
+results/
 
-.coverage
-.pytest_cache
-.mypy_cache
+# RESTinstance: robot README.rst
+*.demo.json
 
-*.private
+# RESTinstance: mountebank
+*.log
+*.pid
 
-.idea/
+# personal notes
+*.md.private
