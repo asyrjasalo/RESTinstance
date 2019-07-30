@@ -12,13 +12,17 @@ repo_root_path="$(cd "$this_path/.." && pwd)"
 : ${BUILD_ARGS:=""} # --build-arg ADD_PY_PACKAGES=tzdata
 : ${BUILD_DIR:="$repo_root_path"}
 
-: ${IMAGE_NAME:="restinstance"}
+: ${IMAGE_NAME:="${BUILD_DIR##*/}"}
 : ${IMAGE_TAG:="latest"}
 
 : ${RUN_ARGS:=""}
 : ${RUN_CMD:="robot.run"}
 
 ### build and run ##############################################################
+
+# Docker image is part of the repository, and the repository must be in downcase
+declare -l IMAGE_NAME
+IMAGE_NAME=$IMAGE_NAME
 
 # NOTE1: pass your host machine user's UID build-time
 docker build --file "$this_path/Dockerfile" \

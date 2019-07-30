@@ -8,7 +8,7 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 ### variables ##################################################################
 
-: ${IMAGE_NAME:="restinstance"}
+: ${IMAGE_NAME:="${BUILD_DIR##*/}"}
 : ${FROM_IMAGE_TAG:="latest"}
 
 : ${REGISTRY_URL:=""}
@@ -18,6 +18,10 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 : ${TO_IMAGE_TAG:="$(date +%y.%m.%d.%H%M)"}
 
 ### tag and push ###############################################################
+
+# Docker image is part of the repository, and the repository must be in downcase
+declare -l IMAGE_NAME
+IMAGE_NAME=$IMAGE_NAME
 
 docker login "$REGISTRY_URL"
 
