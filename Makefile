@@ -8,12 +8,12 @@ VENV_DEV_PATH := .venv/dev
 VENV_RELEASE_PATH := .venv/release
 
 # evaluate lazily: package name when installing from PyPIs
-PACKAGE_NAME = RESTinstance
-MODULE_NAME = REST
+PROJECT_NAME = RESTinstance
+PACKAGE_NAME = REST
 
 # evaluate lazily: check version before building and after installation
 VERSION_TO_BUILD = python setup.py --version
-VERSION_INSTALLED = python -c "import ${MODULE_NAME}; print(${MODULE_NAME}.__version__)"
+VERSION_INSTALLED = python -c "import ${PACKAGE_NAME}; print(${PACKAGE_NAME}.__version__)"
 
 
 .DEFAULT_GOAL := all_dev
@@ -69,18 +69,18 @@ prospector: _venv_dev ## Runs static analysis using dodgy, mypy, pyroma and vult
 .PHONY: testenv
 testenv: testenv_rm ## Start new testenv in docker if available, otherwise local
 	pgrep -f docker >/dev/null && \
-	(docker run -d --name "${PACKAGE_NAME}_mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/home/mb/testapi:ro asyrjasalo/mountebank --allowInjection --configfile testapi/apis.ejs) || \
+	(docker run -d --name "${PROJECT_NAME}_mountebank" -ti -p 2525:2525 -p 8273:8273 -v $(CURDIR)/testapi:/home/mb/testapi:ro asyrjasalo/mountebank --allowInjection --configfile testapi/apis.ejs) || \
 	(nohup npx mountebank --localOnly --allowInjection --configfile testapi/apis.ejs > testenv_npx_mb.log &)
 
 .PHONY: testenv_rm
 testenv_rm: ## Stop and remove the running docker testenv if any
 	pgrep -f docker >/dev/null && \
-	docker rm --force "${PACKAGE_NAME}_mountebank" || true
+	docker rm --force "${PROJECT_NAME}_mountebank" || true
 
 .PHONY: docs
 docs: ## Regenerate (library) documentation in this source tree
 	. "${VENV_DEV_PATH}/bin/activate" && \
-	python -m robot.libdoc ${MODULE_NAME} docs/index.html
+	python -m robot.libdoc ${PACKAGE_NAME} docs/index.html
 
 .PHONY: atest
 atest: testenv ## Run Robot atests for the currently installed package
@@ -121,21 +121,21 @@ install: uninstall ## (Re)install the package from this source tree
 install_pre: uninstall ## (Re)install the latest test.pypi.org (pre-)release
 	pip install --no-cache-dir --pre \
 		--index-url https://test.pypi.org/simple/ \
-		--extra-index-url https://pypi.org/simple ${PACKAGE_NAME}
+		--extra-index-url https://pypi.org/simple ${PROJECT_NAME}
 	###############################
 	### Version after installed ###
 	${VERSION_INSTALLED}
 
 .PHONY: install_prod
 install_prod: ## Install/upgrade to the latest final release in PyPI
-	pip install --no-cache-dir --upgrade ${PACKAGE_NAME}
+	pip install --no-cache-dir --upgrade ${PROJECT_NAME}
 	###############################
 	### Version after installed ###
 	${VERSION_INSTALLED}
 
 .PHONY: uninstall
 uninstall: ## Uninstall the Python package, regardless of its origin
-	pip uninstall --yes ${PACKAGE_NAME} || true
+	pip uninstall --yes ${PROJECT_NAME} || true
 
 .PHONY: publish_pre
 publish_pre: ## Publish dists to test.pypi.org - for pre, e.g. aX, bX, rcX

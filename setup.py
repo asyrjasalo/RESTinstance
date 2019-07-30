@@ -6,8 +6,8 @@ from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
 
 
-PACKAGE_NAME = "RESTinstance"
-MODULE_NAME = "REST"
+PROJECT_NAME = "RESTinstance"
+PACKAGE_NAME = "REST"
 
 CLASSIFIERS = """
 Development Status :: 5 - Production/Stable
@@ -27,7 +27,7 @@ Topic :: Software Development :: Libraries :: Python Modules
 
 CURDIR = dirname(abspath(__file__))
 with open(
-    join(CURDIR, "src", MODULE_NAME, "version.py"), encoding="utf-8"
+    join(CURDIR, "src", PACKAGE_NAME, "version.py"), encoding="utf-8"
 ) as f:
     for line in f:
         if line.startswith("__version__"):
@@ -41,7 +41,7 @@ with open(join(CURDIR, "requirements.txt"), encoding="utf-8") as f:
     REQUIREMENTS = f.read()
 
 setup(
-    name=PACKAGE_NAME,
+    name=PROJECT_NAME,
     version=VERSION,
     author="Anssi Syrjäsalo",
     author_email="anssi.syrjasalo@gmail.com",
