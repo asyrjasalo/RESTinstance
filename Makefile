@@ -80,7 +80,7 @@ testenv_rm: ## Stop and remove the running docker testenv if any
 .PHONY: docs
 docs: ## Regenerate (library) documentation in this source tree
 	. "${VENV_DEV_PATH}/bin/activate" && \
-	python -m robot.libdoc ${PACKAGE_NAME} docs/index.html
+	python -m robot.libdoc src/${PACKAGE_NAME} docs/index.html
 
 .PHONY: atest
 atest: testenv ## Run Robot atests for the currently installed package
