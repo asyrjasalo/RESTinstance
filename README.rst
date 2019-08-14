@@ -232,7 +232,7 @@ To recreate the keyword documentation from source (equals to ``make docs``):
 
 ::
 
-    python -m robot.libdoc REST docs/index.html
+    python -m robot.libdoc src/REST docs/index.html
 
 
 Acceptance tests
@@ -278,18 +278,18 @@ Host directories ``atest/`` and ``results/`` are accessed inside the container
 via the respective Docker volumes. Same arguments are accepted as for ``robot``.
 
 Host network is used to minimize divergence between different host OSes.
-It may or may not be necessary to pass any of ``RUN_ARGS`` in your environment,
-but there should be no downside either (on OS X ``--network=host`` is required).
+Passing the proxy environment variables may not be required in your environment,
+but there should be no downside either. On OS X ``--network=host`` is required.
 
 
 Docker releases
 ~~~~~~~~~~~~~~~
 
 `The Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
-is built with script ``./docker/build_run-docker`` using ``docker/Dockerfile``.
+is built by ``./docker/build_run_docker`` which uses ``docker/Dockerfile``.
 
-To tag the built image with tags for timestamp and "latest",
-and push it to a Docker registry:
+Then, to tag this built image with two git tags, the timestamp and "latest",
+and push it to a Docker image registry:
 
 ::
 
@@ -297,7 +297,7 @@ and push it to a Docker registry:
     REGISTRY_URL=https://private.registry.com/ \
       ./docker/tag_and_push_docker
 
-For `Docker Hub <https://hub.docker.com>`__, just org/username will do:
+For `Docker Hub <https://hub.docker.com>`__, just organisation/username will do:
 
 ::
 
