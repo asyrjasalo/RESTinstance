@@ -3,14 +3,14 @@
 ARG PYTHON_VERSION=3.7.4
 FROM python:${PYTHON_VERSION}-alpine
 
-RUN cp /usr/share/zoneinfo/Europe/Helsinki /etc/localtime || true
-RUN echo "Europe/Helsinki" >  /etc/timezone
-
 # pass tzdata as ADD_APK_PACKAGE for testing on these timezones rather than UTC
-
 ARG ADD_APK_PACKAGES=""
 RUN apk add --no-cache ${ADD_APK_PACKAGES} && \
     rm -rf /var/cache/* /tmp/* /var/log/* ~/.cache
+
+# ...and set is as following
+#RUN cp /usr/share/zoneinfo/Europe/Helsinki /etc/localtime
+#RUN echo "Europe/Helsinki" > /etc/timezone
 
 ARG UNAME="robot"
 ARG HOST_UID=1000
