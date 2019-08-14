@@ -11,7 +11,7 @@ jobs:
 
       - run:
           name: Use Python 3.7.0
-          command: pyenv versions && pyenv global 3.7.0
+          command: pyenv versions && pyenv global 3.7.0 && pyenv versions
 
       - run:
           name: make test build install atest
@@ -33,7 +33,7 @@ jobs:
 
       - run:
           name: Use Python 3.7.0
-          command: pyenv versions && pyenv global 3.7.0
+          command: pyenv versions && pyenv global 3.7.0 && pyenv versions
 
       - run:
           name: make build publish_pre install_pre atest
@@ -55,7 +55,7 @@ jobs:
 
       - run:
           name: Use Python 3.7.0
-          command: pyenv versions && pyenv global 3.7.0
+          command: pyenv versions && pyenv global 3.7.0 && pyenv versions
 
       - run:
           name: make build publish_prod install_prod atest
