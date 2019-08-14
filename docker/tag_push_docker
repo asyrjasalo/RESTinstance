@@ -21,7 +21,7 @@ this_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Docker image is part of the repository, and the repository must be in downcase
 declare -l IMAGE_NAME
-IMAGE_NAME=$IMAGE_NAME
+IMAGE_NAME="$IMAGE_NAME"
 
 docker login "$REGISTRY_URL"
 
