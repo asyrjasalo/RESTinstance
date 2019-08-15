@@ -92,7 +92,23 @@ class Keywords(object):
         """
         self.request["headers"].update(self._input_object(headers))
         return self.request["headers"]
+    
+    @keyword(name=None, tags=("settings",))
+    def unset_headers(self, headers):
+        """*Un-sets existing headers.*
 
+        ``headers``: The headers to remove as a JSON array or a list.
+
+        *Examples*
+
+        | `Unset Headers` | [ "authorization", "Accept-Encoding"] |
+        | `Unset Headers` | ${header_list} |
+        """
+        
+        for header in [header for header in self._input_array(headers) if self.request["headers"].get(header)]:
+            del self.request["headers"][header]
+        return self.request["headers"]
+    
     @keyword(name=None, tags=("expectations",))
     def expect_request(self, schema, merge=False):
         """*Sets the schema to validate the request properties*
