@@ -3,11 +3,11 @@ SHELL := /bin/bash
 # get OS X to have `pip install --user` target in $PATH
 PATH := ${HOME}/.local/bin:${PATH}
 
-# virtualenvs(' paths) handled by make rules
+# virtualenvs that are handled by the make rules
 VENV_DEV_PATH := .venv/dev
 VENV_RELEASE_PATH := .venv/release
 
-# evaluate lazily: package name when installing from PyPIs
+# evaluate lazily: project name in PyPIs and the package in src/
 PROJECT_NAME = RESTinstance
 PACKAGE_NAME = REST
 

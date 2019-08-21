@@ -256,7 +256,7 @@ installed and started as following (ran by the make rule, here for reference):
 
 ::
 
-    npx mountebank --localOnly  --allowInjection --configfile testapi/apis.ejs
+    npx mountebank --localOnly --allowInjection --configfile testapi/apis.ejs
 
 The tests are ran as following (ran by the make rule, here for reference):
 
