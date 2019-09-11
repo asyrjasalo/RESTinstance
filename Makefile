@@ -12,8 +12,8 @@ PROJECT_NAME = RESTinstance
 PACKAGE_NAME = REST
 
 # evaluate lazily: check version before building and after installation
-VERSION_TO_BUILD = python setup.py --version
-VERSION_INSTALLED = python -c "import ${PACKAGE_NAME}; print(${PACKAGE_NAME}.__version__)"
+VERSION_TO_BUILD = python3 setup.py --version
+VERSION_INSTALLED = python3 -c "import ${PACKAGE_NAME}; print(${PACKAGE_NAME}.__version__)"
 
 
 .DEFAULT_GOAL := all_dev
@@ -37,29 +37,27 @@ help:
 
 .PHONY: _venv_dev
 _venv_dev:
-	pipx --version >/dev/null || pip install --user pipx
-	test -d "${VENV_DEV_PATH}" || pipx run virtualenv "${VENV_DEV_PATH}"
+	test -d "${VENV_DEV_PATH}" || python3 -m venv "${VENV_DEV_PATH}"
 	. "${VENV_DEV_PATH}/bin/activate" && \
 	pip install --quiet -r requirements-dev.txt && pre-commit install
 
 .PHONY: _venv_release
 _venv_release:
-	pipx --version >/dev/null || pip install --user pipx
-	pipx run virtualenv --clear "${VENV_RELEASE_PATH}"
+	python3 -m venv --clear "${VENV_RELEASE_PATH}"
 	. "${VENV_RELEASE_PATH}/bin/activate" && \
 	pip install --upgrade pip setuptools wheel
 
 .PHONY: pur
 pur: _venv_dev ## Update requirements-dev's deps that have versions defined
-	pipx run pur -r requirements-dev.txt --no-recursive
+	pip install -r requirements-dev.txt --no-recursive
 
 .PHONY: black
 black: _venv_dev ## Reformat ("blacken") all Python source code in-place
-	pipx run black .
+	black .
 
 .PHONY: flake8
 flake8: _venv_dev ## Run flake8 for detecting flaws via static code analysis
-	pipx run flake8
+	flake8
 
 .PHONY: prospector
 prospector: _venv_dev ## Runs static analysis using dodgy, mypy, pyroma and vulture
@@ -80,11 +78,11 @@ testenv_rm: ## Stop and remove the running docker testenv if any
 .PHONY: docs
 docs: ## Regenerate (library) documentation in this source tree
 	. "${VENV_DEV_PATH}/bin/activate" && \
-	python -m robot.libdoc src/${PACKAGE_NAME} docs/index.html
+	python3 -m robot.libdoc src/${PACKAGE_NAME} docs/index.html
 
 .PHONY: atest
 atest: testenv ## Run Robot atests for the currently installed package
-	python -m robot.run --outputdir results --xunit xunit.xml atest
+	python3 -m robot.run --outputdir results --xunit xunit.xml atest
 
 .PHONY: test
 test: _venv_dev ## Run unit tests, upgrades .venv/dev with requirements(-dev)
@@ -101,7 +99,7 @@ build: _venv_release ## Build source and wheel dists, recreates .venv/release
 	#####################################
 	### Version check before building ###
 	. "${VENV_RELEASE_PATH}/bin/activate" && ${VERSION_TO_BUILD} && \
-	python setup.py clean --all bdist_wheel sdist
+	python3 setup.py clean --all bdist_wheel sdist
 
 .PHONY: install_e
 install_e: ## Install the package as --editable from this source tree
@@ -139,12 +137,12 @@ uninstall: ## Uninstall the Python package, regardless of its origin
 
 .PHONY: publish_pre
 publish_pre: ## Publish dists to test.pypi.org - for pre, e.g. aX, bX, rcX
-	pipx run twine check dist/* && \
-	pipx run twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+	twine check dist/* && \
+	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 .PHONY: publish_prod
 publish_prod: ## Publish dists to live PyPI - for final only, e.g. 1.0.1
-	pipx run twine check dist/* && pipx run twine upload dist/*
+	twine check dist/* && twine upload dist/*
 
 .PHONY: clean
 clean: uninstall ## Pip uninstall, rm .venv/s, build, dist, eggs, .caches

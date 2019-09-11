@@ -223,7 +223,7 @@ If ``make`` is not available, you can setup for development with:
 
 ::
 
-    virtualenv .venv/dev
+    python3 -m venv .venv/dev
     source .venv/dev/bin/activate
     pip install -r requirements-dev.txt
     pip install --editable .
@@ -232,7 +232,7 @@ To recreate the keyword documentation from source (equals to ``make docs``):
 
 ::
 
-    python -m robot.libdoc src/REST docs/index.html
+    python3 -m robot.libdoc src/REST docs/index.html
 
 
 Acceptance tests
@@ -262,7 +262,7 @@ The tests are ran as following (ran by the make rule, here for reference):
 
 ::
 
-    python -m robot --outputdir results atest/
+    python3 -m robot --outputdir results atest/
 
 To run the acceptance tests from a dedicated Docker container, built and ran
 outside the the test API, and limit only to specific suite(s):
