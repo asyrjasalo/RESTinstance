@@ -1,6 +1,6 @@
 # totally naming this rfdocker 2.0 ;p
 
-ARG PYTHON_VERSION=3.7.4
+ARG PYTHON_VERSION=3.6.9
 FROM python:${PYTHON_VERSION}-alpine
 
 # pass tzdata as ADD_APK_PACKAGE for testing on these timezones rather than UTC
@@ -30,4 +30,4 @@ RUN pip install --no-cache-dir --user -r requirements.txt
 ENV PYTHONPATH=/home/${UNAME}/src
 COPY --chown=robot:robot src src
 
-ENTRYPOINT ["python", "-m"]
+ENTRYPOINT ["python3", "-m"]
