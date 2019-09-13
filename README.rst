@@ -262,11 +262,6 @@ outside the the test API, and limit only to specific suite(s):
 
 ::
 
-    RUN_ARGS="--rm --network=host --env HTTP_PROXY --env HTTPS_PROXY \
-      -v $PWD/atest:/home/robot/atest \
-      -v $PWD/results:/home/robot/results" \
-      ./docker/build_run_docker atest/output.robot
-
 Host directories ``atest/`` and ``results/`` are accessed inside the container
 via the respective Docker volumes. Same arguments are accepted as for ``robot``.
 
