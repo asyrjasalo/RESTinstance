@@ -328,6 +328,9 @@ Contributors:
 
 - `Stavros "stdedos" Ntentos <https://github.com/stdedos>`__, `#75 <https://github.com/asyrjasalo/RESTinstance/pull/75>`__.
 
+- `Nicholas "bollwyvl" Bollweg <https://github.com/bollwyvl>`__, `#84 <https://github.com/asyrjasalo/RESTinstance/pull/84>`__.
+
+
 We use following Python excellence under the hood:
 
 -  `Flex <https://github.com/pipermerriam/flex>`__, by Piper Merriam,
