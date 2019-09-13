@@ -3,10 +3,6 @@ RESTinstance
 
 `Robot Framework <http://robotframework.org>`__ library for RESTful JSON APIs
 
-.. image:: https://circleci.com/gh/asyrjasalo/RESTinstance.svg?style=svg
-    :target: https://circleci.com/gh/asyrjasalo/RESTinstance
-
-
 
 Advantages
 ----------
@@ -178,9 +174,6 @@ Bug reports and feature requests are tracked in
 We do respect pull request(er)s. Please mention if you do not want to be
 listed below as contributors.
 
-A `CircleCI <https://circleci.com/gh/asyrjasalo/RESTinstance>`__ job is
-created automatically for your GitHub pull requests as well.
-
 
 Local development
 ~~~~~~~~~~~~~~~~~
@@ -280,28 +273,6 @@ via the respective Docker volumes. Same arguments are accepted as for ``robot``.
 Host network is used to minimize divergence between different host OSes.
 Passing the proxy environment variables may not be required in your environment,
 but there should be no downside either. On OS X ``--network=host`` is required.
-
-
-Docker releases
-~~~~~~~~~~~~~~~
-
-`The Docker image <https://hub.docker.com/r/asyrjasalo/restinstance/tags>`__
-is built by ``./docker/build_run_docker`` which uses ``docker/Dockerfile``.
-
-Then, to tag this built image with two git tags, the timestamp and "latest",
-and push it to a Docker image registry:
-
-::
-
-    REGISTRY_USERNAME=yourname \
-    REGISTRY_URL=https://private.registry.com/ \
-      ./docker/tag_and_push_docker
-
-For `Docker Hub <https://hub.docker.com>`__, just organisation/username will do:
-
-::
-
-    REGISTRY_USERNAME=yourname ./docker/tag_and_push_docker
 
 
 
