@@ -54,7 +54,7 @@ class REST(Keywords):
 
     = Tutorial =
 
-    There is a [https://github.com/asyrjasalo/RESTinstance/blob/master/examples/README.rst|step-by-step tutorial] in the making on using the library.
+    There is a [https://github.com/asyrjasalo/RESTinstance/blob/master/examples/README.md|step-by-step tutorial] in the making on using the library.
 
     For RESTful APIs, this library is intended to be used so that a test suite
     is dedicated per endpoint. The test suite is divided into test cases so that
@@ -180,12 +180,12 @@ class REST(Keywords):
             separators=(",", ": "),
             sort_keys=sort_keys,
         )
-        logger.info("%s\n%s" % (header, json))  # no coloring for log.html
+        logger.info("{}\n{}".format(header, json))  # no coloring for log.html
         if also_console:
             json_data = highlight(
                 json, lexers.JsonLexer(), formatters.TerminalFormatter()
             )
-            logger.console("%s\n%s" % (header, json_data), newline=False)
+            logger.console("{}\n{}".format(header, json_data), newline=False)
         return json
 
     @staticmethod
@@ -285,14 +285,16 @@ class REST(Keywords):
             with open(path, encoding="utf-8") as file:
                 return load(file)
         except IOError as e:
-            raise RuntimeError("File '%s' cannot be opened:\n%s" % (path, e))
+            raise RuntimeError(
+                "File '{}' cannot be opened:\n{}".format(path, e)
+            )
         except ValueError as e:
             try:
                 with open(path, encoding="utf-8") as file:
                     return load_yaml(file, Loader=SafeLoader)
             except ValueError:
                 raise RuntimeError(
-                    "File '%s' is not valid JSON or YAML:\n%s" % (path, e)
+                    "File '{}' is not valid JSON or YAML:\n{}".format(path, e)
                 )
 
     @staticmethod

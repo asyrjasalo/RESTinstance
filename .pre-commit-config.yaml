@@ -1,9 +1,19 @@
 repos:
+- repo: https://github.com/asottile/pyupgrade
+  rev: v1.23.0
+  hooks:
+  - id: pyupgrade
+
 - repo: https://github.com/ambv/black
   rev: 19.3b0
   hooks:
   - id: black
     language_version: python3.6
+
+#- repo: https://github.com/PyCQA/prospector
+#  rev: 1.1.7 # The version of Prospector to use, at least 1.1.7
+#  hooks:
+#  - id: prospector
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v2.3.0
@@ -16,6 +26,11 @@ repos:
   - id: check-toml
   - id: check-yaml
 
+- repo: https://github.com/jstewmon/check-swagger
+  rev: v0.1.4
+  hooks:
+  - id: check-swagger
+
 - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
   rev: v1.1.0
   hooks:
@@ -25,3 +40,10 @@ repos:
   rev: v1.0.4
   hooks:
   - id: python-bandit-vulnerability-check
+    args: []
+    files: .py$
+
+- repo: https://github.com/guykisel/pre-commit-robotframework-tidy
+  rev: f5942827aadc04b1637527b8b5c4b2bc1850ca6b
+  hooks:
+  - id: robotframework-tidy-wrapper

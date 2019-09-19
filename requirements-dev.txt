@@ -1,9 +1,8 @@
 -r requirements.txt
 
-pre-commit==1.17.0
-prospector[with_mypy, with_pyroma, with_vulture]==1.1.6.4
+pre-commit
 
-pytest==5.0.1
-pytest-clarity==0.1.0a1
-pytest-instafail==0.4.1
-pytest-spec==1.1.0
+pytest
+pytest-clarity
+pytest-instafail
+pytest-spec

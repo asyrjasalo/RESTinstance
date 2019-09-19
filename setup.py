@@ -35,7 +35,7 @@ with open(
             break
     else:
         VERSION = "0.0.1"
-with open(join(CURDIR, "README.rst"), encoding="utf-8") as f:
+with open(join(CURDIR, "README.md"), encoding="utf-8") as f:
     README = f.read()
 with open(join(CURDIR, "requirements.txt"), encoding="utf-8") as f:
     REQUIREMENTS = f.read()
@@ -50,7 +50,7 @@ setup(
     license="Apache License 2.0",
     description="Robot Framework library for RESTful JSON APIs",
     long_description=README,
-    long_description_content_type="text/x-rst",
+    long_description_content_type="text/markdown",
     keywords="robotframework library http json api",
     platforms="any",
     classifiers=CLASSIFIERS,

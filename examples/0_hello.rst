@@ -83,7 +83,7 @@ Hello RESTinstance
 ------------------
 
 You should have Robot Framework and RESTinstance installed at this point.
-If not, see README.rst in the repository root for the instructions.
+If not, see README.md in the repository root for the instructions.
 
 We will use
 `https://jsonplaceholder.typicode.com/users <https://jsonplaceholder.typicode.com/users>`__ as the system under test (SUT) for all the examples.

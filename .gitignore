@@ -48,9 +48,6 @@ report.html
 # make atest
 results/
 
-# RESTinstance: robot README.rst
-*.demo.json
-
 # RESTinstance: mountebank
 *.log
 *.pid
