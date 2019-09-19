@@ -140,7 +140,7 @@ listed below as contributors.
 ### Local development
 
 We use [Nox](https://nox.thea.codes/en/stable/) over `make`, `invoke` and `tox`.
-Nox automatically handles `./venv/`s for the common tasks, and works on Windows.
+Nox automatically handles `.venv/`s for the common tasks, and works on Windows.
 We test and develop on Python 3.6. The versions are configured in `noxfile.py`.
 
 Install Nox:
@@ -171,7 +171,7 @@ To regenerate the library keyword documentation and build the package:
 
     nox -s docs build
 
-To remove all sessions (`./venv`s) and remove temporary files in this directory:
+To remove all sessions (`.venv/`s) and remove temporary files in this directory:
 
     nox -s clean
 

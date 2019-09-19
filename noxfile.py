@@ -25,7 +25,7 @@ import nox
 #
 #   nox -s docs
 #
-# Remove all sessions (`./venv`s) and remove temporary files in this directory:
+# Remove all sessions (`.venv/`s) and remove temporary files in this directory:
 #
 #   nox -s clean
 #
