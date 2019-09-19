@@ -124,9 +124,9 @@ DELETE the existing successfully, save the history of all requests
 ```
 
 3.  Make JSON API testing great again:
-
-    robot --outputdir results atest/
-
+```
+robot --outputdir results atest/
+```
 
 
 ## Contributing
@@ -140,9 +140,7 @@ listed below as contributors.
 ### Local development
 
 We use [Nox](https://nox.thea.codes/en/stable/) over `make`, `invoke` and `tox`.
-
 Nox automatically handles `./venv/`s for the common tasks, and works on Windows.
-
 We test and develop on Python 3.6. The versions are configured in `noxfile.py`.
 
 Install Nox:
