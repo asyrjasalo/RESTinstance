@@ -132,10 +132,7 @@ robot --outputdir results atest/
 ## Contributing
 
 Bug reports and feature requests are tracked in
-[GitHub](https://github.com/asyrjasalo/RESTinstance/issues).
-
-We do respect pull request(er)s. Please mention if you do not want to be
-listed below as contributors.
+[GitHub](https://github.com/asyrjasalo/RESTinstance/issues). We do respect pull request(er)s.
 
 ### Local development
 
