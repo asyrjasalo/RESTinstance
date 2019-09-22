@@ -59,7 +59,7 @@ nox.options.sessions = ["test", "atest"]
 
 @nox.session(python=python, venv_backend="venv", reuse_venv=True)
 def test(session):
-    """Run development tests for the package"""
+    """Run development tests for the package."""
     session.install("--upgrade", "-r", "requirements-dev.txt")
     session.run("pre-commit", "install")
     session.run("python", "-m", "unittest", "discover")
@@ -68,7 +68,7 @@ def test(session):
 
 @nox.session(python=False)
 def testenv(session):
-    """Run development server for acceptance tests"""
+    """Run development server for acceptance tests."""
     session.run(
         "npx",
         "mountebank",
@@ -82,7 +82,7 @@ def testenv(session):
 
 @nox.session(python=python, venv_backend="venv", reuse_venv=True)
 def atest(session):
-    """Run acceptance tests for the project"""
+    """Run acceptance tests for the project."""
     session.install("--upgrade", "-r", "requirements.txt")
     session.run(
         "python",
@@ -100,7 +100,7 @@ def atest(session):
 
 @nox.session(python=python, venv_backend="venv", reuse_venv=True)
 def docs(session):
-    """Regenerate documentation for the project"""
+    """Regenerate documentation for the project."""
     session.install("--upgrade", "-r", "requirements.txt")
     session.run(
         "python",
@@ -131,7 +131,7 @@ def prospector(session):
 
 @nox.session(python="3.6", venv_backend="venv")
 def build(session):
-    """Build sdist and wheel to dist/"""
+    """Build sdist and wheel dists."""
     session.install("pip")
     session.install("setuptools")
     session.install("wheel")
@@ -140,7 +140,7 @@ def build(session):
 
 @nox.session(python="3.6", venv_backend="venv")
 def release_testpypi(session):
-    """Publish dist/* to TestPyPI"""
+    """Publish dist/* to TestPyPI."""
     session.install("zest.releaser[recommended]")
     session.run("twine", "check", "dist/*")
     session.run(
@@ -154,7 +154,7 @@ def release_testpypi(session):
 
 @nox.session(python=python, venv_backend="venv")
 def install_testpypi(session):
-    """Install the latest (pre-)release from TestPyPI"""
+    """Install the latest (pre-)release from TestPyPI."""
     session.install(
         "--no-cache-dir",
         "--pre",
@@ -168,20 +168,20 @@ def install_testpypi(session):
 
 @nox.session(python="3.6", venv_backend="venv")
 def release(session):
-    """Tag, build and publish a new release to PyPI"""
+    """Tag, build and publish a new release to PyPI."""
     session.install("zest.releaser[recommended]")
     session.run("fullrelease")
 
 
 @nox.session(python=python, venv_backend="venv")
 def install(session):
-    """Install the latest release from PyPI"""
+    """Install the latest release from PyPI."""
     session.install("--no-cache-dir", project_name)
 
 
 @nox.session(python=False)
 def clean(session):
-    """Remove all .venv's, build files and caches in the directory"""
+    """Remove all .venv's, build files and caches in the directory."""
     rmtree("build", ignore_errors=True)
     rmtree("dist", ignore_errors=True)
     rmtree("pip-wheel-metadata", ignore_errors=True)
