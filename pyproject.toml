@@ -11,8 +11,8 @@ exclude = '''
   | atest
   | build
   | dist
-  | docker
   | docs
+  | examples
   | results
   | testapi
 )/

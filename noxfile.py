@@ -9,7 +9,7 @@ from shutil import rmtree
 # We advance from `pip install nox` for dev tasks. It also works on Windows and:
 #
 # 1. Supports multiple Python versions, each session can be ran on `pythonX.X`.
-# 2. A single session is stored to a single virtualenv in .venv/<session_name>.
+# 2. A single session is stored in a single virtualenv in .venv/<session_name>.
 # 3. Each `nox` resets the session (venv), unless explicitly `reuse_venv=True`.
 #
 #
