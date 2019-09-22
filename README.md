@@ -175,6 +175,14 @@ To remove all sessions (`.venv/`s) and remove temporary files in this directory:
 
     nox -s clean
 
+### TODO
+
+- export `mb` recorded responses to CI (pre-commit hook: `nox -s save_testenv`)
+- change `nox -s testenv` to load the saved testenv -> rid of `--allowInjection`
+- add CI (GitHub Actions? GitLab?)
+- add Python types to pass `prospector --with-tool mypy`
+- enable pre-commit hook for prospector
+
 
 
 ## Credits
