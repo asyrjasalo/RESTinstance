@@ -1,22 +1,17 @@
 repos:
+- repo: https://github.com/detailyang/pre-commit-shell
+  rev: "062f0b028ae65827e04f91c1e6738cfcbe9b337f"
+  hooks:
+  - id: shell-lint
+
 - repo: https://github.com/asottile/pyupgrade
-  rev: v1.23.0
+  rev: "00851f30cbb74899b15a05640d943a1059501903"
   hooks:
   - id: pyupgrade
-
-- repo: https://github.com/ambv/black
-  rev: 19.3b0
-  hooks:
-  - id: black
-    language_version: python3.6
-
-#- repo: https://github.com/PyCQA/prospector
-#  rev: 1.1.7 # The version of Prospector to use, at least 1.1.7
-#  hooks:
-#  - id: prospector
+    args: [--py36-plus]
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.3.0
+  rev: "d6d3bd94604578adbd918c5a00d531d98350d86f"
   hooks:
   - id: check-merge-conflict
   - id: check-added-large-files
@@ -26,24 +21,35 @@ repos:
   - id: check-toml
   - id: check-yaml
 
+#- repo: https://github.com/PyCQA/prospector
+#  rev: "c4d3d2f368b458462feb7d730cb3c5e742410695"
+#  hooks:
+#  - id: prospector
+
+- repo: https://github.com/ambv/black
+  rev: "026c81b83454f176a9f9253cbfb70be2c159d822"
+  hooks:
+  - id: black
+    language_version: python3.6
+
+- repo: https://github.com/guykisel/pre-commit-robotframework-tidy
+  rev: "f5942827aadc04b1637527b8b5c4b2bc1850ca6b"
+  hooks:
+  - id: robotframework-tidy-wrapper
+
 - repo: https://github.com/jstewmon/check-swagger
-  rev: v0.1.4
+  rev: "10786849784ef4386bdd3161e0f31ceab6d15086"
   hooks:
   - id: check-swagger
 
 - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-  rev: v1.1.0
+  rev: "d26534190d2c2d859177374a711746fcdf641350"
   hooks:
   - id: python-safety-dependencies-check
 
 - repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
-  rev: v1.0.4
+  rev: "b0858b0ce3c299726109141d91b1e47d41872788"
   hooks:
   - id: python-bandit-vulnerability-check
     args: []
     files: .py$
-
-- repo: https://github.com/guykisel/pre-commit-robotframework-tidy
-  rev: f5942827aadc04b1637527b8b5c4b2bc1850ca6b
-  hooks:
-  - id: robotframework-tidy-wrapper

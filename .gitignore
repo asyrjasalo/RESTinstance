@@ -22,9 +22,11 @@ dist/
 pip-wheel-metadata/
 *.egg-info/
 
-# requirements-dev.txt
+# pycoverage
 .coverage
 .coverage.*
+
+# pytest
 .pytest_cache/
 
 # mypy
@@ -45,12 +47,13 @@ log.html
 output.xml
 report.html
 
-# make atest
+# nox -s atest
 results/
 
 # RESTinstance: mountebank
-*.log
-*.pid
+mb.log
+mb1.log
+mb.pid
 
 # personal notes
 *.md.private

@@ -167,7 +167,16 @@ def clean(session):
     shutil.rmtree("dist", ignore_errors=True)
     shutil.rmtree("pip-wheel-metadata", ignore_errors=True)
     shutil.rmtree("src/" + project_name + ".egg-info", ignore_errors=True)
-    shutil.rmtree("__pycache__", ignore_errors=True)
     shutil.rmtree(".pytest_cache", ignore_errors=True)
     shutil.rmtree(".mypy_cache", ignore_errors=True)
     shutil.rmtree(".venv", ignore_errors=True)
+    session.run(
+        "python",
+        "-c",
+        "import pathlib; [p.unlink() for p in pathlib.Path('.').rglob('*.py[co]')]",
+    )
+    session.run(
+        "python",
+        "-c",
+        "import pathlib; [p.rmdir() for p in pathlib.Path('.').rglob('__pycache__')]",
+    )
