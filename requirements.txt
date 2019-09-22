@@ -1,4 +1,4 @@
-robotframework >= 3.1.0
+robotframework
 docutils
 
 flex

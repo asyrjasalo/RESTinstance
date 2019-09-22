@@ -1,5 +1,8 @@
-import nox
-import shutil
+import nox  # pylint: disable = import-error
+
+from os.path import abspath, dirname
+from shutil import rmtree
+
 
 # https://nox.thea.codes/en/stable/ ############################################
 #
@@ -30,19 +33,19 @@ import shutil
 #
 #   nox -s clean
 #
-# This workflow is what is preferred for prereleasing to TestPyPI:
+# This workflow is preferred for prereleasing to TestPyPI:
 #
-#   nox -s test atest docs build release_testpypi install_testpypi
+#   nox -s test atest docs clean build release_testpypi install_testpypi
 #
-# If that worked well, it should be fine to let the final release go to PyPI:
+# If that worked well, it should be fine to let the final release to PyPI:
 #
-#   nox -s test atest docs build release install
-#
+#   nox -s release install
 #
 ################################################################################
 
 project_name = "RESTinstance"
 package_name = "REST"
+repo_root_path = dirname(abspath(__file__))
 
 python = "3.6"
 
@@ -56,8 +59,8 @@ nox.options.sessions = ["test", "atest"]
 
 @nox.session(python=python, venv_backend="venv", reuse_venv=True)
 def test(session):
-    """Run unittest and pytest tests"""
-    session.install("-r", "requirements-dev.txt")
+    """Run development tests for the package"""
+    session.install("--upgrade", "-r", "requirements-dev.txt")
     session.run("pre-commit", "install")
     session.run("python", "-m", "unittest", "discover")
     session.run("pytest", "--last-failed", "--last-failed-no-failures", "all")
@@ -65,7 +68,7 @@ def test(session):
 
 @nox.session(python=False)
 def testenv(session):
-    """Start a local test environment for acceptance tests"""
+    """Run development server for acceptance tests"""
     session.run(
         "npx",
         "mountebank",
@@ -79,8 +82,8 @@ def testenv(session):
 
 @nox.session(python=python, venv_backend="venv", reuse_venv=True)
 def atest(session):
-    """Run Robot Framework acceptance tests"""
-    session.install("-r", "requirements.txt")
+    """Run acceptance tests for the project"""
+    session.install("--upgrade", "-r", "requirements.txt")
     session.run(
         "python",
         "-m",
@@ -97,8 +100,8 @@ def atest(session):
 
 @nox.session(python=python, venv_backend="venv", reuse_venv=True)
 def docs(session):
-    """Regenerate library documentation"""
-    session.install("-r", "requirements.txt")
+    """Regenerate documentation for the project"""
+    session.install("--upgrade", "-r", "requirements.txt")
     session.run(
         "python",
         "-m",
@@ -110,13 +113,29 @@ def docs(session):
     )
 
 
+@nox.session(python="3.6", venv_backend="venv", reuse_venv=True)
+def black(session):
+    """Reformat/unify/"blacken" Python source code in-place."""
+    session.install("--upgrade", "black")
+    session.run("black", ".")
+
+
+@nox.session(python="3.6", venv_backend="venv", reuse_venv=True)
+def prospector(session):
+    """Run various static analysis tools for the package."""
+    session.install(
+        "--upgrade", "-r", "requirements.txt", "prospector[with_mypy]"
+    )
+    session.run("prospector", "--with-tool", "mypy")
+
+
 @nox.session(python="3.6", venv_backend="venv")
 def build(session):
     """Build sdist and wheel to dist/"""
     session.install("pip")
     session.install("setuptools")
     session.install("wheel")
-    session.run("python", "setup.py", "clean", "--all", "bdist_wheel", "sdist")
+    session.run("python", "setup.py", "bdist_wheel", "sdist")
 
 
 @nox.session(python="3.6", venv_backend="venv")
@@ -149,7 +168,7 @@ def install_testpypi(session):
 
 @nox.session(python="3.6", venv_backend="venv")
 def release(session):
-    """Tag, build and publish a new release PyPI"""
+    """Tag, build and publish a new release to PyPI"""
     session.install("zest.releaser[recommended]")
     session.run("fullrelease")
 
@@ -162,21 +181,25 @@ def install(session):
 
 @nox.session(python=False)
 def clean(session):
-    """Remove all .venv's, build files, caches and testenv logs"""
-    shutil.rmtree("build", ignore_errors=True)
-    shutil.rmtree("dist", ignore_errors=True)
-    shutil.rmtree("pip-wheel-metadata", ignore_errors=True)
-    shutil.rmtree("src/" + project_name + ".egg-info", ignore_errors=True)
-    shutil.rmtree(".pytest_cache", ignore_errors=True)
-    shutil.rmtree(".mypy_cache", ignore_errors=True)
-    shutil.rmtree(".venv", ignore_errors=True)
+    """Remove all .venv's, build files and caches in the directory"""
+    rmtree("build", ignore_errors=True)
+    rmtree("dist", ignore_errors=True)
+    rmtree("pip-wheel-metadata", ignore_errors=True)
+    rmtree("src/" + project_name + ".egg-info", ignore_errors=True)
+    rmtree(".pytest_cache", ignore_errors=True)
+    rmtree(".mypy_cache", ignore_errors=True)
+    rmtree(".venv", ignore_errors=True)
     session.run(
         "python",
         "-c",
-        "import pathlib; [p.unlink() for p in pathlib.Path('.').rglob('*.py[co]')]",
+        "import pathlib;"
+        + "[p.unlink() for p in pathlib.Path('%s').rglob('*.py[co]')]"
+        % repo_root_path,
     )
     session.run(
         "python",
         "-c",
-        "import pathlib; [p.rmdir() for p in pathlib.Path('.').rglob('__pycache__')]",
+        "import pathlib;"
+        + "[p.rmdir() for p in pathlib.Path('%s').rglob('__pycache__')]"
+        % repo_root_path,
     )

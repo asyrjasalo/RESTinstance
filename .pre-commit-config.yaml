@@ -25,6 +25,7 @@ repos:
 #  rev: "c4d3d2f368b458462feb7d730cb3c5e742410695"
 #  hooks:
 #  - id: prospector
+#    args: [-W, pep8, -W, pep257, -W, pylint]
 
 - repo: https://github.com/ambv/black
   rev: "026c81b83454f176a9f9253cbfb70be2c159d822"
