@@ -43,6 +43,7 @@ On 3.6, 3.7 you can install and upgrade
 On 2.7 series the package works as well, but using 2.7 is
 [not preferred 2020 onwards](https://pythonclock.org/):
 
+    pip install --user --upgrade virtualenv
     virtualenv venv
     source venv/bin/activate
     pip install --upgrade RESTinstance
@@ -157,7 +158,7 @@ We test, develop, build and publish on Python 3.6, and use venvs as preferred:
 
 Nox automates handling `.venv/<task>`s for workflows, that on Windows as well:
 
-    pip install --user --upgrade nox
+    pip install --upgrade nox
 
 The actual tasks are defined in `noxfile.py`, as well as our settings like:
 - The default Python interpreter to run all the defined tasks is `python3.6`
