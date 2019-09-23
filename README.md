@@ -141,32 +141,28 @@ We use [Nox](https://nox.thea.codes/en/stable/) over `make`, `invoke` and `tox`:
 - A session is a single virtualenv which is stored in `.venv/<session_name>`.
 - Every `nox` recreates session, thus virtualenv, unless `reuse_venv=True`.
 
-We test, develop, build and publish on Python 3.6, and use venvs as preferred:
+We test, develop, build and publish on Python 3.6, and use `venv` as prefered:
 
     python3 -m venv .venv/dev
     source .venv/dev/bin/activate
 
-Nox automates handling `.venv/`s for the dev tasks, and that on Windows as well:
+Nox automates handling `.venv/<task>`s for workflows, that on Windows as well:
 
     pip install --uprade nox
 
 The actual tasks are defined in `noxfile.py`, as well as our settings like:
-- The default Python interpreter to run all the defined sessions is `python3.6`
-- [venv module](https://docs.python.org/3/library/venv.html) is what we prefer for virtualenving on Python 3
-- Whether the virtualenv is always recreated when particular task is ran (is our default)
+- The default Python interpreter to run all the defined tasks is `python3.6`
+- We use [venv module](https://docs.python.org/3/library/venv.html) now for
+virtualenving on Python 3
+- Whether some virtualenv is always recreated when the particular task is ran (is our default)
 
-To list all possible sessions, session is a task running in own `.venv/<name>`:
+Session is a task running in own `.venv/<name>`, to list all possible sessions:
 
     nox -l
 
 Default sessions are hilighted in the list, we run both `test`s and `atest`s by:
 
     nox
-
-We want our static analysis checks ran before code even ends up in a commit.
-
-Thus the above session all bootstraps [pre-commit](https://pre-commit.com/)
-hooks in a git working copy. These are configured in `.pre-commit-commit.yaml`.
 
 Session `nox -s atest` assumes you have started `testapi/` on [mountebank](https://www.mbtest.org):
 
@@ -176,10 +172,6 @@ Running the above assumes you have `node` and `npx` installed in your system.
 
 After started, you can debug requests and responses by tests in web browser at
 [localhost:2525](http://localhost:2525/imposters).
-
-Then run the acceptance tests as following:
-
-    nox -s atest
 
 You know, having a virtualenv even for generating libdoc - why not a bad idea:
 
@@ -193,22 +185,32 @@ Our distributions are known to work well on Python 3.7 and 2.7 series too:
 
     nox -s clean build
 
+We use [zest.releaser](https://github.com/zestsoftware/zest.releaser) for
+versioning, tagging and building wheels.
+
+It uses [twine](https://pypi.org/project/twine/) underneath to upload to PyPIs
+securely over HTTPS, which cannot be done with `python setup.py` commands.
+
 This workflow is preferred for distributing a new (pre-)release to TestPyPI:
 
     nox -s test atest docs clean build release_testpypi install_testpypi
 
-If it installed well, all will be fine to let the final release to PyPI:
+If that installed well, all will be fine to let the final release to PyPI:
 
     nox -s release
 
-We use [zest.releaser](https://github.com/zestsoftware/zest.releaser) for
-versioning, tagging and building wheels.
-It uses [twine](https://pypi.org/project/twine/) underneath to upload to PyPIs
-securely over HTTPS, which cannot be done with `python setup.py` commands.
-
-To install or upgrade the latest release from PyPI, and in a own venv as usual:
+To install the latest release from PyPI, and do it in an own venv as usual:
 
     nox -s install
+
+### pre-commit hooks
+
+We want our static analysis checks ran before code even ends up in a commit.
+
+Thus both `nox` and `nox -s test` commands bootstrap
+[pre-commit](https://pre-commit.com/) hooks in your git working copy.
+
+The actual hooks are configured in `.pre-commit-commit.yaml`.
 
 ### Ideas
 
