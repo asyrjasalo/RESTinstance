@@ -148,7 +148,7 @@ We test, develop, build and publish on Python 3.6, and use `venv` as prefered:
 
 Nox automates handling `.venv/<task>`s for workflows, that on Windows as well:
 
-    pip install --uprade nox
+    pip install --user --upgrade nox
 
 The actual tasks are defined in `noxfile.py`, as well as our settings like:
 - The default Python interpreter to run all the defined tasks is `python3.6`
