@@ -33,12 +33,21 @@
 
 ## Installation
 
-On 3.6, 3.7 and 2.7, you can install and upgrade
+On 3.6, 3.7 you can install and upgrade
 [from PyPi](https://pypi.org/project/RESTinstance):
 
+    python3 -m venv venv
+    source venv/dev/bin/activate
     pip install --upgrade RESTinstance
 
-This also installs [Robot Framework](https://pypi.org/project/robotframework)
+On 2.7 series the package works as well, but using 2.7 is
+[not preferred 2021 onwards](https://pythonclock.org/):
+
+    virtualenv venv
+    source venv/dev/bin/activate
+    pip install --upgrade RESTinstance
+
+These also install [Robot Framework](https://pypi.org/project/robotframework)
 if you do not have it already.
 
 
@@ -141,7 +150,7 @@ We use [Nox](https://nox.thea.codes/en/stable/) over `make`, `invoke` and `tox`:
 - A session is a single virtualenv which is stored in `.venv/<session_name>`.
 - Every `nox` recreates session, thus virtualenv, unless `reuse_venv=True`.
 
-We test, develop, build and publish on Python 3.6, and use `venv` as prefered:
+We test, develop, build and publish on Python 3.6, and use venvs as preferred:
 
     python3 -m venv .venv/dev
     source .venv/dev/bin/activate
@@ -156,7 +165,7 @@ The actual tasks are defined in `noxfile.py`, as well as our settings like:
 virtualenving on Python 3
 - Whether some virtualenv is always recreated when the particular task is ran (is our default)
 
-Session is a task running in own `.venv/<name>`, to list all possible sessions:
+Session is a task, running in the `.venv/<task>`, to list all possible sessions:
 
     nox -l
 
