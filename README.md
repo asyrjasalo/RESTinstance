@@ -177,28 +177,27 @@ After started, you may also debug requests and responses via web browser at
 
 Then to run acceptance test as following:
 
-   nox -s atest
+    nox -s atest
 
-Using separate virtualenvs even for generating robot.libdoc is not a bad idea:
+You know, having virtualenv even for generating libdoc is not a bad idea:
 
-   nox -s docs
+    nox -s docs
 
 Remove all sessions (`.venv/`s) and remove temporary files in this directory:
 
-   nox -s clean
+    nox -s clean
 
-Our clean builds are known to work well on Python 3.7 and 2.7 series too:
+Our builds are known to work well on Python 3.7 and 2.7 series too:
 
     nox -s clean build
 
-This workflow is preferred when (pre)-releasing new version to TestPyPI:
+This workflow is preferred for distributing a new (pre-)release to TestPyPI:
 
-   nox -s test atest docs clean build release_testpypi install_testpypi
+    nox -s test atest docs clean build release_testpypi install_testpypi
 
-If that worked well, all is fine to let the final release to PyPI:
+If that went well, all will be fine to let the final release to PyPI:
 
-   nox -s release install
-
+    nox -s release install
 
 ### Ideas
 
