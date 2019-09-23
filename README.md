@@ -151,44 +151,45 @@ Nox automates handling `.venv/`s for the dev tasks, and that on Windows as well:
     pip install --uprade nox
 
 The actual tasks are in `noxfile.py` as well settings used like:
-- The default Python interpreter to run sessions is `python3.6`
-- [venv module](https://docs.python.org/3/library/venv.html) is what we prefer for vitualenving
-- Whether virtualenvs are always recreated when task is ran (our default)
+- The default Python interpreter to run all the defined sessions is `python3.6`
+- [venv module](https://docs.python.org/3/library/venv.html) is what we prefer for virtualenving on Python 3
+- Whether the virtualenv is always recreated when particular task is ran (is our default)
 
-To list all possible sessions - session is a task, which rans in its own venv:
+To list all possible sessions - session is a task, running in its own `.venv/`:
 
     nox -l
 
-Default sessions are hilighted in the list - so we run all tests by:
+Default sessions are hilighted in the list - so we run all tests by this:
 
     nox
 
-We want our static analysis checks ran before code even ends up in a commit:
-Thus this session bootstraps [pre-commit](https://pre-commit.com/) hooks in
-the git working copy.
+We want our static analysis checks ran before code even ends up in a commit.
+
+Thus the session bootstraps [pre-commit](https://pre-commit.com/) hooks in
+the git working copy. The hooks are configured in `.pre-commit-commit.yaml`.
 
 Session `nox -s atest` assumes you have started `testapi/` on [mountebank](https://www.mbtest.org):
 
     nox -s testenv
 
-Running the above requires to have `node` and `npx` installed in your system.
+Running the above assumes you have `node` and `npx` installed in your system.
 
-After started, you may also debug requests and responses via web browser at
+After started, you can also debug requests and responses via web browser at
 [localhost:2525](http://localhost:2525/imposters).
 
-Then to run acceptance test as following:
+Then, run acceptance tests as following:
 
     nox -s atest
 
-You know, having virtualenv even for generating libdoc is not a bad idea:
+You know, having a virtualenv even for generating libdoc is not a bad idea:
 
     nox -s docs
 
-Remove all sessions (`.venv/`s) and remove temporary files in this directory:
+Remove all sessions (`.venv/`s) as well as temporary files in your working copy:
 
     nox -s clean
 
-Our builds are known to work well on Python 3.7 and 2.7 series too:
+Our distributions are known to work well on Python 3.7 and 2.7 series too:
 
     nox -s clean build
 
