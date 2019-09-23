@@ -37,14 +37,14 @@ On 3.6, 3.7 you can install and upgrade
 [from PyPi](https://pypi.org/project/RESTinstance):
 
     python3 -m venv venv
-    source venv/dev/bin/activate
+    source venv/bin/activate
     pip install --upgrade RESTinstance
 
 On 2.7 series the package works as well, but using 2.7 is
 [not preferred 2021 onwards](https://pythonclock.org/):
 
     virtualenv venv
-    source venv/dev/bin/activate
+    source venv/bin/activate
     pip install --upgrade RESTinstance
 
 These also install [Robot Framework](https://pypi.org/project/robotframework)
