@@ -136,26 +136,37 @@ Bug reports and feature requests are tracked in
 
 ### Local development
 
-We use [Nox](https://nox.thea.codes/en/stable/) over `make`, `invoke` and `tox`.
-Nox automatically handles `.venv/`s for the common tasks, and works on Windows.
-We test and develop on Python 3.6. The versions are configured in `noxfile.py`.
+We use [Nox](https://nox.thea.codes/en/stable/) over `make`, `invoke` and `tox`:
+- Supports multiple Python versions, each session can be ran on `pythonX.X`.
+- A single session is stored in a single virtualenv in .venv/<session_name>.
+- Each `nox` resets the session (venv), unless explicitly `reuse_venv=True`.
 
-Install Nox:
+We test, develop, build and publish on Python 3.6, and use venvs as usual:
+
+    python3 -m venv .venv/dev
+    source .venv/dev/bin/activate
+
+Nox automates handling `.venv/`s for the dev tasks, and that on Windows as well
 
     pip install --uprade nox
 
-To list all possible sessions (session is a task which rans in its own venv):
+Use of [venv](https://docs.python.org/3/library/venv.html) module is what we prefer always, also `noxfile.py` configures further tasks so.
+
+The default Python version is configured in `noxfile.py`, and is  `python3.6`.
+
+To list all possible sessions - session is a task, which rans in its own venv:
 
     nox -l
 
-Default sessions are colored in the list, so all tests are ran by:
+Default sessions are hilighted in the list - so we run all tests by:
 
     nox
 
-This also bootstraps [pre-commit](https://pre-commit.com/) in the directory,
-as we want our static analysis checks ran before code even ends up in a commit.
+We want our static analysis checks ran before code even ends up in a commit:
+Thus this session bootstraps [pre-commit](https://pre-commit.com/) hooks in
+the git working copy.
 
-Some tests assume `testapi/` running on [mountebank](https://www.mbtest.org):
+Session `nox -s atest` assumes you have started `testapi/` on [mountebank](https://www.mbtest.org):
 
     nox -s testenv
 
@@ -164,15 +175,32 @@ Running the above requires to have `node` and `npx` installed in your system.
 After started, you may also debug requests and responses via web browser at
 [localhost:2525](http://localhost:2525/imposters).
 
-To regenerate the library keyword documentation and build the package:
+Then to run acceptance test as following:
 
-    nox -s docs build
+   nox -s atest
 
-To remove all sessions (`.venv/`s) and remove temporary files in this directory:
+Using separate virtualenvs even for generating robot.libdoc is not a bad idea:
 
-    nox -s clean
+   nox -s docs
 
-### TODO
+Remove all sessions (`.venv/`s) and remove temporary files in this directory:
+
+   nox -s clean
+
+Our clean builds are known to work well on Python 3.7 and 2.7 series too:
+
+    nox -s clean build
+
+This workflow is preferred when (pre)-releasing new version to TestPyPI:
+
+   nox -s test atest docs clean build release_testpypi install_testpypi
+
+If that worked well, all is fine to let the final release to PyPI:
+
+   nox -s release install
+
+
+### Ideas
 
 - export `mb` recorded responses to CI (pre-commit hook: `nox -s save_testenv`)
 - change `nox -s testenv` to load the saved testenv -> rid of `--allowInjection`
