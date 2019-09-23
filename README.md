@@ -41,7 +41,7 @@ On 3.6, 3.7 you can install and upgrade
     pip install --upgrade RESTinstance
 
 On 2.7 series the package works as well, but using 2.7 is
-[not preferred 2021 onwards](https://pythonclock.org/):
+[not preferred 2020 onwards](https://pythonclock.org/):
 
     virtualenv venv
     source venv/bin/activate
