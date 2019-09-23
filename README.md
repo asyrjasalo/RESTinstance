@@ -150,23 +150,23 @@ Nox automates handling `.venv/`s for the dev tasks, and that on Windows as well:
 
     pip install --uprade nox
 
-The actual tasks are in `noxfile.py` as well settings used like:
+The actual tasks are defined in `noxfile.py`, as well as our settings like:
 - The default Python interpreter to run all the defined sessions is `python3.6`
 - [venv module](https://docs.python.org/3/library/venv.html) is what we prefer for virtualenving on Python 3
 - Whether the virtualenv is always recreated when particular task is ran (is our default)
 
-To list all possible sessions - session is a task, running in its own `.venv/`:
+To list all possible sessions, session is a task running in own `.venv/<name>`:
 
     nox -l
 
-Default sessions are hilighted in the list - so we run all tests by this:
+Default sessions are hilighted in the list, we run both `test`s and `atest`s by:
 
     nox
 
 We want our static analysis checks ran before code even ends up in a commit.
 
-Thus the session bootstraps [pre-commit](https://pre-commit.com/) hooks in
-the git working copy. The hooks are configured in `.pre-commit-commit.yaml`.
+Thus the above session all bootstraps [pre-commit](https://pre-commit.com/)
+hooks in a git working copy. These are configured in `.pre-commit-commit.yaml`.
 
 Session `nox -s atest` assumes you have started `testapi/` on [mountebank](https://www.mbtest.org):
 
@@ -174,14 +174,14 @@ Session `nox -s atest` assumes you have started `testapi/` on [mountebank](https
 
 Running the above assumes you have `node` and `npx` installed in your system.
 
-After started, you can also debug requests and responses via web browser at
+After started, you can debug requests and responses by tests in web browser at
 [localhost:2525](http://localhost:2525/imposters).
 
-Then, run acceptance tests as following:
+Then run the acceptance tests as following:
 
     nox -s atest
 
-You know, having a virtualenv even for generating libdoc is not a bad idea:
+You know, having a virtualenv even for generating libdoc - why not a bad idea:
 
     nox -s docs
 
@@ -197,9 +197,18 @@ This workflow is preferred for distributing a new (pre-)release to TestPyPI:
 
     nox -s test atest docs clean build release_testpypi install_testpypi
 
-If that went well, all will be fine to let the final release to PyPI:
+If it installed well, all will be fine to let the final release to PyPI:
 
-    nox -s release install
+    nox -s release
+
+We use [zest.releaser](https://github.com/zestsoftware/zest.releaser) for
+versioning, tagging and building wheels.
+It uses [twine](https://pypi.org/project/twine/) underneath to upload to PyPIs
+securely over HTTPS, which cannot be done with `python setup.py` commands.
+
+To install or upgrade the latest release from PyPI, and in a own venv as usual:
+
+    nox -s install
 
 ### Ideas
 
