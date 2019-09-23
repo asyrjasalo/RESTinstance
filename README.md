@@ -137,22 +137,23 @@ Bug reports and feature requests are tracked in
 ### Local development
 
 We use [Nox](https://nox.thea.codes/en/stable/) over `make`, `invoke` and `tox`:
-- Supports multiple Python versions, each session can be ran on `pythonX.X`.
-- A single session is stored in a single virtualenv in .venv/<session_name>.
-- Each `nox` resets the session (venv), unless explicitly `reuse_venv=True`.
+- Supports multiple Python versions, each session is ran on some `pythonX.X`.
+- A session is a single virtualenv which is stored in `.venv/<session_name>`.
+- Every `nox` recreates session, thus virtualenv, unless `reuse_venv=True`.
 
-We test, develop, build and publish on Python 3.6, and use venvs as usual:
+We test, develop, build and publish on Python 3.6, and use venvs as preferred:
 
     python3 -m venv .venv/dev
     source .venv/dev/bin/activate
 
-Nox automates handling `.venv/`s for the dev tasks, and that on Windows as well
+Nox automates handling `.venv/`s for the dev tasks, and that on Windows as well:
 
     pip install --uprade nox
 
-Use of [venv](https://docs.python.org/3/library/venv.html) module is what we prefer always, also `noxfile.py` configures further tasks so.
-
-The default Python version is configured in `noxfile.py`, and is  `python3.6`.
+The actual tasks are in `noxfile.py` as well settings used like:
+- The default Python interpreter to run sessions is `python3.6`
+- [venv module](https://docs.python.org/3/library/venv.html) is what we prefer for vitualenving
+- Whether virtualenvs are always recreated when task is ran (our default)
 
 To list all possible sessions - session is a task, which rans in its own venv:
 
