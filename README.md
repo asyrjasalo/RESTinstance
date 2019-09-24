@@ -162,7 +162,7 @@ Third, unlike Tox, Nox uses Python file (`noxfile.py`) for configuration, yet:
 - A session is a single virtualenv which is stored in `.venv/<session_name>`.
 - Every `nox` recreates session, thus virtualenv, unless `reuse_venv=True`.
 
-### Development venving w/ pyenv
+### Python versioning w/ pyenv
 
 The pyenv setup works on OS X and on the common Linux distros out of the box:
 
@@ -184,7 +184,7 @@ We test, develop, build and publish on Python 3.6.9, and use venvs as preferred:
     source .venv/dev/bin/activate
     pip install -e .
 
-### Test venving w/ Nox
+### Automated venving w/ Nox
 
 Nox automates handling `.venv/<task>`s for workflows, that on Windows as well:
 
@@ -235,12 +235,14 @@ After started, you can debug requests and responses by tests in web browser at
 Both `nox -s test` and `nox -s atest` allow passing arguments to `pytest`
 and `robot`, respectively:
 
-    nox -s test -- test/<testmodule>.py
-    nox -s atest -- atest/<testsuite>.robot
+    nox -s test -- test/<test_modulename>.py
+    nox -s atest -- atest/<atest_suitedir>/<atest_suitefile>.robot
 
-You know, having a virtualenv even for generating libdoc - why not a bad idea:
+You know, having a virtualenv even for generating `docs/` - why not a bad idea:
 
     nox -s docs
+
+### Building and tagging a new version
 
 Remove all sessions (`.venv/`s) as well as temporary files in your working copy:
 
@@ -251,10 +253,12 @@ Our distributions are known to work well on Python 3.7 and 2.7 series too:
     nox -s clean build
 
 We use [zest.releaser](https://github.com/zestsoftware/zest.releaser) for
-versioning, tagging and building wheels.
+versioning, tagging and building (universal) `bdist_wheel`s.
 
 It uses [twine](https://pypi.org/project/twine/) underneath to upload to PyPIs
 securely over HTTPS, which can't be done with `python setup.py` commands.
+
+### Releasing to PyPIs
 
 This workflow is preferred for distributing a new (pre-)release to TestPyPI:
 
@@ -264,9 +268,13 @@ If that installed well, all will be fine to let the final release to PyPI:
 
     nox -s release
 
-To install the latest release from PyPI, and do it in an own venv as usual:
+To install the latest release from PyPI, and in a dedicated venv of course:
 
     nox -s install
+
+For intermediate `nox` use, you'll advance by enabling auto-completion for args:
+
+    eval "$(register-python-argcomplete nox)"
 
 ### pre-commit hooks
 
