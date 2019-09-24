@@ -180,6 +180,7 @@ We test, develop, build and publish on Python 3.6.9, and use venvs as preferred:
     pyenv install --skip-existing 3.6.9 && pyenv rehash
     python3 -m venv .venv/dev
     source .venv/dev/bin/activate
+    pip install -e .
 
 Nox automates handling `.venv/<task>`s for workflows, that on Windows as well:
 
@@ -192,9 +193,7 @@ now for virtualenving, as we develop exclusively on Python 3
 - Whether a new virtualenv is always recreated when the respective task is run
 (which is our default for most of the tasks)
 
-Summary: Session is a task, running in the `.venv/<task>`.
-
-To list all possible sessions:
+Session is a task, running in the `.venv/<task>`. To list all possible sessions:
 
     nox -l
 
