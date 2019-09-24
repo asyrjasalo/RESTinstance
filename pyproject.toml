@@ -13,6 +13,7 @@ exclude = '''
   | dist
   | docs
   | examples
+  | node_modules
   | results
   | testapi
 )/

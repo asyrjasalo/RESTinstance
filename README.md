@@ -162,7 +162,9 @@ Third is, unlike Tox, Nox uses Python file (`noxfile.py`) for configuration yet:
 - A session is a single virtualenv which is stored in `.venv/<session_name>`.
 - Every `nox` recreates session, thus virtualenv, unless `reuse_venv=True`.
 
-The Pyenv setup works on OS X and on the common Linux distros out of the box:
+### Development venving w/ pyenv
+
+The pyenv setup works on OS X and on the common Linux distros out of the box:
 
     curl https://pyenv.run | bash
     export PATH="$HOME/.pyenv/bin:$PATH"
@@ -170,7 +172,7 @@ The Pyenv setup works on OS X and on the common Linux distros out of the box:
 
 The first script installs it user-wide, thus it never requires `sudo` rights.
 
-If you are on Windows, using Pyenv might or might not be an option. Regardless,
+If you are on Windows, using pyenv might or might not be an option. Regardless,
 you want to check [pyenv-win](https://github.com/pyenv-win/pyenv-win) instead.
 
 We test, develop, build and publish on Python 3.6.9, and use venvs as preferred:
@@ -182,6 +184,8 @@ We test, develop, build and publish on Python 3.6.9, and use venvs as preferred:
     source .venv/dev/bin/activate
     pip install -e .
 
+### Test venving w/ Nox
+
 Nox automates handling `.venv/<task>`s for workflows, that on Windows as well:
 
     pip install --upgrade nox
@@ -189,9 +193,9 @@ Nox automates handling `.venv/<task>`s for workflows, that on Windows as well:
 The actual tasks are defined in `noxfile.py`, as well as our settings like:
 - The default Python interpreter to run all the development tasks is `python3.6`
 - We explicitly use [venv module](https://docs.python.org/3/library/venv.html)
-now for virtualenving, as we develop exclusively on Python 3
+now for virtualenving, as we develop on Python >= 3.3 anyway
 - Whether a new virtualenv is always recreated when the respective task is run
-(which is our default for most of the tasks)
+(which is default for most of our tasks)
 
 Session is a task, running in the `.venv/<task>`. To list all possible sessions:
 
@@ -223,7 +227,7 @@ Session `nox -s atest` assumes you have started `testapi/` on
 
     nox -s testenv
 
-Running the above assumes you have `node` and `npx` installed in your system.
+Running the above assumes you have `node` (>= 6) installed in your system.
 
 After started, you can debug requests and responses by tests in web browser at
 [localhost:2525](http://localhost:2525/imposters).

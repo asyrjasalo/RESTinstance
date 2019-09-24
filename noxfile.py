@@ -72,11 +72,12 @@ def test(session):
 
 @nox.session(python=False)
 def testenv(session):
-    """Run development server for acceptance tests."""
+    """Run test environment for acceptance tests."""
+    session.run("npm", "install", "--no-save")
     session.run(
-        "npx",
-        "mountebank",
+        "npm",
         "start",
+        "--",
         "--localOnly",
         "--allowInjection",
         "--configfile",
@@ -190,6 +191,7 @@ def clean(session):
     """Remove all .venv's, build files and caches in the directory."""
     rmtree("build", ignore_errors=True)
     rmtree("dist", ignore_errors=True)
+    rmtree("node_modules", ignore_errors=True)
     rmtree("pip-wheel-metadata", ignore_errors=True)
     rmtree("src/" + project_name + ".egg-info", ignore_errors=True)
     rmtree(".pytest_cache", ignore_errors=True)
