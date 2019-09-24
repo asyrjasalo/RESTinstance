@@ -55,13 +55,15 @@ if you do not have it already.
 
 ## Usage
 
-There is a [step-by-step tutorial](https://github.com/asyrjasalo/RESTinstance/blob/master/examples) in the making, best accompanied with
+There is a
+[step-by-step tutorial](https://github.com/asyrjasalo/RESTinstance/blob/master/examples)
+in the making, best accompanied with
 [the keyword documentation](https://asyrjasalo.github.io/RESTinstance).
 
 ### Quick start
 
-1.  Create two new (empty) directories `tests` and `results`.
-2.  Create a new file `atest/YOURNAME.robot` with content:
+1.  Create two new empty directories, `atest` and `results`.
+2.  Create a new file `atest/YOURNAME.robot` with the content:
 
 ``` robotframework
 *** Settings ***
@@ -142,7 +144,8 @@ robot --outputdir results atest/
 ## Contributing
 
 Bug reports and feature requests are tracked in
-[GitHub](https://github.com/asyrjasalo/RESTinstance/issues). We do respect pull request(er)s.
+[GitHub](https://github.com/asyrjasalo/RESTinstance/issues).
+We do respect pull request(er)s.
 
 ### Local development
 
@@ -272,9 +275,16 @@ To install the latest release from PyPI, and in a dedicated venv of course:
 
     nox -s install
 
-For intermediate `nox` use, you'll advance by enabling auto-completion for args:
+For intermediate `nox` arguments, you'll advance by enabling
+[shell completion](https://nox.thea.codes/en/stable/usage.html#shell-completion):
 
     eval "$(register-python-argcomplete nox)"
+
+On `zsh`, ensure you have bash compatibility enabled in `.zshrc` or similar:
+
+    autoload -U bashcompinit
+    bashcompinit
+
 
 ### Unified Python editor/IDE linters
 

@@ -196,8 +196,8 @@ def clean(session):
     rmtree("node_modules", ignore_errors=True)
     rmtree("pip-wheel-metadata", ignore_errors=True)
     rmtree("src/" + PROJECT_NAME + ".egg-info", ignore_errors=True)
-    rmtree(".pytest_cache", ignore_errors=True)
     rmtree(".mypy_cache", ignore_errors=True)
+    rmtree(".pytest_cache", ignore_errors=True)
     rmtree(".venv", ignore_errors=True)
     session.run(
         "python3",
