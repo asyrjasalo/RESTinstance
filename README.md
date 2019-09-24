@@ -278,7 +278,7 @@ For intermediate `nox` use, you'll advance by enabling auto-completion for args:
 
 ### Unified Python editor/IDE linters
 
-Catching errors already write-time, regardless of the editor, is possible with
+Catching errors already write-time, regardless of the editor, is advantaged by
 [Palantir's Python Language Server](https://github.com/palantir/python-language-server):
 
     pip install --user --upgrade python-language-server[all]
@@ -287,11 +287,13 @@ Installing the all bundle, and the LSP plugin for your editor, enables to run
 useful linters real-time, like:
 
 - Either `autopep8` or `black` (preferred) for automated code formatting
+- `isort` for sorting code import statements
 - McCabe for code complexity checking
-- `mypy` for static type checking for Python 3
+- `mypy` for static type checking on Python 3
+- `pycodestyle` for coding style checking
 - `pyflakes` for detecting various coding errors
-- `pycodestyle` linter for coding style checking
-- `isort` for import sort code formatting
+
+Remember to (auto-)start the language server on background via your editor.
 
 ### pre-commit hooks
 
