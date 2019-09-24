@@ -251,7 +251,7 @@ Remove all sessions (`.venv/`s) as well as temporary files in your working copy:
 
     nox -s clean
 
-Our distributions are known to work well on Python 3.7 and 2.7 series too:
+Our PyPI distributions are known to work well on Python 3.7 and 2.7 series too:
 
     nox -s clean build
 
@@ -275,7 +275,9 @@ To install the latest release from PyPI, and in a dedicated venv of course:
 
     nox -s install
 
-For intermediate `nox` arguments, you'll advance by enabling
+### Shell additions
+
+For intermediate `nox` arguments usage, you'll advance by enabling
 [shell completion](https://nox.thea.codes/en/stable/usage.html#shell-completion):
 
     eval "$(register-python-argcomplete nox)"
@@ -285,6 +287,8 @@ On `zsh`, ensure you have bash compatibility enabled in `.zshrc` or similar:
     autoload -U bashcompinit
     bashcompinit
 
+These completions likely do not work on vanilla PowerShell, but can be used on
+[Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
 ### Unified Python editor/IDE linters
 
