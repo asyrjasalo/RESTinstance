@@ -76,9 +76,13 @@ def testenv(session):
     session.run("npm", "install", "--no-save")
     session.run(
         "npm",
-        "start",
+        "run",
+        "mb_restart",
         "--",
         "--localOnly",
+        "true",
+        "--ipWhitelist",
+        "127.0.0.1",
         "--allowInjection",
         "--configfile",
         "testapi/apis.ejs",
