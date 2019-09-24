@@ -295,7 +295,9 @@ These completions likely do not work on vanilla PowerShell, but can be used on
 Catching errors already write-time, regardless of the editor, is advantaged by
 [Palantir's Python Language Server](https://github.com/palantir/python-language-server):
 
-    pip install --user --upgrade python-language-server[all]
+    python3 -m venv .venv/dev
+    source .venv/dev/bin/activate
+    pip install --upgrade python-language-server[all]
 
 Installing the all bundle, and the LSP plugin for your editor, enables to run
 useful linters real-time, like:
