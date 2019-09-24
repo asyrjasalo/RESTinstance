@@ -146,18 +146,18 @@ Bug reports and feature requests are tracked in
 
 ### Local development
 
-The logic and the separation of concerns is:
-1. We use [pyenv](https://github.com/pyenv/pyenv) to manage 1-n Pythons.
-2. With Pyenv installed Pythons we never mess with the system's default Python.
-3. We eventually ended up to [Nox](https://nox.thea.codes/en/stable/) after
-evaluating Bash scripts, `make`, `invoke` and `tox` for local development tasks.
+The logic is detaching the enving from system level (dependencies) as following:
+1. We use [pyenv](https://github.com/pyenv/pyenv) to manage n Pythons user-wide.
+2. With Pyenv installed Pythons, we never mess with the system's default Python.
+3. We ended up to [Nox](https://nox.thea.codes/en/stable/) after evaluating
+Bash scripts, `make`, `invoke` and `tox` to achieve automated virtualenving.
 
-To understand the first two practices above in detail, these are worth reading:
+To understand the first two of the practices, these are worth reading:
 - [Real Python's intro to pyenv](https://realpython.com/intro-to-pyenv)
 - [Real Python's virtualenvs primer](https://realpython.com/python-virtual-environments-a-primer/)
 - [virtualenv compatibility with the stdlib venv module](https://virtualenv.pypa.io/en/latest/reference/#compatibility-with-the-stdlib-venv-module)
 
-Third is, unlike Tox, Nox uses Python file (`noxfile.py`) for configuration yet:
+Third, unlike Tox, Nox uses Python file (`noxfile.py`) for configuration, yet:
 - Supports multiple Python versions, each session is ran on some `pythonX.X`.
 - A session is a single virtualenv which is stored in `.venv/<session_name>`.
 - Every `nox` recreates session, thus virtualenv, unless `reuse_venv=True`.
