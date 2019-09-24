@@ -175,7 +175,7 @@ you want to check [pyenv-win](https://github.com/pyenv-win/pyenv-win) instead.
 
 We test, develop, build and publish on Python 3.6.9, and use venvs as preferred:
 
-    git clone git://github.com:asyrjasalo/RESTinstance.git
+    git clone git@github.com:asyrjasalo/RESTinstance.git
     cd RESTinstance
     pyenv install --skip-existing 3.6.9 && pyenv rehash
     python3 -m venv .venv/dev
