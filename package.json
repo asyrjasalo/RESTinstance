@@ -1,13 +1,12 @@
 {
     "name": "RESTinstance",
     "version": "1.0.3dev1",
-    "description": "Robot Framework library for RESTful APIs - testenv",
+    "description": "Robot Framework library for RESTful APIs: nox -s testenv",
     "homepage": "https://github.com/asyrjasalo/RESTinstance",
     "private": true,
     "license": "Apache-2.0",
     "author": {
         "name": "Anssi Syrjäsalo",
-        "email": "anssi.syrjasalo@gmail.com",
         "url": "https://github.com/asyrjasalo"
     },
     "scripts": {
@@ -17,6 +16,6 @@
         "mountebank": "v2.2.0"
     },
     "engines": {
-        "node": "6.*.*"
+        "node": ">=6"
     }
 }
