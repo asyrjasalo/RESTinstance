@@ -34,9 +34,6 @@ pip-wheel-metadata/
 dmypy.json
 .mypy_cache/
 
-# pyenv
-.python-version
-
 # Jupyter Notebook
 .ipynb_checkpoints
 
@@ -54,6 +51,3 @@ results/
 mb.log
 mb1.log
 mb.pid
-
-# personal notes
-*.md.private

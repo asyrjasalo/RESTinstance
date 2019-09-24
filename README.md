@@ -146,25 +146,53 @@ Bug reports and feature requests are tracked in
 
 ### Local development
 
-We use [Nox](https://nox.thea.codes/en/stable/) over `make`, `invoke` and `tox`:
+The logic and the separation of concerns is:
+1. We use [pyenv](https://github.com/pyenv/pyenv) to manage 1-n Pythons.
+2. With Pyenv installed Pythons we never mess with the system's default Python.
+3. We eventually ended up to [Nox](https://nox.thea.codes/en/stable/) after
+evaluating Bash scripts, `make`, `invoke` and `tox` for local development tasks.
+
+To understand the first two practices above in detail, these are worth reading:
+- [Real Python's intro to pyenv](https://realpython.com/intro-to-pyenv)
+- [Real Python's virtualenvs primer](https://realpython.com/python-virtual-environments-a-primer/)
+- [virtualenv compatibility with the stdlib venv module](https://virtualenv.pypa.io/en/latest/reference/#compatibility-with-the-stdlib-venv-module)
+
+Third is, unlike Tox, Nox uses Python file (`noxfile.py`) for configuration yet:
 - Supports multiple Python versions, each session is ran on some `pythonX.X`.
 - A session is a single virtualenv which is stored in `.venv/<session_name>`.
 - Every `nox` recreates session, thus virtualenv, unless `reuse_venv=True`.
 
-We test, develop, build and publish on Python 3.6, and use venvs as preferred:
+The Pyenv setup works on OS X and on the common Linux distros out of the box:
 
+    curl https://pyenv.run | bash
+    export PATH="$HOME/.pyenv/bin:$PATH"
+    eval "$(pyenv init -)"
+
+The first script installs it user-wide, thus it never requires `sudo` rights.
+
+If you are on Windows, using Pyenv might or might not be an option. Regardless,
+you want to check [pyenv-win](https://github.com/pyenv-win/pyenv-win) instead.
+
+We test, develop, build and publish on Python 3.6.9, and use venvs as preferred:
+
+    git clone git://github.com:asyrjasalo/RESTinstance.git
+    cd RESTinstance
+    pyenv install --skip-existing 3.6.9 && pyenv rehash
     python3 -m venv .venv/dev
     source .venv/dev/bin/activate
 
-Nox automates handling `.venv/<task>`s for workflows, that on Windows as well:
+For convenience we prefer `--user` scope here, even we are already in a venv:
 
-    pip install --upgrade nox
+    pip install --user --upgrade nox
+
+Nox automates handling `.venv/<task>`s for workflows, that on Windows as well.
 
 The actual tasks are defined in `noxfile.py`, as well as our settings like:
-- The default Python interpreter to run all the defined tasks is `python3.6`
-- We use [venv module](https://docs.python.org/3/library/venv.html) now for
-virtualenving on Python 3
-- Whether some virtualenv is always recreated when the particular task is ran (is our default)
+- The default Python interpreter to run all the development tasks is `python3.6`
+- We explicitly use [venv module](https://docs.python.org/3/library/venv.html)
+now for virtualenving, as we develop exclusively on Python 3
+- Whether a new virtualenv is always recreated when the respective task is run
+(which is our default for most of the tasks)
 
 Session is a task, running in the `.venv/<task>`, to list all possible sessions:
 
@@ -199,7 +227,7 @@ We use [zest.releaser](https://github.com/zestsoftware/zest.releaser) for
 versioning, tagging and building wheels.
 
 It uses [twine](https://pypi.org/project/twine/) underneath to upload to PyPIs
-securely over HTTPS, which cannot be done with `python setup.py` commands.
+securely over HTTPS, which can't be done with `python setup.py` commands.
 
 This workflow is preferred for distributing a new (pre-)release to TestPyPI:
 

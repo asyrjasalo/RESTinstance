@@ -132,9 +132,9 @@ def prospector(session):
 @nox.session(python="3.6", venv_backend="venv")
 def build(session):
     """Build sdist and wheel dists."""
-    session.install("pip")
-    session.install("setuptools")
-    session.install("wheel")
+    session.install("--no-cache-dir", "pip")
+    session.install("--no-cache-dir", "setuptools")
+    session.install("--no-cache-dir", "wheel")
     session.run("python", "setup.py", "bdist_wheel", "sdist")
 
 
