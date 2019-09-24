@@ -1,53 +1,52 @@
-import nox  # pylint: disable = import-error
+"""
+We use Nox (over `make`, `invoke`, `tox`, `pipenv`, `poetry` and 'conda'):
+1. Supports multiple Python versions, each session can be ran on `pythonX.X`.
+2. A single session is stored in a single virtualenv in .venv/<session_name>.
+3. Each `nox` resets the session (venv), unless explicitly `reuse_venv=True`.
+
+Setup `nox` user-wide by `pip install --user --upgrade nox` - also on Windows.
+
+What do you want to do then? List all possible sessions (think as of tasks):
+
+   nox -l
+
+To go with sensible defaults (running all tests) before submitting your PR:
+
+    nox
+
+You can also run only a session for acceptance testing with Robot Framework:
+
+   nox -s atest
+
+Using separate virtualenvs even for tasks like `-m robot.libdoc` is not a bad:
+
+   nox -s docs
+
+Remove all sessions (`.venv/`s) and remove temporary files in source tree:
+
+   nox -s clean
+
+This workflow is preferred when (pre-)releasing a new version to TestPyPI:
+
+   nox -s test atest docs clean build release_testpypi install_testpypi
+
+If the above installed well, it'll be fine to let the final release to PyPI:
+
+   nox -s release install
+
+"""
 
 from os.path import abspath, dirname
 from shutil import rmtree
 
+import nox  # pylint: disable = import-error
 
-# https://nox.thea.codes/en/stable/ ############################################
-#
-# We advance from `pip install --user --upgrade nox` for dev tasks.
-# It also works on Windows and:
-# 1. Supports multiple Python versions, each session can be ran on `pythonX.X`.
-# 2. A single session is stored in a single virtualenv in .venv/<session_name>.
-# 3. Each `nox` resets the session (venv), unless explicitly `reuse_venv=True`.
-#
-#
-# What do you want to do? List all possible sessions (think as of tasks):
-#
-#   nox -l
-#
-# To go with sensible defaults (running tests) before submitting your PR:
-#
-#   nox
-#
-# You can also run only a session for acceptance testing with Robot Framework:
-#
-#   nox -s atest
-#
-# Using separate virtualenvs even for generating robot.libdoc is not a bad idea:
-#
-#   nox -s docs
-#
-# Remove all sessions (`.venv/`s) and remove temporary files in this directory:
-#
-#   nox -s clean
-#
-# This workflow is preferred for prereleasing to TestPyPI:
-#
-#   nox -s test atest docs clean build release_testpypi install_testpypi
-#
-# If that worked well, it should be fine to let the final release to PyPI:
-#
-#   nox -s release install
-#
-################################################################################
 
-project_name = "RESTinstance"
-package_name = "REST"
-repo_root_path = dirname(abspath(__file__))
+PROJECT_NAME = "RESTinstance"
+PACKAGE_NAME = "REST"
+REPO_ROOT_PATH = dirname(abspath(__file__))
 
-python = "3.6"
+PYTHON = "3.6"
 
 nox.options.envdir = ".venv"
 nox.options.reuse_existing_virtualenvs = False
@@ -57,7 +56,7 @@ nox.options.stop_on_first_error = True
 nox.options.sessions = ["test", "atest"]
 
 
-@nox.session(python=python, venv_backend="venv", reuse_venv=True)
+@nox.session(python=PYTHON, venv_backend="venv", reuse_venv=True)
 def test(session):
     """Run development tests for the package."""
     session.install("--upgrade", "-r", "requirements-dev.txt")
@@ -89,7 +88,7 @@ def testenv(session):
     )
 
 
-@nox.session(python=python, venv_backend="venv", reuse_venv=True)
+@nox.session(python=PYTHON, venv_backend="venv", reuse_venv=True)
 def atest(session):
     """Run acceptance tests for the project."""
     session.install("--upgrade", "-r", "requirements.txt")
@@ -109,7 +108,7 @@ def atest(session):
     )
 
 
-@nox.session(python=python, venv_backend="venv", reuse_venv=True)
+@nox.session(python=PYTHON, venv_backend="venv", reuse_venv=True)
 def docs(session):
     """Regenerate documentation for the project."""
     session.install("--upgrade", "-r", "requirements.txt")
@@ -119,7 +118,7 @@ def docs(session):
         "robot.libdoc",
         "-P",
         "src",
-        package_name,
+        PACKAGE_NAME,
         "docs/index.html",
     )
 
@@ -163,7 +162,7 @@ def release_testpypi(session):
     )
 
 
-@nox.session(python=python, venv_backend="venv")
+@nox.session(python=PYTHON, venv_backend="venv")
 def install_testpypi(session):
     """Install the latest (pre-)release from TestPyPI."""
     session.install(
@@ -173,7 +172,7 @@ def install_testpypi(session):
         "https://test.pypi.org/simple",
         "--extra-index-url",
         "https://pypi.org/simple",
-        project_name,
+        PROJECT_NAME,
     )
 
 
@@ -184,10 +183,10 @@ def release(session):
     session.run("fullrelease")
 
 
-@nox.session(python=python, venv_backend="venv")
+@nox.session(python=PYTHON, venv_backend="venv")
 def install(session):
     """Install the latest release from PyPI."""
-    session.install("--no-cache-dir", project_name)
+    session.install("--no-cache-dir", PROJECT_NAME)
 
 
 @nox.session(python=False)
@@ -197,21 +196,21 @@ def clean(session):
     rmtree("dist", ignore_errors=True)
     rmtree("node_modules", ignore_errors=True)
     rmtree("pip-wheel-metadata", ignore_errors=True)
-    rmtree("src/" + project_name + ".egg-info", ignore_errors=True)
+    rmtree("src/" + PROJECT_NAME + ".egg-info", ignore_errors=True)
     rmtree(".pytest_cache", ignore_errors=True)
     rmtree(".mypy_cache", ignore_errors=True)
     rmtree(".venv", ignore_errors=True)
     session.run(
-        "python",
+        "python3",
         "-c",
         "import pathlib;"
         + "[p.unlink() for p in pathlib.Path('%s').rglob('*.py[co]')]"
-        % repo_root_path,
+        % REPO_ROOT_PATH,
     )
     session.run(
-        "python",
+        "python3",
         "-c",
         "import pathlib;"
         + "[p.rmdir() for p in pathlib.Path('%s').rglob('__pycache__')]"
-        % repo_root_path,
+        % REPO_ROOT_PATH,
     )
