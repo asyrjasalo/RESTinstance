@@ -192,21 +192,35 @@ now for virtualenving, as we develop exclusively on Python 3
 - Whether a new virtualenv is always recreated when the respective task is run
 (which is our default for most of the tasks)
 
-Session is a task, running in the `.venv/<task>`, to list all possible sessions:
+Summary: Session is a task, running in the `.venv/<task>`.
+
+To list all possible sessions:
 
     nox -l
 
-Default sessions are hilighted in the list, we run both `test`s and `atest`s by:
+Sessions defined in `RESTinstance/noxfile.py`:
+
+    * test -> Run development tests for the package.
+    - testenv -> Run development server for acceptance tests.
+    * atest -> Run acceptance tests for the project.
+    - docs -> Regenerate documentation for the project.
+    - black -> Reformat/unify/"blacken" Python source code in-place.
+    - prospector -> Run various static analysis tools for the package.
+    - build -> Build sdist and wheel dists.
+    - release_testpypi -> Publish dist/* to TestPyPI.
+    - install_testpypi -> Install the latest (pre-)release from TestPyPI.
+    - release -> Tag, build and publish a new release to PyPI.
+    - install -> Install the latest release from PyPI.
+    - clean -> Remove all .venv's, build files and caches in the directory.
+
+Sessions marked with `*` are selected, sessions marked with `-` are skipped.
+
+That is, to run both `test`s and `atest`s:
 
     nox
 
-Both `nox -s test` and `nox -s atest` allow passing arguments to `pytest`
-and `robot`, respectively:
-
-    nox -s test -- test/<testmodule>.py
-    nox -s atest -- atest/<testsuite>.robot
-
-Session `nox -s atest` assumes you have started `testapi/` on [mountebank](https://www.mbtest.org):
+Session `nox -s atest` assumes you have started `testapi/` on
+[mountebank](https://www.mbtest.org):
 
     nox -s testenv
 
@@ -214,6 +228,12 @@ Running the above assumes you have `node` and `npx` installed in your system.
 
 After started, you can debug requests and responses by tests in web browser at
 [localhost:2525](http://localhost:2525/imposters).
+
+Both `nox -s test` and `nox -s atest` allow passing arguments to `pytest`
+and `robot`, respectively:
+
+    nox -s test -- test/<testmodule>.py
+    nox -s atest -- atest/<testsuite>.robot
 
 You know, having a virtualenv even for generating libdoc - why not a bad idea:
 
