@@ -63,7 +63,11 @@ def test(session):
     session.install("--upgrade", "-r", "requirements-dev.txt")
     session.run("pre-commit", "install")
     session.run("python", "-m", "unittest", "discover")
-    session.run("pytest", "--last-failed", "--last-failed-no-failures", "all")
+    if session.posargs:
+        pytest_args = session.posargs
+    else:
+        pytest_args = ("--last-failed", "--last-failed-no-failures", "all")
+    session.run("pytest", *pytest_args)
 
 
 @nox.session(python=False)
@@ -84,6 +88,10 @@ def testenv(session):
 def atest(session):
     """Run acceptance tests for the project."""
     session.install("--upgrade", "-r", "requirements.txt")
+    if session.posargs:
+        robot_args = session.posargs
+    else:
+        robot_args = ("--xunit", "xunit.xml", "atest")
     session.run(
         "python",
         "-m",
@@ -92,9 +100,7 @@ def atest(session):
         "src",
         "--outputdir",
         "results",
-        "--xunit",
-        "xunit.xml",
-        "atest",
+        *robot_args
     )
 
 

@@ -200,6 +200,12 @@ Default sessions are hilighted in the list, we run both `test`s and `atest`s by:
 
     nox
 
+Both `nox -s test` and `nox -s atest` allow arguments to `pytest` and `robot`,
+respectively:
+
+    nox -s test -- test/<testmodule>.py
+    nox -s atest -- atests/<testsuite>.robot
+
 Session `nox -s atest` assumes you have started `testapi/` on [mountebank](https://www.mbtest.org):
 
     nox -s testenv
