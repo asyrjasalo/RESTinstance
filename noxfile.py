@@ -1,5 +1,5 @@
 """
-We use Nox (over `make`, `invoke`, `tox`, `pipenv`, `poetry` and 'conda'):
+We use Nox (over `make`, `invoke`, `tox`, `pipenv`, `poetry` and `conda`):
 1. Supports multiple Python versions, each session can be ran on `pythonX.X`.
 2. A single session is stored in a single virtualenv in .venv/<session_name>.
 3. Each `nox` resets the session (venv), unless explicitly `reuse_venv=True`.
@@ -18,7 +18,7 @@ You can also run only a session for acceptance testing with Robot Framework:
 
    nox -s atest
 
-Using separate virtualenvs even for tasks like `-m robot.libdoc` is not a bad:
+Using separate virtualenvs even for tasks like `-m robot.libdoc` is not bad:
 
    nox -s docs
 
@@ -33,7 +33,6 @@ This workflow is preferred when (pre-)releasing a new version to TestPyPI:
 If the above installed well, it'll be fine to let the final release to PyPI:
 
    nox -s release install
-
 """
 
 from os.path import abspath, dirname
