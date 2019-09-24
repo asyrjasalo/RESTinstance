@@ -289,7 +289,7 @@ useful linters real-time, like:
 - Either `autopep8` or `black` (preferred) for automated code formatting
 - McCabe for code complexity checking
 - `mypy` for static type checking for Python 3
-- `pyflakes for detecting various coding errors
+- `pyflakes` for detecting various coding errors
 - `pycodestyle` linter for coding style checking
 - `isort` for import sort code formatting
 
