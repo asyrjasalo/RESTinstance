@@ -1,8 +1,8 @@
 module.exports.fetch_response = function(request, state, logger, callback) {
 
   var port = 8080;
-  if (request.headers && request.headers['X-Mounterest-Token']) {
-      port = parseInt(request.headers['X-Mounterest-Token'])
+  if (request.headers && request.headers['X-Testenv-Port']) {
+      port = parseInt(request.headers['X-Testenv-Port'])
   }
 
   if (typeof state.instances === "undefined") {

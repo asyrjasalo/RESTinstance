@@ -3,9 +3,6 @@ function(request, state, logger, callback) {
   if (!request.body) return {};
 
   var propertyId = "id";
-  if (request.headers && request.headers['X-Mounterest-Property-ID']) {
-      var propertyId = request.headers['X-Mounterest-Property-ID'];
-  }
 
   var params = JSON.parse(request.body);
   if (!params[propertyId]) {

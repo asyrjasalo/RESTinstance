@@ -3,9 +3,6 @@ function(request, state, logger, callback) {
   const proxy = require(`${process.cwd()}/testapi/responders/proxy.js`);
 
   var propertyId = "id";
-  if (request.headers && request.headers['X-Mounterest-Property-ID']) {
-      var propertyId = request.headers['X-Mounterest-Property-ID'];
-  }
 
   proxy.fetch_response(request, state, logger, response => {
     if (response.statusCode != 200 && response.statusCode != 201) {
