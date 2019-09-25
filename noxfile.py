@@ -71,12 +71,15 @@ def test(session):
 @nox.session(python=False)
 def testenv(session):
     """Run test environment for acceptance tests."""
+    session.run("npm", "upgrade", "npm", "--no-save")
     session.run("npm", "install", "--no-save")
     session.run(
         "npm",
         "run",
         "mb_restart",
         "--",
+        "--host",
+        "127.0.0.1",
         "--localOnly",
         "true",
         "--ipWhitelist",
