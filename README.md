@@ -340,33 +340,34 @@ It was first presented at the first [RoboCon](https://robocon.io), 2018.
 
 Contributors:
 
-  - [jjwong](https://github.com/jjwong) for helping with keyword
-    documentation and examples (also check
-    [RESTinstance_starter_project](https://github.com/jjwong/RESTinstance_starter_project))
-  - [Przemysław "sqilz" Hendel](https://github.com/sqilz) for using and
-    testing RESTinstance in early phase (also check
-    [RESTinstance-wrapper](https://github.com/sqilz/RESTinstance-wrapper))
-  - [Vinh "vinhntb" Nguyen](https://github.com/vinhntb),
-    [#52](https://github.com/asyrjasalo/RESTinstance/pull/52).
-  - [Stavros "stdedos" Ntentos](https://github.com/stdedos),
-    [#75](https://github.com/asyrjasalo/RESTinstance/pull/75).
-  - [Nicholas "bollwyvl" Bollweg](https://github.com/bollwyvl),
-    [#84](https://github.com/asyrjasalo/RESTinstance/pull/84).
+- [jjwong](https://github.com/jjwong) for helping with keyword
+documentation and examples (also check
+[RESTinstance_starter_project](https://github.com/jjwong/RESTinstance_starter_project))
+- [Przemysław "sqilz" Hendel](https://github.com/sqilz) for using and
+testing RESTinstance in early phase (also check
+[RESTinstance-wrapper](https://github.com/sqilz/RESTinstance-wrapper))
+- [Vinh "vinhntb" Nguyen](https://github.com/vinhntb),
+[#52](https://github.com/asyrjasalo/RESTinstance/pull/52).
+- [Stavros "stdedos" Ntentos](https://github.com/stdedos),
+[#75](https://github.com/asyrjasalo/RESTinstance/pull/75).
+- [Nicholas "bollwyvl" Bollweg](https://github.com/bollwyvl),
+[#84](https://github.com/asyrjasalo/RESTinstance/pull/84).
+- [Trey Turner](https://github.com/treyturner), [#86](https://github.com/asyrjasalo/RESTinstance/pull/86)
 
 We use following Python excellence under the hood:
 
-  - [Flex](https://github.com/pipermerriam/flex), by Piper Merriam, for
-    Swagger 2.0 validation
-  - [GenSON](https://github.com/wolverdude/GenSON), by Jon "wolverdude"
-    Wolverton, for JSON Schema generator
-  - [jsonpath-ng](https://github.com/h2non/jsonpath-ng), by Tomas
-    Aparicio and Kenneth Knowles, for handling JSONPath queries
-  - [jsonschema](https://github.com/Julian/jsonschema), by Julian
-    Berman, for JSON Schema validator
-  - [pygments](http://pygments.org), by Georg Brandl et al., for JSON
-    syntax coloring, in terminal <span class="title-ref">Output</span>
-  - [requests](https://github.com/requests/requests), by Kenneth Reitz
-    et al., for making HTTP requests
+- [Flex](https://github.com/pipermerriam/flex), by Piper Merriam, for
+Swagger 2.0 validation
+- [GenSON](https://github.com/wolverdude/GenSON), by Jon "wolverdude"
+Wolverton, for JSON Schema generator
+- [jsonpath-ng](https://github.com/h2non/jsonpath-ng), by Tomas
+Aparicio and Kenneth Knowles, for handling JSONPath queries
+- [jsonschema](https://github.com/Julian/jsonschema), by Julian
+Berman, for JSON Schema validator
+- [pygments](http://pygments.org), by Georg Brandl et al., for JSON
+syntax coloring, in terminal <span class="title-ref">Output</span>
+- [requests](https://github.com/requests/requests), by Kenneth Reitz
+et al., for making HTTP requests
 
 See
 [requirements.txt](https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt)
