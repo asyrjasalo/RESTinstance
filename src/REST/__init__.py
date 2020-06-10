@@ -131,6 +131,7 @@ class REST(Keywords):
             "path": "",
             "query": {},
             "body": None,
+            "data": None,
             "headers": {
                 "Accept": REST._input_string(accept),
                 "Content-Type": REST._input_string(content_type),
@@ -382,3 +383,17 @@ class REST(Keywords):
             else:
                 return value
         return [value, value]
+
+    @staticmethod
+    def _input_data(value):
+        try:
+            data = REST._input_object(value)
+        except RuntimeError:
+            if isinstance(value, bytes):
+                data = value
+            elif path.isfile(value):
+                with open(value, "rb") as file:
+                    data = file.read()
+            else:
+                raise RuntimeError("Data is not a dictionary, bytes, or path to a file")
+        return data
