@@ -1,5 +1,6 @@
 robotframework
 docutils
+pyyaml
 
 flex
 GenSON
