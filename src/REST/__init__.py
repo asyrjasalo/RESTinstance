@@ -54,7 +54,7 @@ class REST(Keywords):
 
     = Tutorial =
 
-    There is a [https://github.com/asyrjasalo/RESTinstance/blob/master/examples/README.md|step-by-step tutorial] in the making on using the library.
+    There is a [https://github.com/asyrjasalo/RESTinstance/blob/master/examples/README.rst|step-by-step tutorial] in the making on using the library.
 
     For RESTful APIs, this library is intended to be used so that a test suite
     is dedicated per endpoint. The test suite is divided into test cases so that
