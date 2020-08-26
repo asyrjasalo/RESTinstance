@@ -1273,7 +1273,7 @@ class Keywords(object):
         return self.instances
 
     @keyword(name="Last REST Instance", tags=("I/O",))
-    def last_rest_instances(self, file_path=None, sort_keys=False):
+    def last_rest_instance(self, file_path=None, sort_keys=False):
         """*Writes the last instance as JSON to a file.*
 
         The instance is written to file as a JSON object,
