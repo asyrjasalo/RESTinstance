@@ -1272,6 +1272,56 @@ class Keywords(object):
             )
         return self.instances
 
+    @keyword(name="Last REST Instance", tags=("I/O",))
+    def last_rest_instances(self, file_path=None, sort_keys=False):
+        """*Writes the last instance as JSON to a file.*
+
+        The instance is written to file as a JSON object,
+        representing the last instance, and having three properties:
+
+        - the request
+        - the response
+        - the schema for both, which have been updated according to the tests
+
+        The file is created if it does not exist, otherwise it is truncated.
+
+        *Options*
+
+        ``sort_keys``: If true, the instances are sorted alphabetically by
+        property names.
+
+        *Examples*
+
+        | `Last REST Instance` | ${CURDIR}/log.json |
+        """
+        if not file_path:
+            outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
+            if self.request["netloc"]:
+                file_path = (
+                    path.join(outputdir_path, self.request["netloc"]) + ".json"
+                )
+            else:
+                file_path = path.join(outputdir_path, "instances") + ".json"
+        sort_keys = self._input_boolean(sort_keys)
+        content = dumps(
+            self.instances[len(self.instances)-1],
+            ensure_ascii=False,
+            indent=4,
+            separators=(",", ": "),
+            sort_keys=sort_keys,
+        )
+        try:
+            with open(file_path, "w", encoding="utf-8") as file:
+                if IS_PYTHON_2:
+                    content = unicode(content)
+                file.write(content)
+        except IOError as e:
+            raise RuntimeError(
+                "Error exporting the last instance "
+                + "to file '%s':\n%s" % (file_path, e)
+            )
+        return self.instances[len(self.instances)-1]
+
     ### Internal methods
 
     def _request(self, endpoint, request, validate=True):
