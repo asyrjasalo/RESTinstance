@@ -31,7 +31,7 @@ GET many with invalid query
 
 POST with invalid params
     [Setup]     Expect response     ${CURDIR}/schemas/invalid/response.json
-    POST        /users              { "name": "Alexander James Murphy" }
+    POST        /users              {"name": "Alexander James Murphy"}
 
 POST with valid params
     &{response}=    GET             /users/1

@@ -11,7 +11,7 @@ ${api_url}=     http://localhost:8273
 *** Keywords ***
 Set expectations
     Expect response         { "status": { "enum": [200, 201, 204, 400] } }
-    Expect response         { "seconds": { "maximum": 1.5 } }
+    Expect response         { "seconds": { "maximum": 1.5 } }
 
 
 *** Test Cases ***
