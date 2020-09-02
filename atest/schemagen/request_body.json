@@ -6,6 +6,9 @@
     "properties": {
         "request": {
             "properties": {
+                "allowRedirects": {
+                    "type": "boolean"
+                },
                 "body": {
                     "properties": {
                         "id": {
@@ -27,8 +30,72 @@
                     ],
                     "type": "object"
                 },
+                "cert": {
+                    "type": "null"
+                },
+                "headers": {
+                    "properties": {
+                        "Accept": {
+                            "type": "string"
+                        },
+                        "Content-Type": {
+                            "type": "string"
+                        },
+                        "User-Agent": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "Accept",
+                        "Content-Type",
+                        "User-Agent"
+                    ],
+                    "type": "object"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "netloc": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "proxies": {
+                    "type": "object"
+                },
                 "query": {
                     "type": "object"
+                },
+                "scheme": {
+                    "type": "string"
+                },
+                "sslVerify": {
+                    "type": "boolean"
+                },
+                "timeout": {
+                    "items": {
+                        "type": "null"
+                    },
+                    "type": "array"
+                },
+                "timestamp": {
+                    "properties": {
+                        "local": {
+                            "type": "string"
+                        },
+                        "utc": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "local",
+                        "utc"
+                    ],
+                    "type": "object"
+                },
+                "url": {
+                    "type": "string"
                 }
             },
             "type": "object"
@@ -51,6 +118,35 @@
                         "name"
                     ],
                     "type": "object"
+                },
+                "headers": {
+                    "properties": {
+                        "Connection": {
+                            "type": "string"
+                        },
+                        "Content-Type": {
+                            "type": "string"
+                        },
+                        "Date": {
+                            "type": "string"
+                        },
+                        "Transfer-Encoding": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "Connection",
+                        "Content-Type",
+                        "Date",
+                        "Transfer-Encoding"
+                    ],
+                    "type": "object"
+                },
+                "seconds": {
+                    "type": "number"
+                },
+                "status": {
+                    "type": "integer"
                 }
             },
             "type": "object"

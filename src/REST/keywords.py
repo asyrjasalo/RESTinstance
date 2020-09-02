@@ -1402,9 +1402,8 @@ class Keywords:
                 self._validate_schema(request_properties, request)
             if response_properties:
                 self._validate_schema(response_properties, response)
-        request_properties["body"] = self._new_schema(request["body"])
-        request_properties["query"] = self._new_schema(request["query"])
-        response_properties["body"] = self._new_schema(response["body"])
+        self._form_sub_schema(request_properties, request)
+        self._form_sub_schema(response_properties, response)
         if "default" in schema and schema["default"]:
             self._add_defaults_to_schema(schema, response)
         return {
@@ -1413,6 +1412,15 @@ class Keywords:
             "schema": schema,
             "spec": self.spec,
         }
+
+    def _form_sub_schema(self, schema_node, r):
+        """r is supposed to be of type dict. r is either request or response """
+        if type(r) is not dict:
+            raise AssertionError(
+                f"_form_sub_schema(): Expected r as dict, got {type(r)}"
+            )
+        for key in r:
+            schema_node[key] = self._new_schema(r[key])
 
     def _assert_spec(self, spec, response):
         request = response.request
