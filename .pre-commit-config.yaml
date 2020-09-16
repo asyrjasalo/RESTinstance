@@ -32,7 +32,7 @@ repos:
   rev: "026c81b83454f176a9f9253cbfb70be2c159d822"
   hooks:
   - id: black
-    language_version: python3.6
+    language_version: python3.8.2
 
 #- repo: https://github.com/PyCQA/prospector
 #  rev: "c4d3d2f368b458462feb7d730cb3c5e742410695"
@@ -40,10 +40,11 @@ repos:
 #  - id: prospector
 #    args: [--without-tool, pep8, --without-tool, pep257]
 
-- repo: https://github.com/guykisel/pre-commit-robotframework-tidy
-  rev: "f5942827aadc04b1637527b8b5c4b2bc1850ca6b"
-  hooks:
-  - id: robotframework-tidy-wrapper
+# - repo: https://github.com/guykisel/pre-commit-robotframework-tidy
+#   rev: "f5942827aadc04b1637527b8b5c4b2bc1850ca6b"
+#   hooks:
+#   - id: robotframework-tidy-wrapper
+#     language_version: python3.8.2
 
 - repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
   rev: "b0858b0ce3c299726109141d91b1e47d41872788"

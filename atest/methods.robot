@@ -40,7 +40,7 @@ PUT with valid params
     Boolean     response body isCoding      true
     PUT         /users/2                    { "sleep": null }
     Null        response body sleep
-    PUT         /users/2                    { "pockets": "", "money": 0.02 }
+    PUT         /users/2                    {"pockets": "", "money": 0.02}
     String      response body pockets       ${EMPTY}
     String      response body pockets       ""
     Number      response body money         0.02

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #  Copyright 2018-  Anssi Syrjäsalo
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,7 +47,7 @@ from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from .schema_keywords import SCHEMA_KEYWORDS
 
 
-class Keywords(object):
+class Keywords:
     def get_keyword_names(self):
         return [
             name
@@ -1123,9 +1121,9 @@ class Keywords(object):
                     if IS_PYTHON_2:
                         content = unicode(content)
                     file.write(content)
-            except IOError as e:
+            except OSError as e:
                 raise RuntimeError(
-                    "Error outputting to file '%s':\n%s" % (file_path, e)
+                    f"Error outputting to file '{file_path}':\n{e}"
                 )
         return json
 
@@ -1216,9 +1214,9 @@ class Keywords(object):
                     if IS_PYTHON_2:
                         content = unicode(content)
                     file.write(content)
-            except IOError as e:
+            except OSError as e:
                 raise RuntimeError(
-                    "Error outputting to file '%s':\n%s" % (file_path, e)
+                    f"Error outputting to file '{file_path}':\n{e}"
                 )
         return json
 
@@ -1265,12 +1263,61 @@ class Keywords(object):
                 if IS_PYTHON_2:
                     content = unicode(content)
                 file.write(content)
-        except IOError as e:
+        except OSError as e:
             raise RuntimeError(
-                "Error exporting instances "
-                + "to file '%s':\n%s" % (file_path, e)
+                "Error exporting instances " + f"to file '{file_path}':\n{e}"
             )
         return self.instances
+
+    @keyword(name="Last REST Instance", tags=("I/O",))
+    def last_rest_instance(self, file_path=None, sort_keys=False):
+        """*Writes the last instance as JSON to a file.*
+
+        The instance is written to file as a JSON object,
+        representing the last instance, and having three properties:
+
+        - the request
+        - the response
+        - the schema for both, which have been updated according to the tests
+
+        The file is created if it does not exist, otherwise it is truncated.
+
+        *Options*
+
+        ``sort_keys``: If true, the instances are sorted alphabetically by
+        property names.
+
+        *Examples*
+
+        | `Last REST Instance` | ${CURDIR}/log.json |
+        """
+        if not file_path:
+            outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
+            if self.request["netloc"]:
+                file_path = (
+                    path.join(outputdir_path, self.request["netloc"]) + ".json"
+                )
+            else:
+                file_path = path.join(outputdir_path, "instances") + ".json"
+        sort_keys = self._input_boolean(sort_keys)
+        content = dumps(
+            self.instances[len(self.instances) - 1],
+            ensure_ascii=False,
+            indent=4,
+            separators=(",", ": "),
+            sort_keys=sort_keys,
+        )
+        try:
+            with open(file_path, "w", encoding="utf-8") as file:
+                if IS_PYTHON_2:
+                    content = unicode(content)
+                file.write(content)
+        except OSError as e:
+            raise RuntimeError(
+                "Error exporting the last instance "
+                + f"to file '{file_path}':\n{e}"
+            )
+        return self.instances[len(self.instances) - 1]
 
     ### Internal methods
 
@@ -1340,9 +1387,9 @@ class Keywords(object):
             "headers": dict(response.headers),
         }
         schema = deepcopy(self.schema)
-        schema["title"] = "%s %s" % (request["method"], request["url"])
+        schema["title"] = "{} {}".format(request["method"], request["url"])
         try:
-            schema["description"] = "%s: %s" % (
+            schema["description"] = "{}: {}".format(
                 BuiltIn().get_variable_value("${SUITE NAME}"),
                 BuiltIn().get_variable_value("${TEST NAME}"),
             )
@@ -1355,9 +1402,8 @@ class Keywords(object):
                 self._validate_schema(request_properties, request)
             if response_properties:
                 self._validate_schema(response_properties, response)
-        request_properties["body"] = self._new_schema(request["body"])
-        request_properties["query"] = self._new_schema(request["query"])
-        response_properties["body"] = self._new_schema(response["body"])
+        self._form_sub_schema(request_properties, request)
+        self._form_sub_schema(response_properties, response)
         if "default" in schema and schema["default"]:
             self._add_defaults_to_schema(schema, response)
         return {
@@ -1366,6 +1412,15 @@ class Keywords(object):
             "schema": schema,
             "spec": self.spec,
         }
+
+    def _form_sub_schema(self, schema_node, r):
+        """r is supposed to be of type dict. r is either request or response """
+        if type(r) is not dict:
+            raise AssertionError(
+                f"_form_sub_schema(): Expected r as dict, got {type(r)}"
+            )
+        for key in r:
+            schema_node[key] = self._new_schema(r[key])
 
     def _assert_spec(self, spec, response):
         request = response.request
@@ -1426,9 +1481,7 @@ class Keywords(object):
             try:
                 query = parse_jsonpath(field)
             except Exception as e:
-                raise RuntimeError(
-                    "Invalid JSONPath query '%s': %s" % (field, e)
-                )
+                raise RuntimeError(f"Invalid JSONPath query '{field}': {e}")
             matches = [str(match.full_path) for match in query.find(value)]
             if not matches:
                 raise AssertionError(
@@ -1524,7 +1577,7 @@ class Keywords(object):
                 raise RuntimeError(
                     "Unknown JSON Schema (%s)" % (schema_version)
                     + " validation keyword "
-                    + "for %s:\n%s" % (json_type, validation)
+                    + f"for {json_type}:\n{validation}"
                 )
             schema[validation] = self.input(validations[validation])
         schema.update({"type": json_type})

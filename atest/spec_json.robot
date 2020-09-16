@@ -19,10 +19,10 @@ GET many with invalid query
     GET         /users?_invalid=query           timeout=2.0
 
 POST with invalid params
-    POST        /users          { "name": "Alexander James Murphy" }
+    POST        /users          {"name": "Alexander James Murphy" }
 
 POST with valid params
-    POST        /users          { "id": 100, "name": "Alexander James Murphy" }
+    POST        /users          {"id": 100, "name": "Alexander James Murphy" }
 
 POST with missing params
     POST        /users

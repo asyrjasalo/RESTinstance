@@ -1,0 +1,8 @@
+https://pypi.org/project/RESTinstance/
+
+python3 -m venv .venv/dev
+source .venv/dev/bin/activate
+Clone the RESTInstance project
+cd to its root
+pip install -r requirements-dev.txt
+pip install --editable .                << builds the project into the venv
