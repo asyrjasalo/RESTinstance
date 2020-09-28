@@ -57,6 +57,15 @@ class Keywords(object):
             if hasattr(getattr(self, name), "robot_name")
         ]
 
+    def _input_handler(self, value_type):
+        input_types = {'boolean': self._input_boolean,
+                       'integer': self._input_integer,
+                       'number': self._input_number,
+                       'string': self._input_string,
+                       'object': self._input_object,
+                       'array': self._input_array}
+        return input_types[value_type]
+
     ### Keywords start here
 
     @keyword(name="Set Client Cert", tags=("settings",))
@@ -704,6 +713,29 @@ class Keywords(object):
             values.append(reality)
         return values
 
+    def _type_assertion(self, field, value_type, allow_null, *enum, **validations):
+        values = []
+        for found in self._find_by_field(field):
+            schema = found["schema"]
+            reality = found["reality"]
+            skip = self._input_boolean(validations.pop("skip", False))
+            self._set_type_validations(value_type, schema, validations)
+            if allow_null:
+                schema = {"anyOf": [{"type": "null"}, schema]}
+            if enum:
+                if "enum" not in schema:
+                    schema["enum"] = []
+                for value in enum:
+                    value = self._input_handler(value_type)(value)
+                    if value not in schema["enum"]:
+                        schema["enum"].append(value)
+            elif self._should_add_examples():
+                schema["examples"] = [reality]
+            if not skip:
+                self._assert_schema(schema, reality)
+            values.append(reality)
+        return values
+
     @keyword(name="Integer", tags=("assertions",))
     def integer(self, field, *enum, **validations):
         """*Asserts the field as JSON integer.*
@@ -748,25 +780,15 @@ class Keywords(object):
         | `Integer` | $[0].id | 1 | | | # same as above |
         | `Integer` | $[*].id | | minimum=1 | maximum=10 |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("integer", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_integer(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._type_assertion(field, 'integer', False, *enum, **validations)
+
+    @keyword(name="Integer or null", tags=("assertions",))
+    def integer_or_null(self, field, *enum, **validations):
+        """*Asserts the field as JSON integer or null.*
+
+        Behaves exactly as `Integer` keyword but will additionally accept null values.
+        """
+        return self._type_assertion(field, 'integer', True, *enum, **validations)
 
     @keyword(name="Number", tags=("assertions",))
     def number(self, field, *enum, **validations):
@@ -810,25 +832,15 @@ class Keywords(object):
         | `Number` | $[0].id | 1 | | | # integers are also numbers |
         | `Number` | $[*].id | | minimum=1 | maximum=10 |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("number", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_number(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._type_assertion(field, 'number', False, *enum, **validations)
+
+    @keyword(name="Number or null", tags=("assertions",))
+    def number_or_null(self, field, *enum, **validations):
+        """*Asserts the field as JSON number or null.*
+
+        Behaves exactly as `Number` keyword but will additionally accept null values.
+        """
+        return self._type_assertion(field, 'number', True, *enum, **validations)
 
     @keyword(name="String", tags=("assertions",))
     def string(self, field, *enum, **validations):
@@ -873,25 +885,15 @@ class Keywords(object):
         | `String` | $[0].email | Sincere@april.biz | | # same as above |
         | `String` | $[*].email | | format=email |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("string", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_string(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._type_assertion(field, 'string', False, *enum, **validations)
+
+    @keyword(name="String or null", tags=("assertions",))
+    def string_or_null(self, field, *enum, **validations):
+        """*Asserts the field as JSON string or null.*
+
+        Behaves exactly as `String` keyword but will additionally accept null values.
+        """
+        return self._type_assertion(field, 'string', True, *enum, **validations)
 
     @keyword(name="Object", tags=("assertions",))
     def object(self, field, *enum, **validations):
@@ -933,25 +935,15 @@ class Keywords(object):
         | `Object` | $.address.geo | required=["lat", "lng"] |
         | `Object` | $..geo | additionalProperties=false | # cannot have other properties |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("object", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_object(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._type_assertion(field, 'object', False, *enum, **validations)
+
+    @keyword(name="Object or null", tags=("assertions",))
+    def object_or_null(self, field, *enum, **validations):
+        """*Asserts the field as JSON object or null.*
+
+        Behaves exactly as `Object` keyword but will additionally accept null values.
+        """
+        return self._type_assertion(field, 'object', True, *enum, **validations)
 
     @keyword(name="Array", tags=("assertions",))
     def array(self, field, *enum, **validations):
@@ -990,25 +982,15 @@ class Keywords(object):
         | `Array` | $ | | | | # same as above |
         | `Array` | $ | minItems=1 | maxItems=10 | uniqueItems=true |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("array", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_array(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._type_assertion(field, 'array', False, *enum, **validations)
+
+    @keyword(name="Array or null", tags=("assertions",))
+    def array_or_null(self, field, *enum, **validations):
+        """*Asserts the field as JSON array or null.*
+
+        Behaves exactly as `Array` keyword but will additionally accept null values.
+        """
+        return self._type_assertion(field, 'array', True, *enum, **validations)
 
     @keyword(name="Input", tags=("I/O",))
     def input(self, what):
