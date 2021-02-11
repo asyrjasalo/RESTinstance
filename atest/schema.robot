@@ -80,3 +80,6 @@ DELETE to existing
 
 DELETE to invalid, but with no validations
     DELETE    /invalid    validate=${False}
+
+DELETE with body
+    DELETE      /users/1/posts        {"id": 1345}
