@@ -553,6 +553,7 @@ class Keywords(object):
     def delete(
         self,
         endpoint,
+        body=None,
         timeout=None,
         allow_redirects=None,
         validate=True,
@@ -565,6 +566,8 @@ class Keywords(object):
         an URL outside the tested API (which may affect logging).
 
         *Options*
+
+        ``body``: Request body parameters as a JSON object, file or a dictionary.
 
         ``timeout``: A number of seconds to wait for the response before failing the keyword.
 
@@ -579,10 +582,12 @@ class Keywords(object):
 
         | `DELETE` | /users/6 |
         | `DELETE` | http://localhost:8273/state | validate=false |
+        | `DELETE` | /users/6/pets | {"name" : "Rex","tagID" : "1234"} |
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request["method"] = "DELETE"
+        request["body"]=self.input(body)
         if allow_redirects is not None:
             request["allowRedirects"] = self._input_boolean(allow_redirects)
         if timeout is not None:
