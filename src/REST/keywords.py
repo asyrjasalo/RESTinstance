@@ -339,6 +339,7 @@ class Keywords(object):
         allow_redirects=None,
         validate=True,
         headers=None,
+        data=None,
     ):
         """*Sends a GET request to the endpoint.*
 
@@ -359,6 +360,8 @@ class Keywords(object):
         by expectation keywords and a spec given on library init.
 
         ``headers``: Headers as a JSON object to add or override for the request.
+
+        ``data``: Data as a dictionary, bytes or a file-like object
 
         *Examples*
 
@@ -386,6 +389,8 @@ class Keywords(object):
         validate = self._input_boolean(validate)
         if headers:
             request["headers"].update(self._input_object(headers))
+        if data:
+            request["data"] = self._input_data(data)
         return self._request(endpoint, request, validate)["response"]
 
     @keyword(name="POST", tags=("http",))
@@ -397,6 +402,7 @@ class Keywords(object):
         allow_redirects=None,
         validate=True,
         headers=None,
+        data=None,
     ):
         """*Sends a POST request to the endpoint.*
 
@@ -417,6 +423,8 @@ class Keywords(object):
 
         ``headers``: Headers as a JSON object to add or override for the request.
 
+        ``data``: Data as a dictionary, bytes or a file-like object
+
         *Examples*
 
         | `POST` | /users | { "id": 11, "name": "Gil Alexander" } |
@@ -433,6 +441,8 @@ class Keywords(object):
         validate = self._input_boolean(validate)
         if headers:
             request["headers"].update(self._input_object(headers))
+        if data:
+            request["data"] = self._input_data(data)
         return self._request(endpoint, request, validate)["response"]
 
     @keyword(name="PUT", tags=("http",))
@@ -444,6 +454,7 @@ class Keywords(object):
         allow_redirects=None,
         validate=True,
         headers=None,
+        data=None,
     ):
         """*Sends a PUT request to the endpoint.*
 
@@ -464,6 +475,8 @@ class Keywords(object):
 
         ``headers``: Headers as a JSON object to add or override for the request.
 
+        `data``: Data as a dictionary, bytes or a file-like object
+
         *Examples*
 
         | `PUT` | /users/2 | { "name": "Julie Langford", "username": "jlangfor" } |
@@ -480,6 +493,8 @@ class Keywords(object):
         validate = self._input_boolean(validate)
         if headers:
             request["headers"].update(self._input_object(headers))
+        if data:
+            request["data"] = self._input_data(data)
         return self._request(endpoint, request, validate)["response"]
 
     @keyword(name="PATCH", tags=("http",))
@@ -491,6 +506,7 @@ class Keywords(object):
         allow_redirects=None,
         validate=True,
         headers=None,
+        data=None,
     ):
         """*Sends a PATCH request to the endpoint.*
 
@@ -511,6 +527,8 @@ class Keywords(object):
 
         ``headers``: Headers as a JSON object to add or override for the request.
 
+        `data``: Data as a dictionary, bytes or a file-like object
+
         *Examples*
 
         | `PATCH` | /users/4 | { "name": "Clementine Bauch" } |
@@ -527,12 +545,15 @@ class Keywords(object):
         validate = self._input_boolean(validate)
         if headers:
             request["headers"].update(self._input_object(headers))
+        if data:
+            request["data"] = self._input_data(data)
         return self._request(endpoint, request, validate)["response"]
 
     @keyword(name="DELETE", tags=("http",))
     def delete(
         self,
         endpoint,
+        body=None,
         timeout=None,
         allow_redirects=None,
         validate=True,
@@ -545,6 +566,8 @@ class Keywords(object):
         an URL outside the tested API (which may affect logging).
 
         *Options*
+
+        ``body``: Request body parameters as a JSON object, file or a dictionary.
 
         ``timeout``: A number of seconds to wait for the response before failing the keyword.
 
@@ -559,10 +582,12 @@ class Keywords(object):
 
         | `DELETE` | /users/6 |
         | `DELETE` | http://localhost:8273/state | validate=false |
+        | `DELETE` | /users/6/pets | {"name" : "Rex","tagID" : "1234"} |
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request["method"] = "DELETE"
+        request["body"]=self.input(body)
         if allow_redirects is not None:
             request["allowRedirects"] = self._input_boolean(allow_redirects)
         if timeout is not None:
@@ -1272,6 +1297,22 @@ class Keywords(object):
             )
         return self.instances
 
+    @keyword(name="Set SSL Verify", tags=("settings",))
+    def set_ssl_verify(self, ssl_verify=True):
+        """*Sets new SSL verify option*
+
+        ``ssl_verify``: True/False or a location to a certificate file
+
+        *Examples*
+
+        | `Set SSL Verify` |  |
+        | `Set SSL Verify` | False |
+        | `Set SSL Verify` | cert.pem |
+        """
+        self.request["sslVerify"] = self._input_ssl_verify(ssl_verify)
+        return self.request["sslVerify"]
+
+
     ### Internal methods
 
     def _request(self, endpoint, request, validate=True):
@@ -1291,6 +1332,7 @@ class Keywords(object):
                 request["url"],
                 params=request["query"],
                 json=request["body"],
+                data=request["data"],
                 headers=request["headers"],
                 proxies=request["proxies"],
                 cert=request["cert"],
