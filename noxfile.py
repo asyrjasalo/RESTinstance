@@ -45,7 +45,7 @@ PROJECT_NAME = "RESTinstance"
 PACKAGE_NAME = "REST"
 REPO_ROOT_PATH = dirname(abspath(__file__))
 
-PYTHON = "3.6"
+PYTHON = "3.8"
 
 nox.options.envdir = ".venv"
 nox.options.reuse_existing_virtualenvs = False
@@ -125,14 +125,14 @@ def docs(session):
     )
 
 
-@nox.session(python="3.6", venv_backend="venv", reuse_venv=True)
+@nox.session(python="3.8", venv_backend="venv", reuse_venv=True)
 def black(session):
     """Reformat/unify/"blacken" Python source code in-place."""
     session.install("--upgrade", "black")
     session.run("black", ".")
 
 
-@nox.session(python="3.6", venv_backend="venv", reuse_venv=True)
+@nox.session(python="3.8", venv_backend="venv", reuse_venv=True)
 def prospector(session):
     """Run various static analysis tools for the package."""
     session.install(
@@ -141,7 +141,7 @@ def prospector(session):
     session.run("prospector", "--with-tool", "mypy")
 
 
-@nox.session(python="3.6", venv_backend="venv")
+@nox.session(python="3.8", venv_backend="venv")
 def build(session):
     """Build sdist and wheel dists."""
     session.install("--no-cache-dir", "pip")
@@ -150,7 +150,7 @@ def build(session):
     session.run("python", "setup.py", "bdist_wheel", "sdist")
 
 
-@nox.session(python="3.6", venv_backend="venv")
+@nox.session(python="3.8", venv_backend="venv")
 def release_testpypi(session):
     """Publish dist/* to TestPyPI."""
     session.install("zest.releaser[recommended]")
@@ -178,7 +178,7 @@ def install_testpypi(session):
     )
 
 
-@nox.session(python="3.6", venv_backend="venv")
+@nox.session(python="3.8", venv_backend="venv")
 def release(session):
     """Tag, build and publish a new release to PyPI."""
     session.install("zest.releaser[recommended]")
