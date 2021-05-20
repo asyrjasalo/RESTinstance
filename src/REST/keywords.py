@@ -371,6 +371,8 @@ class Keywords(object):
         | `GET` | /users | _limit=2 |
         | `GET` | /users | { "_limit": "2" } |
         | `GET` | https://jsonplaceholder.typicode.com/users | headers={ "Authentication": "" } |
+
+        *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
@@ -429,6 +431,8 @@ class Keywords(object):
 
         | `POST` | /users | { "id": 11, "name": "Gil Alexander" } |
         | `POST` | /users | ${CURDIR}/new_user.json |
+
+        *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
@@ -475,12 +479,14 @@ class Keywords(object):
 
         ``headers``: Headers as a JSON object to add or override for the request.
 
-        `data``: Data as a dictionary, bytes or a file-like object
+        ``data``: Data as a dictionary, bytes or a file-like object
 
         *Examples*
 
         | `PUT` | /users/2 | { "name": "Julie Langford", "username": "jlangfor" } |
         | `PUT` | /users/2 | ${dict} |
+
+        *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
@@ -527,12 +533,14 @@ class Keywords(object):
 
         ``headers``: Headers as a JSON object to add or override for the request.
 
-        `data``: Data as a dictionary, bytes or a file-like object
+        ``data``: Data as a dictionary, bytes or a file-like object
 
         *Examples*
 
         | `PATCH` | /users/4 | { "name": "Clementine Bauch" } |
         | `PATCH` | /users/4 | ${dict} |
+
+        *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
@@ -584,6 +592,8 @@ class Keywords(object):
         | `DELETE` | /users/6 |
         | `DELETE` | http://localhost:8273/state | validate=false |
         | `DELETE` | /users/6/pets | {"name" : "Rex","tagID" : "1234"} |
+
+        *Body argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
