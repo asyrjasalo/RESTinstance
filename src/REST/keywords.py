@@ -24,7 +24,7 @@ from pytz import utc, UnknownTimeZoneError
 from tzlocal import get_localzone
 
 from collections import OrderedDict
-from copy import deepcopy
+from copy import deepcopy, copy
 from datetime import datetime
 from json import dumps, loads
 from os import path, getcwd
@@ -35,6 +35,7 @@ from jsonpath_ng.ext import parse as parse_jsonpath
 from jsonschema import validate, FormatChecker
 from jsonschema.exceptions import SchemaError, ValidationError
 from requests import request as client
+from requests.auth import HTTPDigestAuth, HTTPBasicAuth, HTTPProxyAuth
 from requests.exceptions import SSLError, Timeout
 
 if IS_PYTHON_2:
@@ -76,6 +77,45 @@ class Keywords(object):
         """
         self.request["cert"] = self._input_client_cert(cert)
         return self.request["cert"]
+
+
+    @keyword(name="Set Client Authentication", tags=("settings",))
+    def set_client_authentication(self, auth_type, user=None, password=None):
+        """*Attaches HTTP basic authentication to the given requests.*
+
+        The API by default will not have authentication enabled. 
+
+        The auth_type argument must be ${NONE}, basic, digest or proxy.
+        In case the user sets the auth_type to ${NONE} the authentication 
+        information 
+        The user and password will be written in plain text.
+
+        *Examples*
+
+        | `Set Client Authentication` | basic  | admin | password |
+        | `Set Client Authentication` | digest | admin | password |
+        | `Set Client Authentication` | proxy  | admin | password |
+        | `Set Client Authentication` | ${NONE} | | |
+        """
+        if auth_type != None and not isinstance(auth_type, str):
+            raise TypeError(
+                    "Argument \"auth_type\" must be string or ${NONE}!"
+            )
+
+        if auth_type != None:
+            auth_type = auth_type.lower()
+            if auth_type == "basic" :
+                auth_type = HTTPBasicAuth
+            elif auth_type == "digest" :
+                auth_type = HTTPDigestAuth
+            elif auth_type == "proxy" :
+                auth_type = HTTPProxyAuth
+            else :
+                raise Exception( 
+                        "Argument \"auth_type\" must be ${NONE}, basic, digest or proxy."
+                )
+
+        return self._setauth(auth_type, user, password)
 
     @keyword(name="Set Headers", tags=("settings",))
     def set_headers(self, headers):
@@ -276,7 +316,7 @@ class Keywords(object):
         | `HEAD` | /users/1 | timeout=0.5 |
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "HEAD"
         if allow_redirects is not None:
             request["allowRedirects"] = self._input_boolean(allow_redirects)
@@ -319,7 +359,7 @@ class Keywords(object):
         | `OPTIONS` | /users/1 | allow_redirects=false |
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "OPTIONS"
         if allow_redirects is not None:
             request["allowRedirects"] = self._input_boolean(allow_redirects)
@@ -373,7 +413,7 @@ class Keywords(object):
         | `GET` | https://jsonplaceholder.typicode.com/users | headers={ "Authentication": "" } |
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "GET"
         request["query"] = OrderedDict()
         query_in_url = OrderedDict(parse_qsl(urlparse(endpoint).query))
@@ -431,7 +471,7 @@ class Keywords(object):
         | `POST` | /users | ${CURDIR}/new_user.json |
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "POST"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -483,7 +523,7 @@ class Keywords(object):
         | `PUT` | /users/2 | ${dict} |
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "PUT"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -535,7 +575,7 @@ class Keywords(object):
         | `PATCH` | /users/4 | ${dict} |
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "PATCH"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -585,7 +625,7 @@ class Keywords(object):
         | `DELETE` | /users/6/pets | {"name" : "Rex","tagID" : "1234"} |
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "DELETE"
         request["body"]=self.input(body)
         if allow_redirects is not None:
@@ -1315,6 +1355,13 @@ class Keywords(object):
 
     ### Internal methods
 
+    def _setauth(self, auth_type, user = None, password = None):
+        if auth_type == None:
+            self.request["auth"] = None
+        else :
+            self.request["auth"] = auth_type(user, password)
+        return self.request["auth"]
+
     def _request(self, endpoint, request, validate=True):
         if not endpoint.startswith(("http://", "https://")):
             base_url = self.request["scheme"] + "://" + self.request["netloc"]
@@ -1336,6 +1383,7 @@ class Keywords(object):
                 headers=request["headers"],
                 proxies=request["proxies"],
                 cert=request["cert"],
+                auth=request["auth"],
                 timeout=tuple(request["timeout"]),
                 allow_redirects=request["allowRedirects"],
                 verify=request["sslVerify"],
