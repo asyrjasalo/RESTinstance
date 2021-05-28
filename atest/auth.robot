@@ -40,3 +40,14 @@ GET Digest Auth
     Run Keyword And Expect Error  KeyError: 'content-type'  
     ...        GET        ${url}
     Integer    response status    401
+
+Set Auth Invalid Args
+    ${error}   Set Variable       TypeError: Argument "auth_type" must be \${NONE}, basic, digest or proxy.
+    Run Keyword And Expect Error  ${error}
+    ...        Set Client Authentication  none  ${user}  ${password}
+
+    Run Keyword And Expect Error  ${error}
+    ...        Set Client Authentication  doge  ${user}  ${password}
+
+    Run Keyword And Expect Error  ${error}
+    ...        Set Client Authentication  ${1}  ${user}  ${password}
