@@ -97,10 +97,9 @@ class Keywords(object):
         | `Set Client Authentication` | proxy  | admin | password |
         | `Set Client Authentication` | ${NONE} | | |
         """
+        error_auth = "Argument \"auth_type\" must be ${NONE}, basic, digest or proxy."
         if auth_type != None and not isinstance(auth_type, str):
-            raise TypeError(
-                    "Argument \"auth_type\" must be string or ${NONE}!"
-            )
+            raise TypeError(error_auth)
 
         if auth_type != None:
             auth_type = auth_type.lower()
@@ -111,9 +110,7 @@ class Keywords(object):
             elif auth_type == "proxy" :
                 auth_type = HTTPProxyAuth
             else :
-                raise Exception( 
-                        "Argument \"auth_type\" must be ${NONE}, basic, digest or proxy."
-                )
+                raise Exception(error_auth) 
 
         return self._setauth(auth_type, user, password)
 
