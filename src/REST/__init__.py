@@ -132,6 +132,7 @@ class REST(Keywords):
             "query": {},
             "body": None,
             "data": None,
+            "auth" : None,
             "headers": {
                 "Accept": REST._input_string(accept),
                 "Content-Type": REST._input_string(content_type),
