@@ -1321,6 +1321,7 @@ class Keywords(object):
             self.instances,
             ensure_ascii=False,
             indent=4,
+            default=vars,
             separators=(",", ": "),
             sort_keys=sort_keys,
         )
