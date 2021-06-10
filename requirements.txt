@@ -3,6 +3,7 @@ docutils
 flex
 GenSON
 jsonpath-ng
+openapi-core
 
 jsonschema
 pygments

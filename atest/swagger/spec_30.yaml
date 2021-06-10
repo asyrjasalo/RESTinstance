@@ -1,0 +1,190 @@
+---
+openapi: '3.0.0'
+info:
+  title: RoboCon RESTinstance API
+  version: '2018-01-18'
+paths:
+  "/users":
+    get:
+      responses:
+        '200':
+          description: GET many
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/users"
+    post:
+      responses:
+        '201':
+          description: POST with valid params
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/user"
+        '400':
+          description: POST with invalid params
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/post_400"
+  "/users/{id}":
+    get:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: GET to existing
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/user"
+        '404':
+          description: GET to non-existing
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/404"
+    put:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: PUT with valid params
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/user"
+        '400':
+          description: PUT with invalid params
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/400"
+        '404':
+          description: PUT to non-existing
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/404"
+    patch:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: PATCH with valid params
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/user"
+        '400':
+          description: PATCH with invalid params
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/400"
+        '404':
+          description: PATCH to non-existing
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/404"
+    delete:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: DELETE to existing
+        '404':
+          description: DELETE to non-existing
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/404"
+components:
+  schemas:
+    '400':
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+      - error
+    '404':
+      type: object
+      properties:
+        error:
+          type: string
+          example: Not found
+      required:
+      - error
+    post_400:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+      - error
+    users:
+      type: array
+      items:
+        "$ref": "#/components/schemas/user"
+    user:
+      type: object
+      properties:
+        active:
+          type: boolean
+        address:
+          properties:
+            city:
+              type: string
+            geo:
+              properties:
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+              type: object
+            postalcode:
+              type: string
+            street:
+              type: string
+          required:
+          - city
+          type: object
+        email:
+          type: string
+        id:
+          type: integer
+        name:
+          type: string
+        organizationId:
+          type: integer
+        phone:
+          type: string
+        registeredAt:
+          type: string
+        urls:
+          items:
+            type: string
+          type: array
+        uuid:
+          type: string
+      required:
+      - id
+      - name

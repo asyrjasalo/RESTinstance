@@ -32,6 +32,11 @@ from genson import SchemaBuilder
 from jsonpath_ng.ext import parse as parse_jsonpath
 from jsonschema import validate, FormatChecker
 from jsonschema.exceptions import SchemaError, ValidationError
+from openapi_core import create_spec
+from openapi_core.exceptions import OpenAPIError
+from openapi_core.validation.response.validators import ResponseValidator
+from openapi_core.contrib.requests import RequestsOpenAPIRequest, \
+    RequestsOpenAPIResponse
 from requests import request as client
 from requests.auth import HTTPDigestAuth, HTTPBasicAuth, HTTPProxyAuth
 from requests.exceptions import SSLError, Timeout
@@ -1451,10 +1456,29 @@ class Keywords:
 
     def _assert_spec(self, spec, response):
         request = response.request
-        try:
-            validate_api_call(spec, raw_request=request, raw_response=response)
-        except ValueError as e:
-            raise AssertionError(e)
+
+        spec_version = spec.get("openapi", "0")
+        if spec_version.startswith("3"):
+            try:
+                if self._spec is None:
+                    self._spec = create_spec(self.spec)
+
+                validator = ResponseValidator(self._spec)
+
+                openapi_request = RequestsOpenAPIRequest(request)
+                openapi_response = RequestsOpenAPIResponse(response)
+
+                result = validator.validate(openapi_request, openapi_response)
+
+                # raise errors if response invalid
+                result.raise_for_errors()
+            except OpenAPIError as e:
+                raise AssertionError(e)
+        else:
+            try:
+                validate_api_call(spec, raw_request=request, raw_response=response)
+            except ValueError as e:
+                raise AssertionError(e)
 
     def _validate_schema(self, schema, json_dict):
         for field in schema:

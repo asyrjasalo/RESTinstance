@@ -176,6 +176,7 @@ class REST(Keywords):
         self.schema.update(self._input_object(schema))
         self.spec = {}
         self.spec.update(self._input_object(spec))
+        self._spec = None
         self.instances = self._input_array(instances)
         self.log_level = self._input_log_level(loglevel)
         self.auth = None
