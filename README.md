@@ -24,8 +24,8 @@
     and the schema gets more accurate by your tests.** Output the schema
     to a file and reuse it as expectations to test the other methods, as
     most of them respond similarly with only minor differences. Or
-    extend the schema further to a full Swagger spec (version 2.0,
-    OpenAPI 3.0 also planned), which RESTinstance can test requests and
+    extend the schema further to a full Swagger spec (version 2.0 and
+    OpenAPI 3.0), which RESTinstance can test requests and
     responses against. All this leads to reusability, getting great test
     coverage with minimum number of keystrokes and very clean tests.
 
@@ -175,3 +175,5 @@ Berman, for JSON Schema validator
 syntax coloring
 - [requests](https://github.com/requests/requests), by Kenneth Reitz
 et al., for making HTTP requests
+- [openapi-core](https://github.com/python-openapi/openapi-core), by Artur Maciag
+et al., for OpenAPI 3 validation
