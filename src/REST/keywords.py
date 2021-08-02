@@ -1481,6 +1481,7 @@ class Keywords:
         response = {
             "seconds": response.elapsed.microseconds / 1000 / 1000,
             "status": response.status_code,
+            "reason": response.reason,
             "body": response_body,
             "headers": dict(response.headers),
         }

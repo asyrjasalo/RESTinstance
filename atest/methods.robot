@@ -12,6 +12,7 @@ GET existing user
     Integer    response status    200
     Integer    response body id    1
     String    response body name    Leanne Graham
+    String    response reason    OK
 
 GET non-existing user
     GET    /users/1969
