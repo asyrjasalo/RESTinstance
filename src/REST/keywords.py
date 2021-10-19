@@ -849,25 +849,7 @@ class Keywords:
         | `Integer` | $[0].id | 1 | | | # same as above |
         | `Integer` | $[*].id | | minimum=1 | maximum=10 |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("integer", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_integer(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._assert_keyword("integer", field, *enum, **validations)
 
     @keyword(name="Number", tags=("assertions",))
     def number(self, field, *enum, **validations):
@@ -911,25 +893,7 @@ class Keywords:
         | `Number` | $[0].id | 1 | | | # integers are also numbers |
         | `Number` | $[*].id | | minimum=1 | maximum=10 |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("number", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_number(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._assert_keyword("number", field, *enum, **validations)
 
     @keyword(name="String", tags=("assertions",))
     def string(self, field, *enum, **validations):
@@ -974,25 +938,7 @@ class Keywords:
         | `String` | $[0].email | Sincere@april.biz | | # same as above |
         | `String` | $[*].email | | format=email |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("string", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_string(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._assert_keyword("string", field, *enum, **validations)
 
     @keyword(name="Object", tags=("assertions",))
     def object(self, field, *enum, **validations):
@@ -1034,25 +980,7 @@ class Keywords:
         | `Object` | $.address.geo | required=["lat", "lng"] |
         | `Object` | $..geo | additionalProperties=false | # cannot have other properties |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("object", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_object(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._assert_keyword("object", field, *enum, **validations)
 
     @keyword(name="Array", tags=("assertions",))
     def array(self, field, *enum, **validations):
@@ -1091,25 +1019,7 @@ class Keywords:
         | `Array` | $ | | | | # same as above |
         | `Array` | $ | minItems=1 | maxItems=10 | uniqueItems=true |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("array", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_array(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._assert_keyword("array", field, *enum, **validations)
 
     @keyword(name="Input", tags=("I/O",))
     def input(self, what):
@@ -1473,9 +1383,13 @@ class Keywords:
             if response_body:
                 if not log_level:
                     log_level = self.log_level
+                try:
+                    headers = response.headers["Content-Type"]
+                except KeyError:
+                    headers = 'NO "Content-Type" HEADER FOUND'
                 logger.write(
                     "Response body content is not JSON. "
-                    + "Content-Type is: %s" % response.headers["Content-Type"],
+                    + "Content-Type is: %s" % headers,
                     log_level,
                 )
         response = {
@@ -1672,3 +1586,31 @@ class Keywords:
                 )
             schema[validation] = self.input(validations[validation])
         schema.update({"type": json_type})
+
+    def _assert_keyword(self, input_type, field, *enum, **validations):
+        input_methods = {
+            "string": self._input_string,
+            "integer": self._input_integer,
+            "number": self._input_number,
+            "array": self._input_array,
+            "object": self._input_object,
+        }
+        values = []
+        for found in self._find_by_field(field):
+            schema = found["schema"]
+            reality = found["reality"]
+            skip = self._input_boolean(validations.pop("skip", False))
+            self._set_type_validations(input_type, schema, validations)
+            if enum:
+                if "enum" not in schema:
+                    schema["enum"] = []
+                for value in enum:
+                    value = input_methods[input_type](value)
+                    if value not in schema["enum"]:
+                        schema["enum"].append(value)
+            elif self._should_add_examples():
+                schema["examples"] = [reality]
+            if not skip:
+                self._assert_schema(schema, reality)
+            values.append(reality)
+        return values
