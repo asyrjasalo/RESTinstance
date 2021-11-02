@@ -22,6 +22,13 @@ GET many users
     GET    ${api_url}/users?_limit=5
     Array    response body    maxItems=5
 
+Verify many things
+    [Tags]    issue-73
+    GET    ${api_url}/users?_limit=3
+    Integer    response body 0 id    1
+    String    response body 0 name    Leanne Graham
+    Array    response body    skip=true
+
 POST with valid params
     POST    ${api_url}/users    { "id": 15, "name": "Gil Alexander" }
     Object    response body    required=["id", "name"]

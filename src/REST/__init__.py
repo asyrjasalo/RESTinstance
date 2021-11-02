@@ -122,6 +122,7 @@ class REST(Keywords):
         schema={},
         spec={},
         instances=[],
+        loglevel="WARN"
     ):
         self.request = {
             "method": None,
@@ -132,6 +133,7 @@ class REST(Keywords):
             "query": {},
             "body": None,
             "data": None,
+            "auth" : None,
             "headers": {
                 "Accept": REST._input_string(accept),
                 "Content-Type": REST._input_string(content_type),
@@ -171,6 +173,7 @@ class REST(Keywords):
         self.spec = {}
         self.spec.update(self._input_object(spec))
         self.instances = self._input_array(instances)
+        self.log_level = self._input_log_level(loglevel)
 
     @staticmethod
     def log_json(json, header="", also_console=True, sort_keys=False):
@@ -397,3 +400,10 @@ class REST(Keywords):
             else:
                 raise RuntimeError("Data is not a dictionary, bytes, or path to a file")
         return data
+
+    @staticmethod
+    def _input_log_level(loglevel):
+        if loglevel.upper() not in ('TRACE', 'DEBUG', 'INFO', 'HTML', 'WARN', 'ERROR'):
+            logger.warn(f"Unrecognized log level '{loglevel}'. Using default log level 'WARN'.")
+            loglevel = "WARN"
+        return loglevel.upper()

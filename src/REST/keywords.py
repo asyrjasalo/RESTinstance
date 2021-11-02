@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #  Copyright 2018-  Anssi Syrjäsalo
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +22,7 @@ from pytz import utc, UnknownTimeZoneError
 from tzlocal import get_localzone
 
 from collections import OrderedDict
-from copy import deepcopy
+from copy import deepcopy, copy
 from datetime import datetime
 from json import dumps, loads
 from os import path, getcwd
@@ -35,6 +33,7 @@ from jsonpath_ng.ext import parse as parse_jsonpath
 from jsonschema import validate, FormatChecker
 from jsonschema.exceptions import SchemaError, ValidationError
 from requests import request as client
+from requests.auth import HTTPDigestAuth, HTTPBasicAuth, HTTPProxyAuth
 from requests.exceptions import SSLError, Timeout
 
 if IS_PYTHON_2:
@@ -49,7 +48,7 @@ from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from .schema_keywords import SCHEMA_KEYWORDS
 
 
-class Keywords(object):
+class Keywords:
     def get_keyword_names(self):
         return [
             name
@@ -76,6 +75,45 @@ class Keywords(object):
         """
         self.request["cert"] = self._input_client_cert(cert)
         return self.request["cert"]
+
+    @keyword(name="Set Client Authentication", tags=("settings",))
+    def set_client_authentication(self, auth_type, user=None, password=None):
+        """*Attaches HTTP basic authentication to the given requests.*
+
+        The API by default will not have authentication enabled.
+
+        The auth_type argument must be ${NONE}, basic, digest or proxy.
+        In case the user sets the auth_type to ${NONE} the authentication
+        information
+        The user and password will be written in plain text.
+
+        *Examples*
+
+        | `Set Client Authentication` | basic  | admin | password |
+        | `Set Client Authentication` | digest | admin | password |
+        | `Set Client Authentication` | proxy  | admin | password |
+        | `Set Client Authentication` | ${NONE} | | |
+        """
+        error_auth = (
+            'Argument "auth_type" must be ${NONE}, basic, digest or proxy.'
+        )
+        if auth_type != None:
+            if not isinstance(auth_type, str):
+                raise TypeError(error_auth)
+
+            auth_type = auth_type.lower()
+
+            if not auth_type in ["basic", "digest", "proxy"]:
+                raise TypeError(error_auth)
+
+            if auth_type == "basic":
+                auth_type = HTTPBasicAuth
+            elif auth_type == "digest":
+                auth_type = HTTPDigestAuth
+            elif auth_type == "proxy":
+                auth_type = HTTPProxyAuth
+
+        return self._setauth(auth_type, user, password)
 
     @keyword(name="Set Headers", tags=("settings",))
     def set_headers(self, headers):
@@ -251,6 +289,7 @@ class Keywords(object):
         allow_redirects=None,
         validate=True,
         headers=None,
+        loglevel=None,
     ):
         """*Sends a HEAD request to the endpoint.*
 
@@ -270,13 +309,16 @@ class Keywords(object):
 
         ``headers``: The headers to add or override for this request.
 
+        ``loglevel``: INFO, DEBUG, TRACE, WARN, ERROR, HTML. Other values are
+        automatically converted to WARN (library default).
+
         *Examples*
 
         | `HEAD` | /users/1 |
         | `HEAD` | /users/1 | timeout=0.5 |
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "HEAD"
         if allow_redirects is not None:
             request["allowRedirects"] = self._input_boolean(allow_redirects)
@@ -285,7 +327,7 @@ class Keywords(object):
         validate = self._input_boolean(validate)
         if headers:
             request["headers"].update(self._input_object(headers))
-        return self._request(endpoint, request, validate)["response"]
+        return self._request(endpoint, request, validate, loglevel)["response"]
 
     @keyword(name="OPTIONS", tags=("http",))
     def options(
@@ -295,6 +337,7 @@ class Keywords(object):
         allow_redirects=None,
         validate=True,
         headers=None,
+        loglevel=None,
     ):
         """*Sends an OPTIONS request to the endpoint.*
 
@@ -313,13 +356,16 @@ class Keywords(object):
 
         ``headers``: Headers as a JSON object to add or override for the request.
 
+        ``loglevel``: INFO, DEBUG, TRACE, WARN, ERROR, HTML. Other values are
+        automatically converted to WARN (library default).
+
         *Examples*
 
         | `OPTIONS` | /users/1 |
         | `OPTIONS` | /users/1 | allow_redirects=false |
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "OPTIONS"
         if allow_redirects is not None:
             request["allowRedirects"] = self._input_boolean(allow_redirects)
@@ -328,7 +374,7 @@ class Keywords(object):
         validate = self._input_boolean(validate)
         if headers:
             request["headers"].update(self._input_object(headers))
-        return self._request(endpoint, request, validate)["response"]
+        return self._request(endpoint, request, validate, loglevel)["response"]
 
     @keyword(name="GET", tags=("http",))
     def get(
@@ -340,6 +386,7 @@ class Keywords(object):
         validate=True,
         headers=None,
         data=None,
+        loglevel=None,
     ):
         """*Sends a GET request to the endpoint.*
 
@@ -363,6 +410,9 @@ class Keywords(object):
 
         ``data``: Data as a dictionary, bytes or a file-like object
 
+        ``loglevel``: INFO, DEBUG, TRACE, WARN, ERROR, HTML. Other values are
+        automatically converted to WARN (library default).
+
         *Examples*
 
         | `GET` | /users/1 |
@@ -371,9 +421,11 @@ class Keywords(object):
         | `GET` | /users | _limit=2 |
         | `GET` | /users | { "_limit": "2" } |
         | `GET` | https://jsonplaceholder.typicode.com/users | headers={ "Authentication": "" } |
+
+        *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "GET"
         request["query"] = OrderedDict()
         query_in_url = OrderedDict(parse_qsl(urlparse(endpoint).query))
@@ -391,7 +443,7 @@ class Keywords(object):
             request["headers"].update(self._input_object(headers))
         if data:
             request["data"] = self._input_data(data)
-        return self._request(endpoint, request, validate)["response"]
+        return self._request(endpoint, request, validate, loglevel)["response"]
 
     @keyword(name="POST", tags=("http",))
     def post(
@@ -403,6 +455,7 @@ class Keywords(object):
         validate=True,
         headers=None,
         data=None,
+        loglevel=None,
     ):
         """*Sends a POST request to the endpoint.*
 
@@ -425,13 +478,18 @@ class Keywords(object):
 
         ``data``: Data as a dictionary, bytes or a file-like object
 
+        ``loglevel``: INFO, DEBUG, TRACE, WARN, ERROR, HTML. Other values are
+        automatically converted to WARN (library default).
+
         *Examples*
 
         | `POST` | /users | { "id": 11, "name": "Gil Alexander" } |
         | `POST` | /users | ${CURDIR}/new_user.json |
+
+        *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "POST"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -443,7 +501,7 @@ class Keywords(object):
             request["headers"].update(self._input_object(headers))
         if data:
             request["data"] = self._input_data(data)
-        return self._request(endpoint, request, validate)["response"]
+        return self._request(endpoint, request, validate, loglevel)["response"]
 
     @keyword(name="PUT", tags=("http",))
     def put(
@@ -455,6 +513,7 @@ class Keywords(object):
         validate=True,
         headers=None,
         data=None,
+        loglevel=None,
     ):
         """*Sends a PUT request to the endpoint.*
 
@@ -475,15 +534,20 @@ class Keywords(object):
 
         ``headers``: Headers as a JSON object to add or override for the request.
 
-        `data``: Data as a dictionary, bytes or a file-like object
+        ``data``: Data as a dictionary, bytes or a file-like object
+
+        ``loglevel``: INFO, DEBUG, TRACE, WARN, ERROR, HTML. Other values are
+        automatically converted to WARN (library default).
 
         *Examples*
 
         | `PUT` | /users/2 | { "name": "Julie Langford", "username": "jlangfor" } |
         | `PUT` | /users/2 | ${dict} |
+
+        *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "PUT"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -495,7 +559,7 @@ class Keywords(object):
             request["headers"].update(self._input_object(headers))
         if data:
             request["data"] = self._input_data(data)
-        return self._request(endpoint, request, validate)["response"]
+        return self._request(endpoint, request, validate, loglevel)["response"]
 
     @keyword(name="PATCH", tags=("http",))
     def patch(
@@ -507,6 +571,7 @@ class Keywords(object):
         validate=True,
         headers=None,
         data=None,
+        loglevel=None,
     ):
         """*Sends a PATCH request to the endpoint.*
 
@@ -527,15 +592,20 @@ class Keywords(object):
 
         ``headers``: Headers as a JSON object to add or override for the request.
 
-        `data``: Data as a dictionary, bytes or a file-like object
+        ``data``: Data as a dictionary, bytes or a file-like object
+
+        ``loglevel``: INFO, DEBUG, TRACE, WARN, ERROR, HTML. Other values are
+        automatically converted to WARN (library default).
 
         *Examples*
 
         | `PATCH` | /users/4 | { "name": "Clementine Bauch" } |
         | `PATCH` | /users/4 | ${dict} |
+
+        *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "PATCH"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -547,7 +617,7 @@ class Keywords(object):
             request["headers"].update(self._input_object(headers))
         if data:
             request["data"] = self._input_data(data)
-        return self._request(endpoint, request, validate)["response"]
+        return self._request(endpoint, request, validate, loglevel)["response"]
 
     @keyword(name="DELETE", tags=("http",))
     def delete(
@@ -558,6 +628,7 @@ class Keywords(object):
         allow_redirects=None,
         validate=True,
         headers=None,
+        loglevel=None,
     ):
         """*Sends a DELETE request to the endpoint.*
 
@@ -578,16 +649,21 @@ class Keywords(object):
 
         ``headers``: Headers as a JSON object to add or override for the request.
 
+        ``loglevel``: INFO, DEBUG, TRACE, WARN, ERROR, HTML. Other values are
+        automatically converted to WARN (library default).
+
         *Examples*
 
         | `DELETE` | /users/6 |
         | `DELETE` | http://localhost:8273/state | validate=false |
         | `DELETE` | /users/6/pets | {"name" : "Rex","tagID" : "1234"} |
+
+        *Body argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = deepcopy(self.request)
+        request = copy(self.request)
         request["method"] = "DELETE"
-        request["body"]=self.input(body)
+        request["body"] = self.input(body)
         if allow_redirects is not None:
             request["allowRedirects"] = self._input_boolean(allow_redirects)
         if timeout is not None:
@@ -595,7 +671,7 @@ class Keywords(object):
         validate = self._input_boolean(validate)
         if headers:
             request["headers"].update(self._input_object(headers))
-        return self._request(endpoint, request, validate)["response"]
+        return self._request(endpoint, request, validate, loglevel)["response"]
 
     @keyword(name="Missing", tags=("assertions",))
     def missing(self, field):
@@ -773,25 +849,7 @@ class Keywords(object):
         | `Integer` | $[0].id | 1 | | | # same as above |
         | `Integer` | $[*].id | | minimum=1 | maximum=10 |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("integer", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_integer(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._assert_keyword("integer", field, *enum, **validations)
 
     @keyword(name="Number", tags=("assertions",))
     def number(self, field, *enum, **validations):
@@ -835,25 +893,7 @@ class Keywords(object):
         | `Number` | $[0].id | 1 | | | # integers are also numbers |
         | `Number` | $[*].id | | minimum=1 | maximum=10 |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("number", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_number(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._assert_keyword("number", field, *enum, **validations)
 
     @keyword(name="String", tags=("assertions",))
     def string(self, field, *enum, **validations):
@@ -898,25 +938,7 @@ class Keywords(object):
         | `String` | $[0].email | Sincere@april.biz | | # same as above |
         | `String` | $[*].email | | format=email |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("string", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_string(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._assert_keyword("string", field, *enum, **validations)
 
     @keyword(name="Object", tags=("assertions",))
     def object(self, field, *enum, **validations):
@@ -958,25 +980,7 @@ class Keywords(object):
         | `Object` | $.address.geo | required=["lat", "lng"] |
         | `Object` | $..geo | additionalProperties=false | # cannot have other properties |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("object", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_object(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._assert_keyword("object", field, *enum, **validations)
 
     @keyword(name="Array", tags=("assertions",))
     def array(self, field, *enum, **validations):
@@ -1015,25 +1019,7 @@ class Keywords(object):
         | `Array` | $ | | | | # same as above |
         | `Array` | $ | minItems=1 | maxItems=10 | uniqueItems=true |
         """
-        values = []
-        for found in self._find_by_field(field):
-            schema = found["schema"]
-            reality = found["reality"]
-            skip = self._input_boolean(validations.pop("skip", False))
-            self._set_type_validations("array", schema, validations)
-            if enum:
-                if "enum" not in schema:
-                    schema["enum"] = []
-                for value in enum:
-                    value = self._input_array(value)
-                    if value not in schema["enum"]:
-                        schema["enum"].append(value)
-            elif self._should_add_examples():
-                schema["examples"] = [reality]
-            if not skip:
-                self._assert_schema(schema, reality)
-            values.append(reality)
-        return values
+        return self._assert_keyword("array", field, *enum, **validations)
 
     @keyword(name="Input", tags=("I/O",))
     def input(self, what):
@@ -1148,9 +1134,9 @@ class Keywords(object):
                     if IS_PYTHON_2:
                         content = unicode(content)
                     file.write(content)
-            except IOError as e:
+            except OSError as e:
                 raise RuntimeError(
-                    "Error outputting to file '%s':\n%s" % (file_path, e)
+                    f"Error outputting to file '{file_path}':\n{e}"
                 )
         return json
 
@@ -1241,9 +1227,9 @@ class Keywords(object):
                     if IS_PYTHON_2:
                         content = unicode(content)
                     file.write(content)
-            except IOError as e:
+            except OSError as e:
                 raise RuntimeError(
-                    "Error outputting to file '%s':\n%s" % (file_path, e)
+                    f"Error outputting to file '{file_path}':\n{e}"
                 )
         return json
 
@@ -1282,6 +1268,7 @@ class Keywords(object):
             self.instances,
             ensure_ascii=False,
             indent=4,
+            default=vars,
             separators=(",", ": "),
             sort_keys=sort_keys,
         )
@@ -1290,10 +1277,9 @@ class Keywords(object):
                 if IS_PYTHON_2:
                     content = unicode(content)
                 file.write(content)
-        except IOError as e:
+        except OSError as e:
             raise RuntimeError(
-                "Error exporting instances "
-                + "to file '%s':\n%s" % (file_path, e)
+                "Error exporting instances " + f"to file '{file_path}':\n{e}"
             )
         return self.instances
 
@@ -1312,10 +1298,31 @@ class Keywords(object):
         self.request["sslVerify"] = self._input_ssl_verify(ssl_verify)
         return self.request["sslVerify"]
 
+    @keyword(name="Set Log Level", tags=("settings",))
+    def set_log_level(self, loglevel):
+        """*Sets the library log level to se specific value*
+
+        ``loglevel``: INFO, DEBUG, TRACE, WARN, ERROR, HTML. Other values are
+        automatically converted to WARN (library default).
+
+        *Examples*
+        | `Set Log Level` | DEBUG | |
+        | `Set Log Level` | debug | # Same as above |
+        | `Set Log Level` | NOTHING | # Will be converted to WARN|
+        """
+        self.log_level = self._input_log_level(loglevel)
+        return self.log_level
 
     ### Internal methods
 
-    def _request(self, endpoint, request, validate=True):
+    def _setauth(self, auth_type, user=None, password=None):
+        if auth_type == None:
+            self.request["auth"] = None
+        else:
+            self.request["auth"] = auth_type(user, password)
+        return self.request["auth"]
+
+    def _request(self, endpoint, request, validate=True, log_level=None):
         if not endpoint.startswith(("http://", "https://")):
             base_url = self.request["scheme"] + "://" + self.request["netloc"]
             if not endpoint.startswith("/"):
@@ -1336,6 +1343,7 @@ class Keywords(object):
                 headers=request["headers"],
                 proxies=request["proxies"],
                 cert=request["cert"],
+                auth=request["auth"],
                 timeout=tuple(request["timeout"]),
                 allow_redirects=request["allowRedirects"],
                 verify=request["sslVerify"],
@@ -1361,30 +1369,40 @@ class Keywords(object):
             logger.info("Cannot infer local timestamp! tzlocal:%s" % str(e))
         if validate and self.spec:
             self._assert_spec(self.spec, response)
-        instance = self._instantiate(request, response, validate)
+        instance = self._instantiate(request, response, validate, log_level)
         self.instances.append(instance)
         return instance
 
-    def _instantiate(self, request, response, validate_schema=True):
+    def _instantiate(
+        self, request, response, validate_schema=True, log_level=None
+    ):
         try:
             response_body = response.json()
         except ValueError:
             response_body = response.text
             if response_body:
-                logger.warn(
+                if not log_level:
+                    log_level = self.log_level
+                try:
+                    headers = response.headers["Content-Type"]
+                except KeyError:
+                    headers = 'NO "Content-Type" HEADER FOUND'
+                logger.write(
                     "Response body content is not JSON. "
-                    + "Content-Type is: %s" % response.headers["Content-Type"]
+                    + "Content-Type is: %s" % headers,
+                    log_level,
                 )
         response = {
             "seconds": response.elapsed.microseconds / 1000 / 1000,
             "status": response.status_code,
+            "reason": response.reason,
             "body": response_body,
             "headers": dict(response.headers),
         }
         schema = deepcopy(self.schema)
-        schema["title"] = "%s %s" % (request["method"], request["url"])
+        schema["title"] = "{} {}".format(request["method"], request["url"])
         try:
-            schema["description"] = "%s: %s" % (
+            schema["description"] = "{}: {}".format(
                 BuiltIn().get_variable_value("${SUITE NAME}"),
                 BuiltIn().get_variable_value("${TEST NAME}"),
             )
@@ -1468,9 +1486,7 @@ class Keywords(object):
             try:
                 query = parse_jsonpath(field)
             except Exception as e:
-                raise RuntimeError(
-                    "Invalid JSONPath query '%s': %s" % (field, e)
-                )
+                raise RuntimeError(f"Invalid JSONPath query '{field}': {e}")
             matches = [str(match.full_path) for match in query.find(value)]
             if not matches:
                 raise AssertionError(
@@ -1566,7 +1582,35 @@ class Keywords(object):
                 raise RuntimeError(
                     "Unknown JSON Schema (%s)" % (schema_version)
                     + " validation keyword "
-                    + "for %s:\n%s" % (json_type, validation)
+                    + f"for {json_type}:\n{validation}"
                 )
             schema[validation] = self.input(validations[validation])
         schema.update({"type": json_type})
+
+    def _assert_keyword(self, input_type, field, *enum, **validations):
+        input_methods = {
+            "string": self._input_string,
+            "integer": self._input_integer,
+            "number": self._input_number,
+            "array": self._input_array,
+            "object": self._input_object,
+        }
+        values = []
+        for found in self._find_by_field(field):
+            schema = found["schema"]
+            reality = found["reality"]
+            skip = self._input_boolean(validations.pop("skip", False))
+            self._set_type_validations(input_type, schema, validations)
+            if enum:
+                if "enum" not in schema:
+                    schema["enum"] = []
+                for value in enum:
+                    value = input_methods[input_type](value)
+                    if value not in schema["enum"]:
+                        schema["enum"].append(value)
+            elif self._should_add_examples():
+                schema["examples"] = [reality]
+            if not skip:
+                self._assert_schema(schema, reality)
+            values.append(reality)
+        return values
