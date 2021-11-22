@@ -1543,7 +1543,7 @@ class Keywords:
     def _value_by_key(self, json, key):
         try:
             return json[int(key)]
-        except ValueError:
+        except (ValueError, KeyError):
             return json[key]
 
     def _schema_by_key(self, schema, key, value):
