@@ -1062,7 +1062,12 @@ class Keywords:
 
     @keyword(name="Output Schema", tags=("I/O",))
     def output_schema(
-        self, what="", file_path=None, append=False, sort_keys=False
+        self,
+        what="",
+        file_path=None,
+        append=False,
+        sort_keys=False,
+        also_console=True,
     ):
         """*Outputs JSON Schema to terminal or a file.*
 
@@ -1086,6 +1091,8 @@ class Keywords:
 
         ``sort_keys``: If true, the JSON Schema is sorted alphabetically by
         property names before it is output.
+
+        ``also_console``: If false, the JSON Schema is not written to terminal. Default is true.
 
         *Examples*
 
@@ -1116,9 +1123,12 @@ class Keywords:
         else:
             json = self._new_schema(self._input_json_from_non_string(what))
         sort_keys = self._input_boolean(sort_keys)
-        if not file_path:
-            self.log_json(json, sort_keys=sort_keys)
-        else:
+
+        if isinstance(also_console, (STRING_TYPES)):
+            also_console = also_console.lower() == "true"
+        self.log_json(json, sort_keys=sort_keys, also_console=also_console)
+
+        if file_path:
             content = dumps(
                 json,
                 ensure_ascii=False,
@@ -1141,7 +1151,14 @@ class Keywords:
         return json
 
     @keyword(name="Output", tags=("I/O",))
-    def output(self, what="", file_path=None, append=False, sort_keys=False):
+    def output(
+        self,
+        what="",
+        file_path=None,
+        append=False,
+        sort_keys=False,
+        also_console=True,
+    ):
         """*Outputs JSON to terminal or a file.*
 
         By default, the last request and response are output to terminal.
@@ -1164,6 +1181,8 @@ class Keywords:
 
         ``sort_keys``: If true, the JSON is sorted alphabetically by
         property names before it is output.
+
+        ``also_console``: If false, the JSON is not written to terminal. Default is true.
 
         *Examples*
 
@@ -1209,9 +1228,11 @@ class Keywords:
         else:
             json = self._input_json_from_non_string(what)
         sort_keys = self._input_boolean(sort_keys)
-        if not file_path:
-            self.log_json(json, sort_keys=sort_keys)
-        else:
+
+        if isinstance(also_console, (STRING_TYPES)):
+            also_console = also_console.lower() == "true"
+        self.log_json(json, sort_keys=sort_keys, also_console=also_console)
+        if file_path:
             content = dumps(
                 json,
                 ensure_ascii=False,
