@@ -178,6 +178,7 @@ class REST(Keywords):
         self.spec.update(self._input_object(spec))
         self.instances = self._input_array(instances)
         self.log_level = self._input_log_level(loglevel)
+        self.auth = None
 
     @staticmethod
     def log_json(json, header="", also_console=True, sort_keys=False):

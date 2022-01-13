@@ -22,9 +22,9 @@ from pytz import utc, UnknownTimeZoneError
 from tzlocal import get_localzone
 
 from collections import OrderedDict
-from copy import deepcopy, copy
+from copy import deepcopy
 from datetime import datetime
-from json import dumps, loads
+from json import dumps
 from os import path, getcwd
 
 from flex.core import validate_api_call
@@ -113,7 +113,7 @@ class Keywords:
             elif auth_type == "proxy":
                 auth_type = HTTPProxyAuth
 
-        return self._setauth(auth_type, user, password)
+        return self._set_auth(auth_type, user, password)
 
     @keyword(name="Set Headers", tags=("settings",))
     def set_headers(self, headers):
@@ -318,7 +318,7 @@ class Keywords:
         | `HEAD` | /users/1 | timeout=0.5 |
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "HEAD"
         if allow_redirects is not None:
             request["allowRedirects"] = self._input_boolean(allow_redirects)
@@ -365,7 +365,7 @@ class Keywords:
         | `OPTIONS` | /users/1 | allow_redirects=false |
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "OPTIONS"
         if allow_redirects is not None:
             request["allowRedirects"] = self._input_boolean(allow_redirects)
@@ -425,7 +425,7 @@ class Keywords:
         *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "GET"
         request["query"] = OrderedDict()
         query_in_url = OrderedDict(parse_qsl(urlparse(endpoint).query))
@@ -489,7 +489,7 @@ class Keywords:
         *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "POST"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -547,7 +547,7 @@ class Keywords:
         *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "PUT"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -605,7 +605,7 @@ class Keywords:
         *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "PATCH"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -661,7 +661,7 @@ class Keywords:
         *Body argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "DELETE"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -1336,12 +1336,12 @@ class Keywords:
 
     ### Internal methods
 
-    def _setauth(self, auth_type, user=None, password=None):
+    def _set_auth(self, auth_type, user=None, password=None):
         if auth_type == None:
-            self.request["auth"] = None
+            self.auth = None
         else:
-            self.request["auth"] = auth_type(user, password)
-        return self.request["auth"]
+            self.auth = auth_type(user, password)
+        return self.auth
 
     def _request(self, endpoint, request, validate=True, log_level=None):
         if not endpoint.startswith(("http://", "https://")):
@@ -1354,6 +1354,7 @@ class Keywords:
         request["scheme"] = url_parts.scheme
         request["netloc"] = url_parts.netloc
         request["path"] = url_parts.path
+        request["auth"] = self.auth
         try:
             response = client(
                 request["method"],
