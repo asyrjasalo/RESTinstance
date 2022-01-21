@@ -22,9 +22,9 @@ from pytz import utc, UnknownTimeZoneError
 from tzlocal import get_localzone
 
 from collections import OrderedDict
-from copy import deepcopy, copy
+from copy import deepcopy
 from datetime import datetime
-from json import dumps, loads
+from json import dumps
 from os import path, getcwd
 
 from flex.core import validate_api_call
@@ -113,7 +113,7 @@ class Keywords:
             elif auth_type == "proxy":
                 auth_type = HTTPProxyAuth
 
-        return self._setauth(auth_type, user, password)
+        return self._set_auth(auth_type, user, password)
 
     @keyword(name="Set Headers", tags=("settings",))
     def set_headers(self, headers):
@@ -318,7 +318,7 @@ class Keywords:
         | `HEAD` | /users/1 | timeout=0.5 |
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "HEAD"
         if allow_redirects is not None:
             request["allowRedirects"] = self._input_boolean(allow_redirects)
@@ -365,7 +365,7 @@ class Keywords:
         | `OPTIONS` | /users/1 | allow_redirects=false |
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "OPTIONS"
         if allow_redirects is not None:
             request["allowRedirects"] = self._input_boolean(allow_redirects)
@@ -425,7 +425,7 @@ class Keywords:
         *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "GET"
         request["query"] = OrderedDict()
         query_in_url = OrderedDict(parse_qsl(urlparse(endpoint).query))
@@ -489,7 +489,7 @@ class Keywords:
         *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "POST"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -547,7 +547,7 @@ class Keywords:
         *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "PUT"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -605,7 +605,7 @@ class Keywords:
         *Data argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "PATCH"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -661,7 +661,7 @@ class Keywords:
         *Body argument is new in version 1.1.0*
         """
         endpoint = self._input_string(endpoint)
-        request = copy(self.request)
+        request = deepcopy(self.request)
         request["method"] = "DELETE"
         request["body"] = self.input(body)
         if allow_redirects is not None:
@@ -1062,7 +1062,12 @@ class Keywords:
 
     @keyword(name="Output Schema", tags=("I/O",))
     def output_schema(
-        self, what="", file_path=None, append=False, sort_keys=False
+        self,
+        what="",
+        file_path=None,
+        append=False,
+        sort_keys=False,
+        also_console=True,
     ):
         """*Outputs JSON Schema to terminal or a file.*
 
@@ -1086,6 +1091,8 @@ class Keywords:
 
         ``sort_keys``: If true, the JSON Schema is sorted alphabetically by
         property names before it is output.
+
+        ``also_console``: If false, the JSON Schema is not written to terminal. Default is true.
 
         *Examples*
 
@@ -1116,9 +1123,12 @@ class Keywords:
         else:
             json = self._new_schema(self._input_json_from_non_string(what))
         sort_keys = self._input_boolean(sort_keys)
-        if not file_path:
-            self.log_json(json, sort_keys=sort_keys)
-        else:
+
+        if isinstance(also_console, (STRING_TYPES)):
+            also_console = also_console.lower() == "true"
+        self.log_json(json, sort_keys=sort_keys, also_console=also_console)
+
+        if file_path:
             content = dumps(
                 json,
                 ensure_ascii=False,
@@ -1141,7 +1151,14 @@ class Keywords:
         return json
 
     @keyword(name="Output", tags=("I/O",))
-    def output(self, what="", file_path=None, append=False, sort_keys=False):
+    def output(
+        self,
+        what="",
+        file_path=None,
+        append=False,
+        sort_keys=False,
+        also_console=True,
+    ):
         """*Outputs JSON to terminal or a file.*
 
         By default, the last request and response are output to terminal.
@@ -1164,6 +1181,8 @@ class Keywords:
 
         ``sort_keys``: If true, the JSON is sorted alphabetically by
         property names before it is output.
+
+        ``also_console``: If false, the JSON is not written to terminal. Default is true.
 
         *Examples*
 
@@ -1209,9 +1228,11 @@ class Keywords:
         else:
             json = self._input_json_from_non_string(what)
         sort_keys = self._input_boolean(sort_keys)
-        if not file_path:
-            self.log_json(json, sort_keys=sort_keys)
-        else:
+
+        if isinstance(also_console, (STRING_TYPES)):
+            also_console = also_console.lower() == "true"
+        self.log_json(json, sort_keys=sort_keys, also_console=also_console)
+        if file_path:
             content = dumps(
                 json,
                 ensure_ascii=False,
@@ -1315,12 +1336,12 @@ class Keywords:
 
     ### Internal methods
 
-    def _setauth(self, auth_type, user=None, password=None):
+    def _set_auth(self, auth_type, user=None, password=None):
         if auth_type == None:
-            self.request["auth"] = None
+            self.auth = None
         else:
-            self.request["auth"] = auth_type(user, password)
-        return self.request["auth"]
+            self.auth = auth_type(user, password)
+        return self.auth
 
     def _request(self, endpoint, request, validate=True, log_level=None):
         if not endpoint.startswith(("http://", "https://")):
@@ -1333,6 +1354,7 @@ class Keywords:
         request["scheme"] = url_parts.scheme
         request["netloc"] = url_parts.netloc
         request["path"] = url_parts.path
+        request["auth"] = self.auth
         try:
             response = client(
                 request["method"],
@@ -1543,7 +1565,7 @@ class Keywords:
     def _value_by_key(self, json, key):
         try:
             return json[int(key)]
-        except ValueError:
+        except (ValueError, KeyError):
             return json[key]
 
     def _schema_by_key(self, schema, key, value):

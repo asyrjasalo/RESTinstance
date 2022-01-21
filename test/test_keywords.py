@@ -51,6 +51,30 @@ class TestKeywords(unittest.TestCase):
         )
         self.assertTrue(isinstance(observed, list))
 
+    def test_find_by_field_numerical_value(self):
+        self.library._last_instance_or_error = MagicMock()
+        self.library._last_instance_or_error.return_value = {
+            "response": {
+                "body": {"element": {"1": "first", "2": "second", "3": "third"}}
+            },
+            "schema": {
+                "properties": {
+                    "response": {"properties": {"body": {"1": "first"}}}
+                }
+            },
+        }
+        observed = self.library._find_by_field("$.element['1']")
+        expected = [
+            {
+                "path": ["element", "1"],
+                "reality": "first",
+                "schema": {"type": "string"},
+            }
+        ]
+        self.assertEqual(observed, expected)
+        with self.assertRaises(RuntimeError):
+            self.library._find_by_field("$.element.1")
+
     def test_find_by_field_with_dollar(self):
         self.library._last_instance_or_error = MagicMock()
         self.library._last_instance_or_error.return_value = {

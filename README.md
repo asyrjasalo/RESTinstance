@@ -2,7 +2,7 @@
 
 [Robot Framework](http://robotframework.org) library for RESTful JSON APIs
 
-
+[Keyword Documentation](https://asyrjasalo.github.io/RESTinstance)
 
 ## Advantages
 

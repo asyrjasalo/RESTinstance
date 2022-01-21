@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #  Copyright 2018-  Anssi Syrjäsalo
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -98,6 +96,12 @@ class REST(Keywords):
 
     All instances can be output to a file with `RESTinstances` which can
     be useful for additional logging.
+
+    = Known Issues =
+
+    There is a [known issue](https://github.com/h2non/jsonpath-ng/issues/38) JSONPath parsing for keys with numerical values
+    if the path is formatted as `$.element.1`. A workaround for this is to use the numerical value as `$.element['1']` instead.
+
     """
 
     ROBOT_LIBRARY_SCOPE = "TEST SUITE"
@@ -122,7 +126,7 @@ class REST(Keywords):
         schema={},
         spec={},
         instances=[],
-        loglevel="WARN"
+        loglevel="WARN",
     ):
         self.request = {
             "method": None,
@@ -133,7 +137,7 @@ class REST(Keywords):
             "query": {},
             "body": None,
             "data": None,
-            "auth" : None,
+            "auth": None,
             "headers": {
                 "Accept": REST._input_string(accept),
                 "Content-Type": REST._input_string(content_type),
@@ -174,6 +178,7 @@ class REST(Keywords):
         self.spec.update(self._input_object(spec))
         self.instances = self._input_array(instances)
         self.log_level = self._input_log_level(loglevel)
+        self.auth = None
 
     @staticmethod
     def log_json(json, header="", also_console=True, sort_keys=False):
@@ -184,12 +189,12 @@ class REST(Keywords):
             separators=(",", ": "),
             sort_keys=sort_keys,
         )
-        logger.info("{}\n{}".format(header, json))  # no coloring for log.html
+        logger.info(f"{header}\n{json}")  # no coloring for log.html
         if also_console:
             json_data = highlight(
                 json, lexers.JsonLexer(), formatters.TerminalFormatter()
             )
-            logger.console("{}\n{}".format(header, json_data), newline=False)
+            logger.console(f"{header}\n{json_data}", newline=False)
         return json
 
     @staticmethod
@@ -288,17 +293,15 @@ class REST(Keywords):
         try:
             with open(path, encoding="utf-8") as file:
                 return load(file)
-        except IOError as e:
-            raise RuntimeError(
-                "File '{}' cannot be opened:\n{}".format(path, e)
-            )
+        except OSError as e:
+            raise RuntimeError(f"File '{path}' cannot be opened:\n{e}")
         except ValueError as e:
             try:
                 with open(path, encoding="utf-8") as file:
                     return load_yaml(file, Loader=SafeLoader)
             except ValueError:
                 raise RuntimeError(
-                    "File '{}' is not valid JSON or YAML:\n{}".format(path, e)
+                    f"File '{path}' is not valid JSON or YAML:\n{e}"
                 )
 
     @staticmethod
@@ -398,12 +401,23 @@ class REST(Keywords):
                 with open(value, "rb") as file:
                     data = file.read()
             else:
-                raise RuntimeError("Data is not a dictionary, bytes, or path to a file")
+                raise RuntimeError(
+                    "Data is not a dictionary, bytes, or path to a file"
+                )
         return data
 
     @staticmethod
     def _input_log_level(loglevel):
-        if loglevel.upper() not in ('TRACE', 'DEBUG', 'INFO', 'HTML', 'WARN', 'ERROR'):
-            logger.warn(f"Unrecognized log level '{loglevel}'. Using default log level 'WARN'.")
+        if loglevel.upper() not in (
+            "TRACE",
+            "DEBUG",
+            "INFO",
+            "HTML",
+            "WARN",
+            "ERROR",
+        ):
+            logger.warn(
+                f"Unrecognized log level '{loglevel}'. Using default log level 'WARN'."
+            )
             loglevel = "WARN"
         return loglevel.upper()
