@@ -1,5 +1,11 @@
 # RESTinstance
 
+Hi,
+
+As of 2023, RESTinstance is looking for maintainers.
+
+Please contact opensource@syrjasalo.com for more information.
+
 [Robot Framework](http://robotframework.org) library for RESTful JSON APIs
 
 [Keyword Documentation](https://asyrjasalo.github.io/RESTinstance)
@@ -340,19 +346,7 @@ It was first presented at the first [RoboCon](https://robocon.io), 2018.
 
 Contributors:
 
-- [jjwong](https://github.com/jjwong) for helping with keyword
-documentation and examples (also check
-[RESTinstance_starter_project](https://github.com/jjwong/RESTinstance_starter_project))
-- [Przemysław "sqilz" Hendel](https://github.com/sqilz) for using and
-testing RESTinstance in early phase (also check
-[RESTinstance-wrapper](https://github.com/sqilz/RESTinstance-wrapper))
-- [Vinh "vinhntb" Nguyen](https://github.com/vinhntb),
-[#52](https://github.com/asyrjasalo/RESTinstance/pull/52).
-- [Stavros "stdedos" Ntentos](https://github.com/stdedos),
-[#75](https://github.com/asyrjasalo/RESTinstance/pull/75).
-- [Nicholas "bollwyvl" Bollweg](https://github.com/bollwyvl),
-[#84](https://github.com/asyrjasalo/RESTinstance/pull/84).
-- [Trey Turner](https://github.com/treyturner), [#86](https://github.com/asyrjasalo/RESTinstance/pull/86)
+- Eficode Ltd.
 
 We use following Python excellence under the hood:
 
@@ -372,5 +366,3 @@ et al., for making HTTP requests
 See
 [requirements.txt](https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt)
 for all the direct run time dependencies.
-
-REST your mind, OSS got your back.

@@ -43,8 +43,8 @@ with open(join(CURDIR, "requirements.txt"), encoding="utf-8") as f:
 setup(
     name=PROJECT_NAME,
     version=VERSION,
-    author="Eficode Oy",
-    author_email="info@eficode.com",
+    author="Anssi Syrjäsalo",
+    author_email="opensource@syrjasalo.com",
     url="https://github.com/asyrjasalo/RESTinstance",
     download_url="https://pypi.python.org/pypi/RESTinstance",
     license="Apache License 2.0",
