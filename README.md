@@ -1,10 +1,9 @@
 # RESTinstance
 
-Hi,
+[![Changelog](https://img.shields.io/github/v/tag/asyrjasalo/RESTinstance?label=changelog&sort=semver)](https://github.com/asyrjasalo/RESTinstance/blob/main/CHANGELOG.md)
+[![LGPL-3.0](https://img.shields.io/github/license/asyrjasalo/RESTinstance)](https://github.com/asyrjasalo/RESTinstance/blob/main/LICENSE.txt)
 
-As of 2023, RESTinstance is looking for maintainers.
-
-Please contact opensource@syrjasalo.com for more information.
+RESTinstance is looking for maintainers, apply at opensource@syrjasalo.com.
 
 [Robot Framework](http://robotframework.org) library for RESTful JSON APIs
 
