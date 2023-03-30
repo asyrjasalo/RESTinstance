@@ -338,7 +338,7 @@ The actual hooks are configured in `.pre-commit-commit.yaml`.
 ## Credits
 
 RESTinstance is under
-[Apache License 2.0](https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE)
+[LGPL-3.0 license](https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE.txt)
 and was originally written by [Anssi Syrjäsalo](https://github.com/asyrjasalo).
 
 It was first presented at the first [RoboCon](https://robocon.io), 2018.
