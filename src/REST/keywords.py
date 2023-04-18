@@ -29,9 +29,9 @@ from requests.auth import HTTPDigestAuth, HTTPBasicAuth, HTTPProxyAuth
 from requests.exceptions import SSLError, Timeout
 
 if IS_PYTHON_2:
-    from urlparse import parse_qsl, urljoin, urlparse
+    from urlparse import parse_qsl, urljoin, urlparse, ParseResult
 else:
-    from urllib.parse import parse_qsl, urljoin, urlparse
+    from urllib.parse import parse_qsl, urljoin, urlparse, ParseResult
 
 from robot.api import logger
 from robot.api.deco import keyword
@@ -1337,10 +1337,11 @@ class Keywords:
 
     def _request(self, endpoint, request, validate=True, log_level=None):
         if not endpoint.startswith(("http://", "https://")):
-            base_url = self.request["scheme"] + "://" + self.request["netloc"]
-            if not endpoint.startswith("/"):
-                endpoint = "/" + endpoint
-            endpoint = urljoin(base_url, self.request["path"]) + endpoint
+            endpoint = ParseResult(
+                self.request["scheme"],
+                self.request["netloc"],
+                self.request["path"],'',
+                endpoint,'').geturl()
         request["url"] = endpoint
         url_parts = urlparse(request["url"])
         request["scheme"] = url_parts.scheme
