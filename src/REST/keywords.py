@@ -372,6 +372,7 @@ class Keywords:
     def get(
         self,
         endpoint,
+        body=None,
         query=None,
         timeout=None,
         allow_redirects=None,
@@ -419,6 +420,7 @@ class Keywords:
         endpoint = self._input_string(endpoint)
         request = deepcopy(self.request)
         request["method"] = "GET"
+        request["body"] = self.input(body)
         request["query"] = OrderedDict()
         query_in_url = OrderedDict(parse_qsl(urlparse(endpoint).query))
         if query_in_url:
