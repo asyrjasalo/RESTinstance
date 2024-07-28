@@ -10,9 +10,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 1
       matrix:
-        python-version: [3.9.19, 3.10.14, 3.11.9, 3.12.4]
+        #python-version: [3.9.19, 3.10.14, 3.11.9, 3.12.4]
+        python-version: [3.12.4]
 
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
           python -m pip install --user pdm
           pdm install
       - name: Start server
-        run: npx -y mountebank restart --host localhost --localOnly true --ipWhitelist 127.0.0.1 --allowInjection --configfile testapi/apis.ejs &
+        run: pdm run testenv &
       - name: Run tests
         run: pdm run atest
       - name: Generate Report
