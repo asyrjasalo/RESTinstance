@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.9.19, 3.10.14, 3.11.9]
+        python-version: [3.9.19, 3.10.14, 3.11.9, 3.12.4]
 
     steps:
     - uses: actions/checkout@v2
@@ -34,13 +34,13 @@ jobs:
     - name: Create documentation
       run: nox -s docs
     - name: Commit documentation
-      if: ${{ github.event_name == 'push' && matrix.python-version == '3.11' }}
+      if: ${{ github.event_name == 'push' && matrix.python-version == '3.12.4' }}
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         git commit -m "Update library documentation" docs/index.html
     - name: Push documentation
-      if: ${{ github.event_name == 'push' && matrix.python-version == '3.11' }}
+      if: ${{ github.event_name == 'push' && matrix.python-version == '3.12.4' }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
