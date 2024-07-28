@@ -1,38 +1,5 @@
 """
-We use Nox (over `make`, `invoke`, `tox`, `pipenv`, `poetry` and `conda`):
-1. Supports multiple Python versions, each session can be ran on `pythonX.X`.
-2. A single session is stored in a single virtualenv in .venv/<session_name>.
-3. Each `nox` resets the session (venv), unless explicitly `reuse_venv=True`.
-
-Setup `nox` user-wide by `pip install --user --upgrade nox` - also on Windows.
-
-What do you want to do then? List all possible sessions (think as of tasks):
-
-   nox -l
-
-To go with sensible defaults (running all tests) before submitting your PR:
-
-    nox
-
-You can also run only a session for acceptance testing with Robot Framework:
-
-   nox -s atest
-
-Using separate virtualenvs even for tasks like `-m robot.libdoc` is not bad:
-
-   nox -s docs
-
-Remove all sessions (`.venv/`s) and remove temporary files in source tree:
-
-   nox -s clean
-
-This workflow is preferred when (pre-)releasing a new version to TestPyPI:
-
-   nox -s test atest docs clean build release_testpypi install_testpypi
-
-If the above installed well, it'll be fine to let the final release to PyPI:
-
-   nox -s release install
+In addition to Nox, we use a lot of "classics" (as of 2024), like setuptools, twine and zest.releaser. This likely changes for Python 3.12+.
 """
 
 from os.path import abspath, dirname
@@ -57,7 +24,6 @@ nox.options.sessions = ["test", "atest"]
 def test(session):
     """Run development tests for the package."""
     session.install("--upgrade", "-r", "requirements-dev.txt")
-    session.run("pre-commit", "install")
     session.run("python", "-m", "unittest", "discover")
     if session.posargs:
         pytest_args = session.posargs
@@ -111,6 +77,7 @@ def atest(session):
 @nox.session(venv_backend="venv", reuse_venv=True)
 def docs(session):
     """Regenerate documentation for the project."""
+    session.install("--no-cache-dir", "setuptools")
     session.install("--upgrade", "-r", "requirements.txt")
     session.run(
         "python",
@@ -125,7 +92,7 @@ def docs(session):
 
 @nox.session(venv_backend="venv", reuse_venv=True)
 def black(session):
-    """Reformat/unify/"blacken" Python source code in-place."""
+    """Reformat Python source code in-place."""
     session.install("--upgrade", "black")
     session.run("black", ".")
 
