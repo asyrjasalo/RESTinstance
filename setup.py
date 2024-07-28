@@ -18,8 +18,8 @@ Programming Language :: Python :: 3.11
 Programming Language :: Python :: 3.12
 Framework :: Robot Framework
 Framework :: Robot Framework :: Library
-Topic :: Software Development :: Testing
 Topic :: Software Development :: Libraries :: Python Modules
+Topic :: Software Development :: Testing
 """.strip().splitlines()
 
 CURDIR = dirname(abspath(__file__))
@@ -43,7 +43,7 @@ setup(
     author="Anssi Syrjäsalo",
     author_email="opensource@syrjasalo.com",
     url="https://github.com/asyrjasalo/RESTinstance",
-    download_url="https://pypi.python.org/pypi/RESTinstance",
+    download_url="https://pypi.org/pypi/RESTinstance",
     license="LGPLv3",
     description="Robot Framework library for RESTful JSON APIs",
     long_description=README,
