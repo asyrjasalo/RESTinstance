@@ -24,7 +24,6 @@ jobs:
           python -m pip install --user pdm
           pdm install
       - name: Recreate documentation
-          run: pdm docs
+        run: pdm docs
       - name: Build distributions
-        run: |
-          pdm build
+        run: pdm build
