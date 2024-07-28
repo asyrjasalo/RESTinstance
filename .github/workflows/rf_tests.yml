@@ -26,6 +26,17 @@ jobs:
           python -m pip install --user pdm
           pdm install
       - name: Start server
-        run: pdm run testenv &
+        run: npx -y mountebank restart --host 127.0.0.1 --localOnly true --ipWhitelist 127.0.0.1 --allowInjection --configfile testapi/apis.ejs &
       - name: Run tests
         run: pdm run atest
+      - name: Generate Report
+        id: xunit-viewer
+        uses: AutoModality/action-xunit-viewer@v1
+        with:
+          results: results
+      - name: Attach the report
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ steps.xunit-viewer.outputs.report-name }}
+          path: ${{ steps.xunit-viewer.outputs.report-dir }}/index.html
