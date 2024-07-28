@@ -172,11 +172,11 @@ The first script installs it user-wide, thus it never requires `sudo` rights.
 If you are on Windows, using pyenv might or might not be an option. Regardless,
 you want to check [pyenv-win](https://github.com/pyenv-win/pyenv-win) instead.
 
-We test, develop, build and publish on Python 3.6.9, and use venvs as preferred:
+We test, develop, build and publish on `.python-version`, and use venvs:
 
     git clone git@github.com:asyrjasalo/RESTinstance.git
     cd RESTinstance
-    pyenv install --skip-existing 3.6.9 && pyenv rehash
+    pyenv install && pyenv rehash
     python3 -m venv .venv/dev
     source .venv/dev/bin/activate
     pip install -e .
@@ -185,7 +185,7 @@ We test, develop, build and publish on Python 3.6.9, and use venvs as preferred:
 
 Nox automates handling `.venv/<task>`s for workflows, that on Windows as well:
 
-    pip install --upgrade nox
+    python3 -m pip install nox
 
 The actual tasks are defined in `noxfile.py`, as well as our settings like:
 - The default Python interpreter to run all the development tasks is `python3.6`
@@ -245,7 +245,7 @@ Remove all sessions (`.venv/`s) as well as temporary files in your working copy:
 
     nox -s clean
 
-Our PyPI distributions are known to work well on Python 3.7 and 2.7 series too:
+Build:
 
     nox -s clean build
 

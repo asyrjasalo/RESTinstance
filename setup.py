@@ -13,10 +13,10 @@ CLASSIFIERS = """
 Development Status :: 5 - Production/Stable
 License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)
 Operating System :: OS Independent
-Programming Language :: Python :: 2.7
-Programming Language :: Python :: 3
-Programming Language :: Python :: 3.6
-Programming Language :: Python :: 3.7
+Programming Language :: Python :: 3.9
+Programming Language :: Python :: 3.10
+Programming Language :: Python :: 3.11
+Programming Language :: Python :: 3.12
 Framework :: Robot Framework
 Framework :: Robot Framework :: Library
 Topic :: Internet
