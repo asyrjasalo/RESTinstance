@@ -4,11 +4,7 @@
 # Copyright(C) 2018- Anssi Syrjäsalo (http://a.syrjasalo.com)
 # Licensed under GNU Lesser General Public License v3 (LGPL-3.0).
 
-# For Python 2
-from __future__ import unicode_literals
-from __future__ import division
 from io import open
-from .compat import IS_PYTHON_2, STRING_TYPES
 
 from pytz import utc, UnknownTimeZoneError
 from tzlocal import get_localzone
@@ -28,10 +24,7 @@ from requests import request as client
 from requests.auth import HTTPDigestAuth, HTTPBasicAuth, HTTPProxyAuth
 from requests.exceptions import SSLError, Timeout
 
-if IS_PYTHON_2:
-    from urlparse import parse_qsl, urljoin, urlparse
-else:
-    from urllib.parse import parse_qsl, urljoin, urlparse
+from urllib.parse import parse_qsl, urljoin, urlparse
 
 from robot.api import logger
 from robot.api.deco import keyword
@@ -1043,7 +1036,7 @@ class Keywords:
         """
         if what is None:
             return None
-        if not isinstance(what, STRING_TYPES):
+        if not isinstance(what, str):
             return self._input_json_from_non_string(what)
         if path.isfile(what):
             return self._input_json_from_file(what)
@@ -1094,7 +1087,7 @@ class Keywords:
         | `Output Schema` | $.email | # only the schema for one response body property |
         | `Output Schema` | $..geo | # only the schema for the nested response body property |
         """
-        if isinstance(what, (STRING_TYPES)):
+        if isinstance(what, (str)):
             if what == "":
                 try:
                     json = self._last_instance_or_error()["schema"]
@@ -1116,7 +1109,7 @@ class Keywords:
             json = self._new_schema(self._input_json_from_non_string(what))
         sort_keys = self._input_boolean(sort_keys)
 
-        if isinstance(also_console, (STRING_TYPES)):
+        if isinstance(also_console, (str)):
             also_console = also_console.lower() == "true"
         self.log_json(json, sort_keys=sort_keys, also_console=also_console)
 
@@ -1133,8 +1126,6 @@ class Keywords:
                 with open(
                     path.join(getcwd(), file_path), write_mode, encoding="utf-8"
                 ) as file:
-                    if IS_PYTHON_2:
-                        content = unicode(content)
                     file.write(content)
             except OSError as e:
                 raise RuntimeError(
@@ -1190,7 +1181,7 @@ class Keywords:
         | `Output` | response body | ${CURDIR}/response_body.json | | # write the response body to a file |
         | `Output` | response seconds | ${CURDIR}/response_delays.log | append=true | # keep track of response delays in a file |
         """
-        if isinstance(what, (STRING_TYPES)):
+        if isinstance(what, (str)):
             if what == "":
                 try:
                     json = deepcopy(self._last_instance_or_error())
@@ -1221,7 +1212,7 @@ class Keywords:
             json = self._input_json_from_non_string(what)
         sort_keys = self._input_boolean(sort_keys)
 
-        if isinstance(also_console, (STRING_TYPES)):
+        if isinstance(also_console, (str)):
             also_console = also_console.lower() == "true"
         self.log_json(json, sort_keys=sort_keys, also_console=also_console)
         if file_path:
@@ -1237,8 +1228,6 @@ class Keywords:
                 with open(
                     path.join(getcwd(), file_path), write_mode, encoding="utf-8"
                 ) as file:
-                    if IS_PYTHON_2:
-                        content = unicode(content)
                     file.write(content)
             except OSError as e:
                 raise RuntimeError(
@@ -1287,8 +1276,6 @@ class Keywords:
         )
         try:
             with open(file_path, "w", encoding="utf-8") as file:
-                if IS_PYTHON_2:
-                    content = unicode(content)
                 file.write(content)
         except OSError as e:
             raise RuntimeError(

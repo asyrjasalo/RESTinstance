@@ -4,11 +4,7 @@
 # Copyright(C) 2018- Anssi Syrjäsalo (http://a.syrjasalo.com)
 # Licensed under GNU Lesser General Public License v3 (LGPL-3.0).
 
-# For Python 2
-from __future__ import unicode_literals
-from __future__ import division
 from io import open
-from .compat import IS_PYTHON_2, STRING_TYPES
 
 from json import dumps, load, loads
 from os import path
@@ -17,10 +13,7 @@ from yaml import load as load_yaml, SafeLoader
 from pygments import highlight, lexers, formatters
 from requests.packages.urllib3 import disable_warnings
 
-if IS_PYTHON_2:
-    from urlparse import parse_qs, urljoin, urlparse
-else:
-    from urllib.parse import parse_qs, urljoin, urlparse
+from urllib.parse import parse_qs, urljoin, urlparse
 
 from robot.api import logger
 
@@ -229,14 +222,14 @@ class REST(Keywords):
     def _input_string(value):
         if value == "":
             return ""
-        if isinstance(value, STRING_TYPES):
+        if isinstance(value, str):
             if not value.startswith('"'):
                 value = '"' + value
             if not value.endswith('"'):
                 value = value + '"'
         try:
             json_value = loads(value)
-            if not isinstance(json_value, STRING_TYPES):
+            if not isinstance(json_value, str):
                 raise RuntimeError("Input is not a JSON string: %s" % (value))
         except ValueError:
             raise RuntimeError("Input not is valid JSON: %s" % (value))
@@ -311,7 +304,7 @@ class REST(Keywords):
     def _input_client_cert(value):
         if value is None or value == "null":
             return None
-        if isinstance(value, STRING_TYPES):
+        if isinstance(value, str):
             return value
         if isinstance(value, (list)):
             if len(value) != 2:
@@ -322,7 +315,7 @@ class REST(Keywords):
             return value
         try:
             value = loads(value)
-            if not isinstance(value, STRING_TYPES + (list)):
+            if not isinstance(value, str + (list)):
                 raise RuntimeError(
                     "Input is not a JSON string " + "or a list: %s" + (value)
                 )
