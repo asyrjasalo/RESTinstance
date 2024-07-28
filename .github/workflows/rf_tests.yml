@@ -5,9 +5,9 @@ name: Robot Framework acceptance tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   test:
@@ -17,34 +17,33 @@ jobs:
         python-version: [3.9.19, 3.10.14, 3.11.9, 3.12.4]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements-dev.txt
-        pre-commit install
-    - name: Start server
-      run: |
-        npm upgrade npm --no-save
-        npm install --no-save
-        npm run mb_restart -- --host 127.0.0.1 --localOnly true --ipWhitelist 127.0.0.1 --allowInjection --configfile testapi/apis.ejs &
-    - name: Run tests
-      run: |
-        python -m robot -P src --xunit xunit.xml -d results atest
-    - name: Generate Report
-      id: xunit-viewer
-      uses: AutoModality/action-xunit-viewer@v1
-      with:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+      - name: Start server
+        run: |
+          npm upgrade npm --no-save
+          npm install --no-save
+          npm run mb_restart -- --host 127.0.0.1 --localOnly true --ipWhitelist 127.0.0.1 --allowInjection --configfile testapi/apis.ejs &
+      - name: Run tests
+        run: |
+          python -m robot -P src --xunit xunit.xml -d results atest
+      - name: Generate Report
+        id: xunit-viewer
+        uses: AutoModality/action-xunit-viewer@v1
+        with:
           results: results
-    - name: Attach the report
-      if: always()
-      uses: actions/upload-artifact@v1
-      with:
-        name: ${{ steps.xunit-viewer.outputs.report-name }}
-        path: ${{ steps.xunit-viewer.outputs.report-dir }}/index.html
+      - name: Attach the report
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ steps.xunit-viewer.outputs.report-name }}
+          path: ${{ steps.xunit-viewer.outputs.report-dir }}/index.html
