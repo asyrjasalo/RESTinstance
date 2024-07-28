@@ -32,7 +32,7 @@ jobs:
         run: |
           npm upgrade npm --no-save
           npm install --no-save
-          npm run mb_restart -- --host 127.0.0.1 --localOnly true --ipWhitelist 127.0.0.1 --allowInjection --configfile testapi/apis.ejs &
+          npm run mb_restart -- --host localhost --localOnly true --ipWhitelist 127.0.0.1 --allowInjection --configfile testapi/apis.ejs &
       - name: Run tests
         run: |
           python -m robot -P src --xunit xunit.xml -d results atest

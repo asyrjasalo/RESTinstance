@@ -44,7 +44,7 @@ def testenv(session):
         "mb_restart",
         "--",
         "--host",
-        "127.0.0.1",
+        "localhost",
         "--localOnly",
         "true",
         "--ipWhitelist",
