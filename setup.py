@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 from io import open  # required for Python 2
 from os.path import abspath, dirname, join
