@@ -5,19 +5,18 @@ repos:
   - id: detect-private-key
   - id: check-merge-conflict
   - id: check-added-large-files
-  - id: check-case-conflict     # check fnames for case-insensitive file systems
-  - id: check-ast               # whether files parse as valid Python
+  - id: check-case-conflict
+  - id: check-ast
   - id: debug-statements
-  - id: check-docstring-first   # checks common error of code after docstrings
+  - id: check-docstring-first
   - id: requirements-txt-fixer
-  - id: mixed-line-ending       # next: unify how text files are encoded ->
+  - id: mixed-line-ending
   - id: trailing-whitespace
-  - id: check-json              # next: verify configs syntactically correct ->
+  - id: check-json
   - id: check-toml
   - id: check-yaml
 
-repos:
-  - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 24.4.2
-    hooks:
-      - id: black
+- repo: https://github.com/psf/black-pre-commit-mirror
+  rev: 24.4.2
+  hooks:
+    - id: black
