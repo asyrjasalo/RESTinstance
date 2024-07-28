@@ -10,9 +10,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 1
       matrix:
-        #python-version: [3.9.19, 3.10.14, 3.11.9, 3.12.4]
-        python-version: [3.11.9]
+        python-version: [3.9.19, 3.10.14, 3.11.9, 3.12.4]
 
     steps:
       - uses: actions/checkout@v2
