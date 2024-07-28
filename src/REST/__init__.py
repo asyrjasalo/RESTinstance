@@ -32,12 +32,8 @@ class REST(Keywords):
 
     Contracts represent a common language within software teams, recognising our differing talents as designers, developers and test experts; or perhaps your new business companion wants to integrate to the system as well, but there is still some noise in signal - yet you don't feel very content providing them the source code, let alone explaining technical details, like which JSON properties are must in the response body, over the phone.
 
-    Rest your mind. OSS got your back.
 
-
-    = Tutorial =
-
-    There is a [https://github.com/asyrjasalo/RESTinstance/blob/master/examples/README.md|step-by-step tutorial] in the making on using the library.
+    = Usage =
 
     For RESTful APIs, this library is intended to be used so that a test suite
     is dedicated per endpoint. The test suite is divided into test cases so that
