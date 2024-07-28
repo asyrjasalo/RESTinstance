@@ -18,8 +18,6 @@ Programming Language :: Python :: 3.11
 Programming Language :: Python :: 3.12
 Framework :: Robot Framework
 Framework :: Robot Framework :: Library
-Topic :: Internet
-Topic :: Internet :: WWW/HTTP
 Topic :: Software Development :: Testing
 Topic :: Software Development :: Libraries :: Python Modules
 """.strip().splitlines()
@@ -46,7 +44,7 @@ setup(
     author_email="opensource@syrjasalo.com",
     url="https://github.com/asyrjasalo/RESTinstance",
     download_url="https://pypi.python.org/pypi/RESTinstance",
-    license="Apache License 2.0",
+    license="LGPLv3",
     description="Robot Framework library for RESTful JSON APIs",
     long_description=README,
     long_description_content_type="text/markdown",
