@@ -1,9 +1,8 @@
 # RESTinstance
 
-[![Changelog](https://img.shields.io/github/v/tag/asyrjasalo/RESTinstance?label=changelog&sort=semver)](https://github.com/asyrjasalo/RESTinstance/blob/master/CHANGELOG.md)
 [![LGPL-3.0](https://img.shields.io/github/license/asyrjasalo/RESTinstance)](https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE.txt)
 
-RESTinstance is looking for maintainers, apply at opensource@syrjasalo.com.
+We are accepting maintainers. Kindly reach out at opensource@syrjasalo.com.
 
 [Robot Framework](http://robotframework.org) library for RESTful JSON APIs
 
@@ -137,9 +136,7 @@ robot --outputdir results atest/
 
 ## Contributing
 
-Bug reports and feature requests are tracked in
-[GitHub](https://github.com/asyrjasalo/RESTinstance/issues).
-We do respect pull request(er)s.
+Please create and issue and then create a pull request.
 
 ### Local development
 
@@ -312,7 +309,7 @@ The actual hooks are configured in `.pre-commit-commit.yaml`.
 
 RESTinstance is under
 [LGPL-3.0 license](https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE.txt)
-and was originally written by [Anssi Syrjäsalo](https://github.com/asyrjasalo).
+and is originally written by [Anssi Syrjäsalo](https://github.com/asyrjasalo).
 
 It was first presented at the first [RoboCon](https://robocon.io), 2018.
 
