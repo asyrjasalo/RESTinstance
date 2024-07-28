@@ -188,12 +188,11 @@ Build source dist and wheel:
 
 Pre-release to TestPyPI:
 
-    pdm publish --repository testpypi
+    pdm publish --no-build --repository testpypi
 
 Release to PyPI:
 
-    pdm publish
-
+    pdm publish --no-build
 
 ## Credits
 

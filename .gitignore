@@ -31,3 +31,6 @@ mb.pid
 dist/
 .pdm-build/
 .pdm-python
+
+# setuptools
+*.egg-info

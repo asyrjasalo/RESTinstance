@@ -1,10 +1,10 @@
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "RESTinstance"
-version = "1.4.2-dev"
+version = "1.4.2-dev1"
 description = "Robot Framework library for RESTful JSON APIs"
 authors = [{ name = "Anssi Syrjäsalo", email = "opensource@syrjasalo.com" }]
 dependencies = [
@@ -52,7 +52,7 @@ test = [
     "pytest-clarity",
     "pytest-instafail",
     "pytest-spec",
-    "setuptools",
+    "setuptools"
 ]
 
 [tool.pdm.scripts]
@@ -62,7 +62,7 @@ atest = "python -m robot -P src --xunit xunit.xml --outputdir results atest/"
 tests = { composite = ["test", "atest"] }
 format = "black ."
 docs = "python -m robot.libdoc -P src REST docs/index.html"
-clear = { shell = "rm -rf dist/ node_modules/ .pdm-build/ .pytest_cache/ results/ mb.pid *.log" }
+clear = { shell = "rm -rf dist/ node_modules/ .pdm-build/ .pytest_cache/ results/ src/*.egg-info mb.pid *.log" }
 
 [tool.black]
 line-length = 80
