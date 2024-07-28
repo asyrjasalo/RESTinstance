@@ -58,7 +58,7 @@ test = [
 [tool.pdm.scripts]
 test = "python -m pytest test/"
 testenv = "npx -y mountebank --host localhost --localOnly true --ipWhitelist 127.0.0.1 --allowInjection --configfile testapi/apis.ejs"
-atest = ""
+atest = "python -m robot -P src --xunit xunit.xml --outputdir results atest/"
 tests = { composite = ["test", "atest"] }
 format = "black ."
 docs = "python -m robot.libdoc -P src REST docs/index.html"
