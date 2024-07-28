@@ -27,7 +27,7 @@ jobs:
           python -m pip install --user pdm
           pdm install
       - name: Start server
-        run: npx -y mountebank restart --host 127.0.0.1 --localOnly true --ipWhitelist 127.0.0.1 --allowInjection --configfile testapi/apis.ejs &
+        run: npx -y mountebank restart --host localhost --localOnly true --ipWhitelist 127.0.0.1 --allowInjection --configfile testapi/apis.ejs &
       - name: Run tests
         run: pdm run atest
       - name: Generate Report
