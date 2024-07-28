@@ -29,16 +29,11 @@
     responses against. All this leads to reusability, getting great test
     coverage with minimum number of keystrokes and very clean tests.
 
-
 ## Installation
 
-You can install and upgrade
-[from PyPi](https://pypi.org/project/RESTinstance):
+Install and upgrade [from PyPi](https://pypi.org/project/RESTinstance):
 
     pip install --upgrade RESTinstance
-
-These also install [Robot Framework](https://pypi.org/project/robotframework)
-if you do not have it already.
 
 ## Usage
 
@@ -124,23 +119,26 @@ DELETE the existing successfully, save the history of all requests
 robot --outputdir results atest/
 ```
 
-
 ## Contributing
 
-Please create an issue and then create a pull request.
+Install [pre-commit](https://pre-commit.com/) and hooks in git working copy:
 
+    pre-commit install
+
+Kindly create an [issue](https://github.com/asyrjasalo/RESTinstance/issues)
+and then create a pull request.
 
 ### Local development
 
 Install Nox:
 
-    pipx install nox
+    python -m pip install nox
 
-To list all possible tasks:
+To list all tasks:
 
-    nox -l
+    python -m nox -l
 
-Tasks are defined in `noxfile.py`:
+Those are defined in `noxfile.py`:
 
     * test -> Run development tests for the package.
     - testenv -> Run development server for acceptance tests.
@@ -154,66 +152,49 @@ Tasks are defined in `noxfile.py`:
     - install -> Install the latest release from PyPI.
     - clean -> Remove all .venv's, build files and caches in the directory.
 
-Tasks marked with `*` are selected by default.
+Tasks marked with `*` are selected by default when running `python -m nox`.
 
-Acceptance tests assume you have started `testapi/` on
-[mountebank](https://www.mbtest.org) first:
+To run both unit and acceptance tests:
 
-    nox -s testenv
+    python -m nox
 
-After started, you can debug requests and responses by tests in web browser at
+Acceptance tests assume you have started [mountebank](https://www.mbtest.org)
+`testapi/` on another terminal first:
+
+    python -m nox -s testenv
+
+You can debug mountebank requests and responses by tests in web browser at
 [localhost:2525](http://localhost:2525/imposters).
 
 Both `nox -s test` and `nox -s atest` allow passing arguments to `pytest`
 and `robot`, respectively:
 
-    nox -s test -- test/<test_modulename>.py
-    nox -s atest -- atest/<atest_suitedir>/<atest_suitefile>.robot
+    python -m nox -s test -- test/<test_modulename>.py
+    python -m nox -s atest -- atest/<atest_suitedir>/<atest_suitefile>.robot
 
-To run both unit and acceptance tests:
-
-    nox
+### Building a new version
 
 Update documentation:
 
-    nox -s docs
-
-### Building and tagging a new version
-
-Remove all virtual environments and temporary files in your working copy:
-
-    nox -s clean
+    python -m nox -s docs
 
 Build:
 
-    nox -s clean build
+    python -m nox -s clean build
 
-We use [zest.releaser](https://github.com/zestsoftware/zest.releaser) for
-versioning, tagging and building (universal) `bdist_wheel`s.
-
-It uses [twine](https://pypi.org/project/twine/) underneath to upload to PyPIs
-securely over HTTPS, which can't be done with `python setup.py` commands.
-
-### Releasing to PyPIs
+### Releasing to PyPI
 
 Pre-release to TestPyPI:
 
-    nox -s test atest docs clean build release_testpypi install_testpypi
+    python -m nox -s release_testpypi install_testpypi
 
 Release to PyPI:
 
-    nox -s release
+    python -m nox -s release
 
-To install the latest release from PyPI:
+Smoke test by installing the latest release from PyPI:
 
-    nox -s install
-
-### pre-commit hooks
-
-Both `nox` and `nox -s test` commands bootstrap
-[pre-commit](https://pre-commit.com/) hooks in your git working copy.
-
-Hooks are configured in `.pre-commit-commit.yaml`.
+    python -m nox -s install
 
 
 ## Credits
