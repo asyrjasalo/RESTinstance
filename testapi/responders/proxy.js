@@ -27,28 +27,33 @@ module.exports.fetch_response = function (request, state, logger, callback) {
   var path = request.path;
   if (Object.keys(request.query).length > 0) {
     const querystring = require("querystring");
-    var path = path + '?' + querystring.stringify(request.query);
+    var path = path + "?" + querystring.stringify(request.query);
   }
 
   const options = {
     method: "get",
     hostname: "localhost",
     port: port,
-    path: path
+    path: path,
   };
 
-  var origin_request = http.request(options, response => {
+  var origin_request = http.request(options, (response) => {
     var body = "";
     response.setEncoding("utf8");
-    response.on("data", chunk => {
+    response.on("data", (chunk) => {
       body += chunk;
     });
-    response.on("end", function() {
+    response.on("end", function () {
       response.body = body;
+      try {
+        JSON.parse(body);
+      } catch (err) {
+        response.body = "{}";
+      }
       response.token = port;
       callback(response);
     });
   });
 
   origin_request.end();
-}
+};
