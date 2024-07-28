@@ -140,14 +140,13 @@ To list all possible tasks:
 
     nox -l
 
-Tasks defined in `RESTinstance/noxfile.py`:
+Tasks are defined in `noxfile.py`:
 
     * test -> Run development tests for the package.
     - testenv -> Run development server for acceptance tests.
     * atest -> Run acceptance tests for the project.
     - docs -> Regenerate documentation for the project.
     - black -> Reformat/unify/"blacken" Python source code in-place.
-    - prospector -> Run various static analysis tools for the package.
     - build -> Build sdist and wheel dists.
     - release_testpypi -> Publish dist/* to TestPyPI.
     - install_testpypi -> Install the latest (pre-)release from TestPyPI.

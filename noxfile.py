@@ -130,15 +130,6 @@ def black(session):
     session.run("black", ".")
 
 
-@nox.session(venv_backend="venv", reuse_venv=True)
-def prospector(session):
-    """Run various static analysis tools for the package."""
-    session.install(
-        "--upgrade", "-r", "requirements.txt", "prospector[with_mypy]"
-    )
-    session.run("prospector", "--with-tool", "mypy")
-
-
 @nox.session(venv_backend="venv")
 def build(session):
     """Build sdist and wheel dists."""
