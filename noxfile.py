@@ -177,6 +177,27 @@ def install_testpypi(session):
 
 
 @nox.session(venv_backend="venv")
+def release_pypi(session):
+    """Publish dist/* to PyPI."""
+    session.install("zest.releaser[recommended]")
+    session.run("twine", "check", "dist/*")
+    session.run(
+        "twine",
+        "upload",
+        "dist/*",
+    )
+
+
+@nox.session(venv_backend="venv")
+def install_pypi(session):
+    """Install the latest release from PyPI."""
+    session.install(
+        "--no-cache-dir",
+        PROJECT_NAME,
+    )
+
+
+@nox.session(venv_backend="venv")
 def release(session):
     """Tag, build and publish a new release to PyPI."""
     session.install("zest.releaser[recommended]")
