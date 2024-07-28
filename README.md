@@ -132,7 +132,7 @@ Please create an issue and then create a pull request.
 
 ### Local development
 
-The actual tasks are defined in `noxfile.py`:
+Install Nox:
 
     pipx install nox
 
@@ -156,12 +156,8 @@ Tasks are defined in `noxfile.py`:
 
 Tasks marked with `*` are selected by default.
 
-That is, to run both `test`s and `atest`s:
-
-    nox
-
-Session `nox -s atest` assumes you have started `testapi/` on
-[mountebank](https://www.mbtest.org):
+Acceptance tests assume you have started `testapi/` on
+[mountebank](https://www.mbtest.org) first:
 
     nox -s testenv
 
@@ -174,13 +170,17 @@ and `robot`, respectively:
     nox -s test -- test/<test_modulename>.py
     nox -s atest -- atest/<atest_suitedir>/<atest_suitefile>.robot
 
+To run both unit and acceptance tests:
+
+    nox
+
 Update documentation:
 
     nox -s docs
 
 ### Building and tagging a new version
 
-Remove all sessions (`.venv/`s) as well as temporary files in your working copy:
+Remove all virtual environments and temporary files in your working copy:
 
     nox -s clean
 
@@ -196,26 +196,24 @@ securely over HTTPS, which can't be done with `python setup.py` commands.
 
 ### Releasing to PyPIs
 
-This workflow is preferred for distributing a new (pre-)release to TestPyPI:
+Pre-release to TestPyPI:
 
     nox -s test atest docs clean build release_testpypi install_testpypi
 
-If that installed well, all will be fine to let the final release to PyPI:
+Release to PyPI:
 
     nox -s release
 
-To install the latest release from PyPI, and in a dedicated venv of course:
+To install the latest release from PyPI:
 
     nox -s install
 
 ### pre-commit hooks
 
-We want our static analysis checks ran before code even ends up in a commit.
-
-Thus both `nox` and `nox -s test` commands bootstrap
+Both `nox` and `nox -s test` commands bootstrap
 [pre-commit](https://pre-commit.com/) hooks in your git working copy.
 
-The actual hooks are configured in `.pre-commit-commit.yaml`.
+Hooks are configured in `.pre-commit-commit.yaml`.
 
 
 ## Credits
@@ -241,10 +239,6 @@ Aparicio and Kenneth Knowles, for handling JSONPath queries
 - [jsonschema](https://github.com/Julian/jsonschema), by Julian
 Berman, for JSON Schema validator
 - [pygments](http://pygments.org), by Georg Brandl et al., for JSON
-syntax coloring, in terminal <span class="title-ref">Output</span>
+syntax coloring
 - [requests](https://github.com/requests/requests), by Kenneth Reitz
 et al., for making HTTP requests
-
-See
-[requirements.txt](https://github.com/asyrjasalo/RESTinstance/blob/master/requirements.txt)
-for all the direct run time dependencies.
