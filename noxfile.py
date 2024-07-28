@@ -192,14 +192,14 @@ def clean(session):
     rmtree(".pytest_cache", ignore_errors=True)
     rmtree(".venv", ignore_errors=True)
     session.run(
-        "python3",
+        "python",
         "-c",
         "import pathlib;"
         + "[p.unlink() for p in pathlib.Path('%s').rglob('*.py[co]')]"
         % REPO_ROOT_PATH,
     )
     session.run(
-        "python3",
+        "python",
         "-c",
         "import pathlib;"
         + "[p.rmdir() for p in pathlib.Path('%s').rglob('__pycache__')]"
