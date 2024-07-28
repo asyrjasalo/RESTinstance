@@ -1,5 +1,5 @@
 """
-In addition to Nox, we use a lot of "classics" (as of 2024), like setuptools, twine and zest.releaser. This likely changes for Python 3.12+.
+In addition to Nox, we use a lot of "classics" (as of 2024), like setuptools, twine and zest.releaser. This likely changes for Python 3.13+...
 """
 
 from os.path import abspath, dirname
@@ -16,13 +16,14 @@ nox.options.envdir = ".venv"
 nox.options.reuse_existing_virtualenvs = False
 nox.options.stop_on_first_error = True
 
-# The sensible default workflow
+# The default workflow
 nox.options.sessions = ["test", "atest"]
 
 
 @nox.session(venv_backend="venv", reuse_venv=True)
 def test(session):
     """Run development tests for the package."""
+    session.install("--no-cache-dir", "setuptools")
     session.install("--upgrade", "-r", "requirements-dev.txt")
     session.run("python", "-m", "unittest", "discover")
     if session.posargs:
@@ -57,6 +58,7 @@ def testenv(session):
 @nox.session(venv_backend="venv", reuse_venv=True)
 def atest(session):
     """Run acceptance tests for the project."""
+    session.install("--no-cache-dir", "setuptools")
     session.install("--upgrade", "-r", "requirements.txt")
     if session.posargs:
         robot_args = session.posargs
