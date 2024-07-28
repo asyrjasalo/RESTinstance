@@ -45,8 +45,6 @@ PROJECT_NAME = "RESTinstance"
 PACKAGE_NAME = "REST"
 REPO_ROOT_PATH = dirname(abspath(__file__))
 
-PYTHON = "3.11"
-
 nox.options.envdir = ".venv"
 nox.options.reuse_existing_virtualenvs = False
 nox.options.stop_on_first_error = True
@@ -55,7 +53,7 @@ nox.options.stop_on_first_error = True
 nox.options.sessions = ["test", "atest"]
 
 
-@nox.session(python=PYTHON, venv_backend="venv", reuse_venv=True)
+@nox.session(venv_backend="venv", reuse_venv=True)
 def test(session):
     """Run development tests for the package."""
     session.install("--upgrade", "-r", "requirements-dev.txt")
@@ -90,7 +88,7 @@ def testenv(session):
     )
 
 
-@nox.session(python=PYTHON, venv_backend="venv", reuse_venv=True)
+@nox.session(venv_backend="venv", reuse_venv=True)
 def atest(session):
     """Run acceptance tests for the project."""
     session.install("--upgrade", "-r", "requirements.txt")
@@ -110,7 +108,7 @@ def atest(session):
     )
 
 
-@nox.session(python=PYTHON, venv_backend="venv", reuse_venv=True)
+@nox.session(venv_backend="venv", reuse_venv=True)
 def docs(session):
     """Regenerate documentation for the project."""
     session.install("--upgrade", "-r", "requirements.txt")
@@ -125,14 +123,14 @@ def docs(session):
     )
 
 
-@nox.session(python=PYTHON, venv_backend="venv", reuse_venv=True)
+@nox.session(venv_backend="venv", reuse_venv=True)
 def black(session):
     """Reformat/unify/"blacken" Python source code in-place."""
     session.install("--upgrade", "black")
     session.run("black", ".")
 
 
-@nox.session(python=PYTHON, venv_backend="venv", reuse_venv=True)
+@nox.session(venv_backend="venv", reuse_venv=True)
 def prospector(session):
     """Run various static analysis tools for the package."""
     session.install(
@@ -141,7 +139,7 @@ def prospector(session):
     session.run("prospector", "--with-tool", "mypy")
 
 
-@nox.session(python=PYTHON, venv_backend="venv")
+@nox.session(venv_backend="venv")
 def build(session):
     """Build sdist and wheel dists."""
     session.install("--no-cache-dir", "pip")
@@ -150,7 +148,7 @@ def build(session):
     session.run("python", "setup.py", "bdist_wheel", "sdist")
 
 
-@nox.session(python=PYTHON, venv_backend="venv")
+@nox.session(venv_backend="venv")
 def release_testpypi(session):
     """Publish dist/* to TestPyPI."""
     session.install("zest.releaser[recommended]")
@@ -164,7 +162,7 @@ def release_testpypi(session):
     )
 
 
-@nox.session(python=PYTHON, venv_backend="venv")
+@nox.session(venv_backend="venv")
 def install_testpypi(session):
     """Install the latest (pre-)release from TestPyPI."""
     session.install(
@@ -178,14 +176,14 @@ def install_testpypi(session):
     )
 
 
-@nox.session(python=PYTHON, venv_backend="venv")
+@nox.session(venv_backend="venv")
 def release(session):
     """Tag, build and publish a new release to PyPI."""
     session.install("zest.releaser[recommended]")
     session.run("fullrelease")
 
 
-@nox.session(python=PYTHON, venv_backend="venv")
+@nox.session(venv_backend="venv")
 def install(session):
     """Install the latest release from PyPI."""
     session.install("--no-cache-dir", PROJECT_NAME)
