@@ -183,16 +183,9 @@ We test, develop, build and publish on `.python-version`, and use venvs:
 
 ### Automated venving w/ Nox
 
-Nox automates handling `.venv/<task>`s for workflows, that on Windows as well:
+The actual tasks are defined in `noxfile.py`:
 
     pipx install nox
-
-The actual tasks are defined in `noxfile.py`, as well as our settings like:
-- The default Python interpreter to run all the development tasks is `python3.6`
-- We explicitly use [venv module](https://docs.python.org/3/library/venv.html)
-now for virtualenving, as we develop on Python >= 3.3 anyway
-- Whether a new virtualenv is always recreated when the respective task is run
-(which is default for most of our tasks)
 
 Session is a task, running in the `.venv/<task>`. To list all possible sessions:
 
