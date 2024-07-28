@@ -26,19 +26,6 @@ jobs:
           python -m pip install --user pdm
           pdm install
       - name: Start server
-        run: |
-          pdm run testenv &
+        run: pdm run testenv &
       - name: Run tests
-        run: |
-          pdm run atest
-      - name: Generate Report
-        id: xunit-viewer
-        uses: AutoModality/action-xunit-viewer@v1
-        with:
-          results: results
-      - name: Attach the report
-        if: always()
-        uses: actions/upload-artifact@v1
-        with:
-          name: ${{ steps.xunit-viewer.outputs.report-name }}
-          path: ${{ steps.xunit-viewer.outputs.report-dir }}/index.html
+        run: pdm run atest

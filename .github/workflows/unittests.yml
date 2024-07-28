@@ -27,5 +27,4 @@ jobs:
           python -m pip install --user pdm
           pdm install
       - name: Run unit tests
-        run: |
-          pdm run test
+        run: pdm run test
