@@ -185,7 +185,7 @@ We test, develop, build and publish on `.python-version`, and use venvs:
 
 Nox automates handling `.venv/<task>`s for workflows, that on Windows as well:
 
-    python3 -m pip install nox
+    pipx install nox
 
 The actual tasks are defined in `noxfile.py`, as well as our settings like:
 - The default Python interpreter to run all the development tasks is `python3.6`
