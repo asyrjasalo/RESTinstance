@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: "d6d3bd94604578adbd918c5a00d531d98350d86f"
+  rev: v4.6.0
   hooks:
   - id: detect-private-key
   - id: check-merge-conflict
@@ -15,3 +15,10 @@ repos:
   - id: check-json              # next: verify configs syntactically correct ->
   - id: check-toml
   - id: check-yaml
+
+repos:
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 24.4.2
+    hooks:
+      - id: black
+        language_version: python3.11
