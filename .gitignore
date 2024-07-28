@@ -1,20 +1,10 @@
-### OS #########################################################################
-
-# OS specific
+# macOS
 .DS_Store
 
-# IDEs
-.idea/
-.vscode/
-
-### Python #####################################################################
-
-# byte-compiled / optimized / DLL files
+# pyc files
 __pycache__/
-*.py[cod]
-*$py.class
 
-# virtualenv(s)
+# virtualenvs
 .venv/
 
 # setuptools
@@ -22,10 +12,6 @@ build/
 dist/
 pip-wheel-metadata/
 *.egg-info/
-
-# pycoverage
-.coverage
-.coverage.*
 
 # pytest
 .pytest_cache/
@@ -35,23 +21,14 @@ pip-wheel-metadata/
 dmypy.json
 .mypy_cache/
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-### Project ####################################################################
-
 # Robot Framework
+results/
 log.html
 output.xml
 report.html
 
-# nox -s testenv (mountebank)
+# mountebank
 node_modules/
-
-# nox -s atest
-results/
-
-# RESTinstance: mountebank
 mb.log
 mb1.log
 mb.pid
