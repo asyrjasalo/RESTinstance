@@ -1,8 +1,7 @@
-module.exports.fetch_response = function(request, state, logger, callback) {
-
+module.exports.fetch_response = function (request, state, logger, callback) {
   var port = 8080;
-  if (request.headers && request.headers['X-Testenv-Port']) {
-      port = parseInt(request.headers['X-Testenv-Port'])
+  if (request.headers && request.headers["X-Testenv-Port"]) {
+    port = parseInt(request.headers["X-Testenv-Port"]);
   }
 
   if (typeof state.instances === "undefined") {
@@ -18,7 +17,7 @@ module.exports.fetch_response = function(request, state, logger, callback) {
   }
 
   if (state.instances[port].responses[request.path]) {
-    response = state.instances[port].responses[request.path]
+    response = state.instances[port].responses[request.path];
     response.token = port;
     return callback(response);
   }
