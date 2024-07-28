@@ -1,10 +1,8 @@
 {
     "name": "RESTinstance",
-    "version": "1.0.3dev1",
     "description": "Robot Framework library for RESTful APIs: nox -s testenv",
     "homepage": "https://github.com/asyrjasalo/RESTinstance",
     "private": true,
-    "license": "Apache-2.0",
     "author": {
         "name": "Anssi Syrjäsalo",
         "url": "https://github.com/asyrjasalo"
@@ -14,7 +12,7 @@
         "mb_save": "node_modules/mountebank/bin/mb save --removeProxies"
     },
     "devDependencies": {
-        "mountebank": "v2.2.0"
+        "mountebank": "^2.9.1"
     },
     "engines": {
         "node": ">=6"
