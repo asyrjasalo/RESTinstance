@@ -25,12 +25,10 @@ jobs:
         run: |
           python -m pip install --user pdm
           pdm install
-      - name: Start server
+      - name: Run tests
         run: |
           pdm testenv &
-          sleep 5
-      - name: Run tests
-        run: pdm atest
+          pdm atest
       - name: Generate Report
         id: xunit-viewer
         uses: AutoModality/action-xunit-viewer@v1
