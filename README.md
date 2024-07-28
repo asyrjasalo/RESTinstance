@@ -1,9 +1,5 @@
 # RESTinstance
 
-[![LGPL-3.0](https://img.shields.io/github/license/asyrjasalo/RESTinstance)](https://github.com/asyrjasalo/RESTinstance/blob/master/LICENSE.txt)
-
-We are accepting maintainers. Kindly reach out at opensource@syrjasalo.com.
-
 [Robot Framework](http://robotframework.org) library for RESTful JSON APIs
 
 [Keyword Documentation](https://asyrjasalo.github.io/RESTinstance)
@@ -39,8 +35,6 @@ We are accepting maintainers. Kindly reach out at opensource@syrjasalo.com.
 You can install and upgrade
 [from PyPi](https://pypi.org/project/RESTinstance):
 
-    python3 -m venv venv
-    source venv/bin/activate
     pip install --upgrade RESTinstance
 
 These also install [Robot Framework](https://pypi.org/project/robotframework)
@@ -48,10 +42,7 @@ if you do not have it already.
 
 ## Usage
 
-There is a
-[step-by-step tutorial](https://github.com/asyrjasalo/RESTinstance/blob/master/examples)
-in the making, best accompanied with
-[the keyword documentation](https://asyrjasalo.github.io/RESTinstance).
+See [the keyword documentation](https://asyrjasalo.github.io/RESTinstance).
 
 ### Quick start
 
@@ -136,59 +127,20 @@ robot --outputdir results atest/
 
 ## Contributing
 
-Please create and issue and then create a pull request.
+Please create an issue and then create a pull request.
+
 
 ### Local development
-
-The logic is detaching the enving from system level (dependencies) as following:
-1. We use [pyenv](https://github.com/pyenv/pyenv) to manage n Pythons user-wide.
-2. With Pyenv installed Pythons, we never mess with the system's default Python.
-3. We ended up to [Nox](https://nox.thea.codes/en/stable/) after evaluating
-Bash scripts, `make`, `invoke` and `tox` to achieve automated virtualenving.
-
-To understand the first two of the practices, these are worth reading:
-- [Real Python's intro to pyenv](https://realpython.com/intro-to-pyenv)
-- [Real Python's virtualenvs primer](https://realpython.com/python-virtual-environments-a-primer/)
-- [virtualenv compatibility with the stdlib venv module](https://virtualenv.pypa.io/en/latest/reference/#compatibility-with-the-stdlib-venv-module)
-
-Third, unlike Tox, Nox uses Python file (`noxfile.py`) for configuration, yet:
-- Supports multiple Python versions, each session is ran on some `pythonX.X`.
-- A session is a single virtualenv which is stored in `.venv/<session_name>`.
-- Every `nox` recreates session, thus virtualenv, unless `reuse_venv=True`.
-
-### Python versioning w/ pyenv
-
-The pyenv setup works on OS X and on the common Linux distros out of the box:
-
-    curl https://pyenv.run | bash
-    export PATH="$HOME/.pyenv/bin:$PATH"
-    eval "$(pyenv init -)"
-
-The first script installs it user-wide, thus it never requires `sudo` rights.
-
-If you are on Windows, using pyenv might or might not be an option. Regardless,
-you want to check [pyenv-win](https://github.com/pyenv-win/pyenv-win) instead.
-
-We test, develop, build and publish on `.python-version`, and use venvs:
-
-    git clone git@github.com:asyrjasalo/RESTinstance.git
-    cd RESTinstance
-    pyenv install && pyenv rehash
-    python3 -m venv .venv/dev
-    source .venv/dev/bin/activate
-    pip install -e .
-
-### Automated venving w/ Nox
 
 The actual tasks are defined in `noxfile.py`:
 
     pipx install nox
 
-Session is a task, running in the `.venv/<task>`. To list all possible sessions:
+To list all possible tasks:
 
     nox -l
 
-Sessions defined in `RESTinstance/noxfile.py`:
+Tasks defined in `RESTinstance/noxfile.py`:
 
     * test -> Run development tests for the package.
     - testenv -> Run development server for acceptance tests.
@@ -203,7 +155,7 @@ Sessions defined in `RESTinstance/noxfile.py`:
     - install -> Install the latest release from PyPI.
     - clean -> Remove all .venv's, build files and caches in the directory.
 
-Sessions marked with `*` are selected, sessions marked with `-` are skipped.
+Tasks marked with `*` are selected by default.
 
 That is, to run both `test`s and `atest`s:
 
@@ -214,8 +166,6 @@ Session `nox -s atest` assumes you have started `testapi/` on
 
     nox -s testenv
 
-Running the above assumes you have `node` (>= 6) installed in your system.
-
 After started, you can debug requests and responses by tests in web browser at
 [localhost:2525](http://localhost:2525/imposters).
 
@@ -225,7 +175,7 @@ and `robot`, respectively:
     nox -s test -- test/<test_modulename>.py
     nox -s atest -- atest/<atest_suitedir>/<atest_suitefile>.robot
 
-You know, having a virtualenv even for generating `docs/` - why not a bad idea:
+Update documentation:
 
     nox -s docs
 
@@ -258,42 +208,6 @@ If that installed well, all will be fine to let the final release to PyPI:
 To install the latest release from PyPI, and in a dedicated venv of course:
 
     nox -s install
-
-### Shell additions
-
-For intermediate `nox` arguments usage, you'll advance by enabling
-[shell completion](https://nox.thea.codes/en/stable/usage.html#shell-completion):
-
-    eval "$(register-python-argcomplete nox)"
-
-On `zsh`, ensure you have bash compatibility enabled in `.zshrc` or similar:
-
-    autoload -U bashcompinit
-    bashcompinit
-
-These completions likely do not work on vanilla PowerShell, but can be used on
-[Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
-
-### Unified Python editor/IDE linters
-
-Catching errors already write-time, regardless of the editor, is advantaged by
-[Palantir's Python Language Server](https://github.com/palantir/python-language-server):
-
-    python3 -m venv .venv/dev
-    source .venv/dev/bin/activate
-    pip install --upgrade python-language-server[all]
-
-Installing the all bundle, and the LSP plugin for your editor, enables to run
-useful linters real-time, like:
-
-- Either `autopep8` or `black` (preferred) for automated code formatting
-- `isort` for sorting code import statements
-- McCabe for code complexity checking
-- `mypy` for static type checking on Python 3
-- `pycodestyle` for coding style checking
-- `pyflakes` for detecting various coding errors
-
-Remember to (auto-)start the language server on background via your editor.
 
 ### pre-commit hooks
 
