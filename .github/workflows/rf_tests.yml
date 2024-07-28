@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        #python-version: [3.9.19, 3.10.14, 3.11.9, 3.12.4]
-        python-version: [3.12.4]
+        python-version: [3.9.19, 3.10.14, 3.11.9, 3.12.4]
 
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +26,9 @@ jobs:
           python -m pip install --user pdm
           pdm install
       - name: Start server
-        run: pdm testenv &
+        run: |
+          pdm testenv &
+          sleep 5
       - name: Run tests
         run: pdm atest
       - name: Generate Report
