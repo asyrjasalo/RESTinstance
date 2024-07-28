@@ -35,28 +35,17 @@ RESTinstance is looking for maintainers, apply at opensource@syrjasalo.com.
     coverage with minimum number of keystrokes and very clean tests.
 
 
-
 ## Installation
 
-On 3.6, 3.7 you can install and upgrade
+You can install and upgrade
 [from PyPi](https://pypi.org/project/RESTinstance):
 
     python3 -m venv venv
     source venv/bin/activate
     pip install --upgrade RESTinstance
 
-On 2.7 series the package works as well, but using 2.7 is
-[not preferred 2020 onwards](https://pythonclock.org/):
-
-    pip install --user --upgrade virtualenv
-    virtualenv venv
-    source venv/bin/activate
-    pip install --upgrade RESTinstance
-
 These also install [Robot Framework](https://pypi.org/project/robotframework)
 if you do not have it already.
-
-
 
 ## Usage
 
@@ -324,15 +313,6 @@ Thus both `nox` and `nox -s test` commands bootstrap
 [pre-commit](https://pre-commit.com/) hooks in your git working copy.
 
 The actual hooks are configured in `.pre-commit-commit.yaml`.
-
-### Ideas
-
-- export `mb` recorded responses to CI (pre-commit hook: `nox -s save_testenv`)
-- change `nox -s testenv` to load the saved testenv -> rid of `--allowInjection`
-- add CI (GitHub Actions? GitLab?)
-- add Python types to pass `prospector --with-tool mypy`
-- enable pre-commit hook for prospector
-
 
 
 ## Credits
