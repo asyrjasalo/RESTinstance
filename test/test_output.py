@@ -161,8 +161,7 @@ class OutputConsoleHelpers(unittest.TestCase):
         sys.__stdout__ = self.original
 
     def _remove_ansi(self, text):
-        """Remove ANSI codes from text
-        """
+        """Remove ANSI codes from text"""
         ansi_escape = re.compile(
             r"""
                 \x1B  # ESC

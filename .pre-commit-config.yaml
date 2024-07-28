@@ -11,7 +11,6 @@ repos:
   - id: check-docstring-first   # checks common error of code after docstrings
   - id: requirements-txt-fixer
   - id: mixed-line-ending       # next: unify how text files are encoded ->
-  - id: end-of-file-fixer
   - id: trailing-whitespace
   - id: check-json              # next: verify configs syntactically correct ->
   - id: check-toml
