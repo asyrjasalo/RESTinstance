@@ -7,12 +7,6 @@ __pycache__/
 # virtualenvs
 .venv/
 
-# setuptools
-build/
-dist/
-pip-wheel-metadata/
-*.egg-info/
-
 # pytest
 .pytest_cache/
 
@@ -32,3 +26,8 @@ node_modules/
 mb.log
 mb1.log
 mb.pid
+
+# pdm
+dist/
+.pdm-build/
+.pdm-python

@@ -1,14 +1,10 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-
 name: Python package
 
 on:
-  workflow_dispatch:
-  #push:
-  #  branches: [master]
-  #pull_request:
-  #  branches: [master]
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
   build:
@@ -25,23 +21,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          python -m pip install nox
-      - name: Build pip package
+          python -m pip install --user pdm
+          pdm install
+      - name: Recreate documentation
+          run: pdm docs
+      - name: Build distributions
         run: |
-          python -m nox -s clean build
-      - name: Create documentation
-        run: python -m nox -s docs
-      - name: Commit documentation
-        if: ${{ github.event_name == 'push' && matrix.python-version == '3.12.4' }}
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -m "Update library documentation" docs/index.html
-      - name: Push documentation
-        if: ${{ github.event_name == 'push' && matrix.python-version == '3.12.4' }}
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: master
+          pdm build

@@ -1,6 +1,0 @@
--r requirements.txt
-
-pytest
-pytest-clarity
-pytest-instafail
-pytest-spec

@@ -121,7 +121,11 @@ robot --outputdir results atest/
 
 ## Contributing
 
-Install [pre-commit](https://pre-commit.com/) and hooks in git working copy:
+Install [pre-commit](https://pre-commit.com/) if not already installed:
+
+    python -m pip install --user pre-commit
+
+Install pre-commit hooks in your working copy:
 
     pre-commit install
 
@@ -130,71 +134,65 @@ and then create a pull request.
 
 ### Local development
 
-Install Nox:
+You may use your favorite Python version manager (adsf, pyenv, ...) as long
+as it follows `.python-version`.
 
-    python -m pip install nox
+Install [PDM](https://pdm-project.org/latest/):
 
-To list all tasks:
+    python -m pip install --user pdm
 
-    python -m nox -l
+Install dependencies:
 
-Those are defined in `noxfile.py`:
+    pdm install
 
-    * test -> Run development tests for the package.
-    - testenv -> Run development server for acceptance tests.
-    * atest -> Run acceptance tests for the project.
-    - docs -> Regenerate documentation for the project.
-    - black -> Reformat/unify/"blacken" Python source code in-place.
-    - build -> Build sdist and wheel dists.
-    - release_testpypi -> Publish dist/* to TestPyPI.
-    - install_testpypi -> Install the latest (pre-)release from TestPyPI.
-    - release -> Tag, build and publish a new release to PyPI.
-    - install -> Install the latest release from PyPI.
-    - clean -> Remove all .venv's, build files and caches in the directory.
+To run unit tests only:
 
-Tasks marked with `*` are selected by default when running `python -m nox`.
-
-To run both unit and acceptance tests:
-
-    python -m nox
+    pdm test
 
 Acceptance tests assume you have started [mountebank](https://www.mbtest.org)
 `testapi/` on another terminal first:
 
-    python -m nox -s testenv
+    pdm testenv
 
-You can debug mountebank requests and responses by tests in web browser at
-[localhost:2525](http://localhost:2525/imposters).
+Note that you can then debug mountebank requests and responses created by tests
+at [localhost:2525](http://localhost:2525/imposters).
 
-Both `nox -s test` and `nox -s atest` allow passing arguments to `pytest`
-and `robot`, respectively:
+To run acceptance tests:
 
-    python -m nox -s test -- test/<test_modulename>.py
-    python -m nox -s atest -- atest/<atest_suitedir>/<atest_suitefile>.robot
+    pdm atest
+
+Both scripts allow passing arguments to `pytest` and `robot`, respectively:
+
+    pdm test -- test/<test_modulename>.py
+    pdm atest -- atest/<atest_suitefile>.robot
+
+To format source files in-place:
+
+    pdm format
 
 ### Building a new version
 
-Update documentation:
+Run both unit and acceptance tests:
 
-    python -m nox -s docs
+    pdm tests
 
-Build:
+Recreate documentation:
 
-    python -m nox -s clean build
+    pdm docs
+
+Build source dist and wheel:
+
+    pdm build
 
 ### Releasing to PyPI
 
 Pre-release to TestPyPI:
 
-    python -m nox -s release_testpypi install_testpypi
+    pdm publish --repository testpypi
 
 Release to PyPI:
 
-    python -m nox -s release
-
-Smoke test by installing the latest release from PyPI:
-
-    python -m nox -s install
+    pdm publish
 
 
 ## Credits
