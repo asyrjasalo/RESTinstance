@@ -121,24 +121,8 @@ robot --outputdir results atest/
 
 ## Contributing
 
-You can use your favorite Python version manager (asdf, pyenv, ...) as long
-as it follows `.python-version`.
-
-Install [pre-commit](https://pre-commit.com/) if not already installed:
-
-    python -m pip install --user pre-commit
-
-Install pre-commit hooks in your git working copy:
-
-    pre-commit install --hook-type pre-commit
-    pre-commit install --hook-type commit-msg
-
 Kindly create an [issue](https://github.com/asyrjasalo/RESTinstance/issues)
-and then create a pull request.
-
-Use [Conventional Commits](https://www.conventionalcommits.org/).
-
-### Local development
+and then create a pull request. See `CONTRIBUTING.md` for that.
 
 Install [PDM](https://pdm-project.org/latest/):
 
@@ -148,54 +132,22 @@ Install dependencies:
 
     pdm install
 
-To run unit tests:
-
-    pdm test
-
 Acceptance tests require you starting [mountebank](https://www.mbtest.org)
 `testapi/` in another terminal first:
 
     pdm testenv
 
-To run acceptance tests:
+To run all tests:
 
-    pdm atest
+    pdm tests
 
-You can then debug mountebank requests and responses created by acceptance tests
+You can debug mountebank requests and responses created by acceptance tests
 at [localhost:2525](http://localhost:2525/imposters).
 
 Arguments can be passed to `pytest` and `robot`, respectively:
 
     pdm test -- test/<test_modulename>.py
     pdm atest -- atest/<atest_suitefile>.robot
-
-### Building a new version
-
-Format source files in-place:
-
-    pdm format
-
-Run all tests:
-
-    pdm tests
-
-Recreate documentation:
-
-    pdm docs
-
-Build source dist and wheel distributions:
-
-    pdm build
-
-### Releasing to PyPI
-
-You can release to TestPyPI first:
-
-    pdm publish --no-build --repository testpypi
-
-Release to PyPI:
-
-    pdm publish --no-build
 
 ## Credits
 
