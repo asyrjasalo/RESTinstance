@@ -14,6 +14,7 @@ from copy import deepcopy
 from datetime import datetime
 from json import dumps
 from os import path, getcwd
+from pathlib import Path
 
 from flex.core import validate_api_call
 from genson import SchemaBuilder
@@ -1124,7 +1125,7 @@ class Keywords:
             write_mode = "a" if self._input_boolean(append) else "w"
             try:
                 with open(
-                    path.join(getcwd(), file_path), write_mode, encoding="utf-8"
+                    Path(getcwd()) / file_path, write_mode, encoding="utf-8"
                 ) as file:
                     file.write(content)
             except OSError as e:
@@ -1226,7 +1227,7 @@ class Keywords:
             write_mode = "a" if self._input_boolean(append) else "w"
             try:
                 with open(
-                    path.join(getcwd(), file_path), write_mode, encoding="utf-8"
+                    Path(getcwd()) / file_path, write_mode, encoding="utf-8"
                 ) as file:
                     file.write(content)
             except OSError as e:
