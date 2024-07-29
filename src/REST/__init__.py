@@ -13,7 +13,7 @@ from yaml import load as load_yaml, SafeLoader
 from pygments import highlight, lexers, formatters
 from requests.packages.urllib3 import disable_warnings
 
-from urllib.parse import parse_qs, urljoin, urlparse
+from urllib.parse import urlparse
 
 from robot.api import logger
 
