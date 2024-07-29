@@ -46,15 +46,13 @@ Repository = "https://github.com/asyrjasalo/RESTinstance"
 distribution = true
 
 [tool.pdm.dev-dependencies]
-dev = [
-    "ruff"
-]
+dev = ["ruff"]
 test = [
     "pytest",
     "pytest-clarity",
     "pytest-instafail",
     "pytest-spec",
-    "setuptools"
+    "setuptools",
 ]
 
 [tool.pdm.scripts]
@@ -65,7 +63,7 @@ tests = { composite = ["test", "atest"] }
 format = "ruff format ."
 lint = "ruff check ."
 docs = "python -m robot.libdoc -P src REST docs/index.html"
-clear = { shell = "rm -rf dist/ node_modules/ .pdm-build/ .pytest_cache/ .ruff_cache/ results/ src/*.egg-info mb.pid *.log" }
+clear = { shell = "rm -rf .pdm-build/ .pytest_cache/ .ruff_cache/ dist/ node_modules/ results/ src/*.egg-info mb.pid *.log" }
 
 [tool.pytest]
 testpaths = "test"
@@ -75,16 +73,17 @@ addopts = "--cov --spec --instafail --diff-type=auto"
 line-length = 80
 indent-width = 4
 exclude = [
-  ".git",
-  ".pytest_cache",
-  '.ruff_cache',
-  ".venv",
-  "atest",
-  "dist",
-  "docs",
-  "node_modules",
-  "results",
-  "testapi"
+    ".git",
+    ".pdm-build",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "atest",
+    "dist",
+    "docs",
+    "node_modules",
+    "results",
+    "testapi",
 ]
 
 [tool.ruff.lint]
