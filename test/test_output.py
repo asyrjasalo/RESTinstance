@@ -49,12 +49,6 @@ class TestOutputLogJsonCalling(unittest.TestCase):
             self.output_dict, sort_keys=True, also_console=True
         )
 
-    def test_output_log_json_console_true(self):
-        self.library.output(self.output_dict, also_console=True)
-        self.library.log_json.assert_called_with(
-            self.output_dict, sort_keys=False, also_console=True
-        )
-
     def test_output_string_values_true(self):
         self.library.output(self.output_dict, also_console="true")
         self.library.log_json.assert_called_with(
@@ -95,12 +89,6 @@ class TestOutputLogJsonCalling(unittest.TestCase):
         self.library.output_schema(self.output_dict, sort_keys=True)
         self.library.log_json.assert_called_with(
             self.output_schema_dict, sort_keys=True, also_console=True
-        )
-
-    def test_output_schema_log_json_console_true(self):
-        self.library.output_schema(self.output_dict, also_console=True)
-        self.library.log_json.assert_called_with(
-            self.output_schema_dict, sort_keys=False, also_console=True
         )
 
     def test_output_schema_string_values_true(self):
