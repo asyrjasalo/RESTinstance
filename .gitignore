@@ -10,11 +10,6 @@ __pycache__/
 # pytest
 .pytest_cache/
 
-# mypy
-.dmypy.json
-dmypy.json
-.mypy_cache/
-
 # Robot Framework
 results/
 log.html

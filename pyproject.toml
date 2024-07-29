@@ -71,16 +71,11 @@ clear = { shell = "rm -rf dist/ node_modules/ .pdm-build/ .pytest_cache/ results
 testpaths = "test"
 addopts = "--cov --spec --instafail --diff-type=auto"
 
-[tool.mypy]
-disallow_untyped_defs = true
-ignore_missing_imports = true
-
 [tool.ruff]
 line-length = 80
 indent-width = 4
 exclude = [
   ".git",
-  ".mypy_cache",
   ".pytest_cache",
   ".venv",
   "atest",
