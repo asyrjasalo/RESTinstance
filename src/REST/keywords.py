@@ -82,13 +82,13 @@ class Keywords:
         error_auth = (
             'Argument "auth_type" must be ${NONE}, basic, digest or proxy.'
         )
-        if auth_type != None:
+        if auth_type is not None:
             if not isinstance(auth_type, str):
                 raise TypeError(error_auth)
 
             auth_type = auth_type.lower()
 
-            if not auth_type in ["basic", "digest", "proxy"]:
+            if auth_type not in ["basic", "digest", "proxy"]:
                 raise TypeError(error_auth)
 
             if auth_type == "basic":
@@ -1316,7 +1316,7 @@ class Keywords:
     ### Internal methods
 
     def _set_auth(self, auth_type, user=None, password=None):
-        if auth_type == None:
+        if auth_type is None:
             self.auth = None
         else:
             self.auth = auth_type(user, password)
