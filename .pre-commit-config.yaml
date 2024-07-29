@@ -14,19 +14,20 @@ repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.6.0
   hooks:
-  - id: detect-private-key
-  - id: check-merge-conflict
-  - id: check-added-large-files
-  - id: check-case-conflict
-  - id: check-ast
-  - id: debug-statements
-  - id: check-docstring-first
-  - id: requirements-txt-fixer
-  - id: mixed-line-ending
-  - id: trailing-whitespace
-  - id: check-json
-  - id: check-toml
-  - id: check-yaml
+    - id: check-merge-conflict
+    - id: check-added-large-files
+    - id: check-case-conflict
+    - id: check-ast
+    - id: debug-statements
+    - id: check-docstring-first
+    - id: mixed-line-ending
+    - id: trailing-whitespace
+    - id: check-json
+    - id: check-toml
+    - id: check-yaml
+    - id: check-symlinks
+    - id: destroyed-symlinks
+    - id: check-executables-have-shebangs
 
 - repo: https://github.com/psf/black-pre-commit-mirror
   rev: 24.4.2
