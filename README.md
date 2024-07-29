@@ -128,12 +128,15 @@ Install [pre-commit](https://pre-commit.com/) if not already installed:
 
     python -m pip install --user pre-commit
 
-Install pre-commit hooks in your working copy:
+Install pre-commit hooks in your git working copy:
 
-    pre-commit install
+    pre-commit install --hook-type pre-commit
+    pre-commit install --hook-type commit-msg
 
 Kindly create an [issue](https://github.com/asyrjasalo/RESTinstance/issues)
 and then create a pull request.
+
+Use [Conventional Commits](https://www.conventionalcommits.org/).
 
 ### Local development
 
