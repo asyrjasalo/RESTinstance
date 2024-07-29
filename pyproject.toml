@@ -46,7 +46,9 @@ Repository = "https://github.com/asyrjasalo/RESTinstance"
 distribution = true
 
 [tool.pdm.dev-dependencies]
-format = ["black"]
+dev = [
+    "black"
+]
 test = [
     "pytest",
     "pytest-clarity",
@@ -84,20 +86,6 @@ exclude = '''
 [tool.pytest]
 testpaths = "test"
 addopts = "--cov --spec --instafail --diff-type=auto"
-
-[tool.flake8]
-exclude = [
-    ".git",
-    ".venv",
-    "dist",
-    "docs",
-    "node_modules",
-    "results",
-    "testapi",
-    "__pycache__",
-]
-max-complexity = 15
-max-line-length = 80
 
 [tool.mypy]
 disallow_untyped_defs = true
