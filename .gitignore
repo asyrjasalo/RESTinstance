@@ -29,3 +29,6 @@ dist/
 
 # setuptools
 *.egg-info
+
+# ruff
+.ruff_cache/

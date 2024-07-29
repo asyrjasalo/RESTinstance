@@ -65,7 +65,7 @@ tests = { composite = ["test", "atest"] }
 format = "ruff format ."
 lint = "ruff check ."
 docs = "python -m robot.libdoc -P src REST docs/index.html"
-clear = { shell = "rm -rf dist/ node_modules/ .pdm-build/ .pytest_cache/ results/ src/*.egg-info mb.pid *.log" }
+clear = { shell = "rm -rf dist/ node_modules/ .pdm-build/ .pytest_cache/ .ruff_cache/ results/ src/*.egg-info mb.pid *.log" }
 
 [tool.pytest]
 testpaths = "test"
@@ -77,6 +77,7 @@ indent-width = 4
 exclude = [
   ".git",
   ".pytest_cache",
+  '.ruff_cache',
   ".venv",
   "atest",
   "dist",
