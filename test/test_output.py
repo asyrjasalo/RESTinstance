@@ -1,10 +1,11 @@
+import io
 import os
 import re
-import unittest
 import sys
+import unittest
 from unittest.mock import MagicMock, mock_open, patch
+
 from src import REST
-import io
 
 
 class TestOutputLogJsonCalling(unittest.TestCase):

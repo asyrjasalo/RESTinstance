@@ -5,17 +5,15 @@
 # Licensed under GNU Lesser General Public License v3 (LGPL-3.0).
 
 from io import open
-
 from json import dumps, load, loads
 from os import path
-from yaml import load as load_yaml, SafeLoader
-
-from pygments import highlight, lexers, formatters
-from requests.packages.urllib3 import disable_warnings
-
 from urllib.parse import urlparse
 
+from pygments import formatters, highlight, lexers
+from requests.packages.urllib3 import disable_warnings
 from robot.api import logger
+from yaml import SafeLoader
+from yaml import load as load_yaml
 
 from .keywords import Keywords
 from .version import __version__

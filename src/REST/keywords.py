@@ -4,31 +4,27 @@
 # Copyright(C) 2018- Anssi Syrjäsalo (http://a.syrjasalo.com)
 # Licensed under GNU Lesser General Public License v3 (LGPL-3.0).
 
-from io import open
-
-from pytz import utc, UnknownTimeZoneError
-from tzlocal import get_localzone
-
 from collections import OrderedDict
 from copy import deepcopy
 from datetime import datetime
+from io import open
 from json import dumps
-from os import path, getcwd
+from os import getcwd, path
+from urllib.parse import parse_qsl, urljoin, urlparse
 
 from flex.core import validate_api_call
 from genson import SchemaBuilder
 from jsonpath_ng.ext import parse as parse_jsonpath
-from jsonschema import validate, FormatChecker
+from jsonschema import FormatChecker, validate
 from jsonschema.exceptions import SchemaError, ValidationError
+from pytz import UnknownTimeZoneError, utc
 from requests import request as client
-from requests.auth import HTTPDigestAuth, HTTPBasicAuth, HTTPProxyAuth
+from requests.auth import HTTPBasicAuth, HTTPDigestAuth, HTTPProxyAuth
 from requests.exceptions import SSLError, Timeout
-
-from urllib.parse import parse_qsl, urljoin, urlparse
-
 from robot.api import logger
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
+from tzlocal import get_localzone
 
 from .schema_keywords import SCHEMA_KEYWORDS
 
