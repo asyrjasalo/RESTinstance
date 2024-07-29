@@ -1,6 +1,5 @@
 # Install the hooks in this file:
-#   pre-commit install --hook-type pre-commit
-#   pre-commit install --hook-type commit-msg
+#   pre-commit install --hook-type pre-commit --hook-type commit-msg
 #
 # (optional) test hooks for staged files:
 #   pre-commit run --verbose
