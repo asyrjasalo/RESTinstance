@@ -1,4 +1,4 @@
-# RESTinstance (1.4.3)
+# RESTinstance (1.4.4rc0)
 
 [Robot Framework](http://robotframework.org) library for RESTful JSON APIs
 
