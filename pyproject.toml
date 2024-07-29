@@ -47,7 +47,6 @@ distribution = true
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "black",
     "ruff"
 ]
 test = [
@@ -63,27 +62,10 @@ test = "python -m pytest test/"
 testenv = "npx -y mountebank --host localhost --allowInjection --configfile testapi/apis.ejs"
 atest = "python -m robot -P src --xunit xunit.xml --outputdir results atest/"
 tests = { composite = ["test", "atest"] }
-format = "black ."
+format = "ruff format ."
 lint = "ruff check ."
 docs = "python -m robot.libdoc -P src REST docs/index.html"
 clear = { shell = "rm -rf dist/ node_modules/ .pdm-build/ .pytest_cache/ results/ src/*.egg-info mb.pid *.log" }
-
-[tool.black]
-line-length = 80
-exclude = '''
-/(
-  | \.git
-  | \.mypy_cache
-  | \.pytest_cache
-  | \.venv
-  | atest
-  | dist
-  | docs
-  | node_modules
-  | results
-  | testapi
-)/
-'''
 
 [tool.pytest]
 testpaths = "test"
@@ -93,5 +75,21 @@ addopts = "--cov --spec --instafail --diff-type=auto"
 disallow_untyped_defs = true
 ignore_missing_imports = true
 
+[tool.ruff]
+line-length = 80
+indent-width = 4
+exclude = [
+  ".git",
+  ".mypy_cache",
+  ".pytest_cache",
+  ".venv",
+  "atest",
+  "dist",
+  "docs",
+  "node_modules",
+  "results",
+  "testapi"
+]
+
 [tool.ruff.lint]
-select = ["E4", "E7", "E9", "F", "I", "Q"]
+select = ["E4", "E7", "E9", "F", "I", "Q", "W"]

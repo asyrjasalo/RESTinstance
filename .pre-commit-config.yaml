@@ -28,10 +28,11 @@ repos:
     - id: destroyed-symlinks
     - id: check-executables-have-shebangs
 
-- repo: https://github.com/psf/black-pre-commit-mirror
-  rev: 24.4.2
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.5.5
   hooks:
-    - id: black
+    - id: ruff
+    - id: ruff-format
 
 - repo: https://github.com/commitizen-tools/commitizen
   rev: v3.28.0
