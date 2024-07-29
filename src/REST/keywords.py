@@ -1092,7 +1092,7 @@ class Keywords:
                 try:
                     json = self._last_instance_or_error()["schema"]
                 except IndexError:
-                    raise RuntimeError(no_instances_error)
+                    raise RuntimeError("No instances.")
             elif what.startswith(("request", "response", "$")):
                 self._last_instance_or_error()
                 matches = self._find_by_field(what)
@@ -1188,7 +1188,7 @@ class Keywords:
                     json.pop("schema")
                     json.pop("spec")
                 except IndexError:
-                    raise RuntimeError(no_instances_error)
+                    raise RuntimeError("No instances.")
             elif what.startswith("schema"):
                 logger.warn(
                     "Using `Output` for schema is deprecated. "
