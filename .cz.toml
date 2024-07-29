@@ -1,7 +1,7 @@
 [tool.commitizen]
 bump_message = "chore: Release $new_version"
 tag_format = "$version"
-version = "1.4.4rc0"
+version = "1.4.4"
 version_files = [
     "README.md",
     "pyproject.toml:version",
