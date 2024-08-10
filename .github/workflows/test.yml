@@ -27,4 +27,4 @@ jobs:
           pdm install
 
       - name: Run unit tests
-        run: pdm test
+        run: pdm test test/
