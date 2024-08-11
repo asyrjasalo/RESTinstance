@@ -63,7 +63,7 @@ tests = { composite = ["test", "atest"] }
 format = "ruff format ."
 lint = "ruff check ."
 docs = "python -m robot.libdoc -P src REST docs/index.html"
-clear = { shell = "rm -rf .pdm-build/ .pytest_cache/ .ruff_cache/ dist/ node_modules/ results/ src/*.egg-info mb.pid *.log" }
+clean = { shell = "rm -rf .pdm-build/ .pytest_cache/ .ruff_cache/ dist/ node_modules/ results/ src/*.egg-info mb.pid *.log" }
 
 [tool.pytest]
 testpaths = "test"
