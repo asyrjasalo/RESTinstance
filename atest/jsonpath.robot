@@ -36,3 +36,7 @@ JSONPath query from array
     Integer     $.[*] where $.id
     Integer     $.[0:1].id|$.[1:4].id   1   2   3   4   5
     Missing     $[*].notexisting
+    String      $[?(@.email\=\='Sincere@april.biz')].username            Bret
+    String      $[?(@..bs\=\='harness real-time e-markets')].username    Bret
+    String      $[?(@.address.zipcode\=\='92998-3874')]..geo.lat         -37.3159
+    String      $[?(@..zipcode\=\='92998-3874')]..geo.lat                -37.3159
