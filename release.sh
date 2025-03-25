@@ -21,9 +21,9 @@ fi
 
 if [ -n "$prerelease_type" ]; then
     echo "Creating pre-release ($prerelease_type)"
-    pipx run --spec commitizen cz bump --prerelease "$prerelease_type" &&
+    uvx --from commitizen cz bump --prerelease "$prerelease_type" &&
     pdm publish --repository testpypi
 else
-    pipx run --spec commitizen cz bump &&
+    uvx --from commitizen cz bump &&
     pdm publish
 fi
