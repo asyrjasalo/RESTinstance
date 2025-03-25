@@ -17,6 +17,10 @@ from genson import SchemaBuilder
 from jsonpath_ng.ext import parse as parse_jsonpath
 from jsonschema import FormatChecker, validate
 from jsonschema.exceptions import SchemaError, ValidationError
+from openapi_core import OpenAPI
+from openapi_core.exceptions import OpenAPIError
+from openapi_core.contrib.requests import RequestsOpenAPIRequest, \
+    RequestsOpenAPIResponse
 from pytz import UnknownTimeZoneError, utc
 from requests import request as client
 from requests.auth import HTTPBasicAuth, HTTPDigestAuth, HTTPProxyAuth
@@ -1426,10 +1430,26 @@ class Keywords:
 
     def _assert_spec(self, spec, response):
         request = response.request
-        try:
-            validate_api_call(spec, raw_request=request, raw_response=response)
-        except ValueError as e:
-            raise AssertionError(e)
+
+        spec_version = spec.get("openapi", "0")
+        if spec_version.startswith("3"):
+            try:
+                if self._spec is None:
+                    self._spec = OpenAPI.from_dict(self.spec)
+
+                openapi_request = RequestsOpenAPIRequest(request)
+                openapi_response = RequestsOpenAPIResponse(response)
+
+                self._spec.validate_request(openapi_request)
+                self._spec.validate_response(openapi_request, openapi_response)
+
+            except OpenAPIError as e:
+                raise AssertionError(e) from e
+        else:
+            try:
+                validate_api_call(spec, raw_request=request, raw_response=response)
+            except ValueError as e:
+                raise AssertionError(e)
 
     def _validate_schema(self, schema, json_dict):
         for field in schema:

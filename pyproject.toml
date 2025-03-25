@@ -13,6 +13,7 @@ dependencies = [
     "GenSON",
     "jsonpath-ng",
     "jsonschema",
+    "openapi-core",
     "pygments",
     "pytz",
     "requests",
