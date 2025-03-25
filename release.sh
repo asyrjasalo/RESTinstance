@@ -21,9 +21,12 @@ fi
 
 if [ -n "$prerelease_type" ]; then
     echo "Creating pre-release ($prerelease_type)"
-    uvx --from commitizen cz bump --prerelease "$prerelease_type" &&
+    uvx --from commitizen cz bump \
+        --prerelease "$prerelease_type"\
+        --allow-no-commit &&
     pdm publish --repository testpypi
 else
-    uvx --from commitizen cz bump &&
+    uvx --from commitizen cz bump \
+        --allow-no-commit &&
     pdm publish
 fi
