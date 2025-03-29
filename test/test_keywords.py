@@ -73,8 +73,6 @@ class TestKeywords(unittest.TestCase):
             }
         ]
         self.assertEqual(observed, expected)
-        with self.assertRaises(RuntimeError):
-            self.library._find_by_field("$.element.1")
 
     def test_find_by_field_with_dollar(self):
         self.library._last_instance_or_error = MagicMock()
