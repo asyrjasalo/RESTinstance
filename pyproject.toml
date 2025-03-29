@@ -62,7 +62,7 @@ testenv = "npx -y mountebank --host localhost --allowInjection --configfile test
 atest = "python -m robot -P src --xunit xunit.xml --outputdir results {args:atest/}"
 tests = { composite = ["test", "atest"] }
 format = "ruff format ."
-lint = "ruff check ."
+lint = "ruff check --fix ."
 docs = "python -m robot.libdoc -P src REST docs/index.html"
 clean = { shell = "rm -rf .pdm-build/ .pytest_cache/ .ruff_cache/ dist/ node_modules/ results/ src/*.egg-info mb.pid *.log" }
 
