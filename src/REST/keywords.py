@@ -18,11 +18,11 @@ from jsonpath_ng.ext import parse as parse_jsonpath
 from jsonschema import FormatChecker, validate
 from jsonschema.exceptions import SchemaError, ValidationError
 from openapi_core import OpenAPI
-from openapi_core.exceptions import OpenAPIError
 from openapi_core.contrib.requests import (
     RequestsOpenAPIRequest,
     RequestsOpenAPIResponse,
 )
+from openapi_core.exceptions import OpenAPIError
 from pytz import UnknownTimeZoneError, utc
 from requests import request as client
 from requests.auth import HTTPBasicAuth, HTTPDigestAuth, HTTPProxyAuth
