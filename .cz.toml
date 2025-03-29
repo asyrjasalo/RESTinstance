@@ -5,5 +5,6 @@ version = "1.5.0"
 version_files = [
     "README.md",
     "pyproject.toml:version",
+    "docs/index.html",
     "src/REST/version.py:__version__"
 ]
