@@ -4,6 +4,7 @@
 # Copyright(C) 2018- Anssi Syrjäsalo (http://a.syrjasalo.com)
 # Licensed under GNU Lesser General Public License v3 (LGPL-3.0).
 
+import warnings
 from collections import OrderedDict
 from copy import deepcopy
 from datetime import datetime
@@ -12,7 +13,10 @@ from json import dumps
 from os import getcwd, path
 from urllib.parse import parse_qsl, urljoin, urlparse
 
-from flex.core import validate_api_call
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
+    from flex.core import validate_api_call
+
 from genson import SchemaBuilder
 from jsonpath_ng.ext import parse as parse_jsonpath
 from jsonschema import FormatChecker, validate
