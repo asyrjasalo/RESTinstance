@@ -19,8 +19,10 @@ from jsonschema import FormatChecker, validate
 from jsonschema.exceptions import SchemaError, ValidationError
 from openapi_core import OpenAPI
 from openapi_core.exceptions import OpenAPIError
-from openapi_core.contrib.requests import RequestsOpenAPIRequest, \
-    RequestsOpenAPIResponse
+from openapi_core.contrib.requests import (
+    RequestsOpenAPIRequest,
+    RequestsOpenAPIResponse,
+)
 from pytz import UnknownTimeZoneError, utc
 from requests import request as client
 from requests.auth import HTTPBasicAuth, HTTPDigestAuth, HTTPProxyAuth
@@ -47,7 +49,7 @@ class Keywords:
     def set_client_cert(self, cert):
         """*Sets the client cert for the requests.*
 
-        The cert is either a path to a .pem file, or a JSON array, or a list
+        The cert is either a path to a .pem file, or a JSON array, or a list, or a tuple
         having the cert path and the key path.
 
         Values ``null`` and ``${None}`` can be used for clearing the cert.
@@ -56,6 +58,7 @@ class Keywords:
 
         | `Set Client Cert` | ${CURDIR}/client.pem |
         | `Set Client Cert` | ["${CURDIR}/client.cert", "${CURDIR}/client.key"] |
+        | `Set Client Cert` | ("${CURDIR}/client.cert", "${CURDIR}/client.key") |
         | `Set Client Cert` | ${paths_list} |
         """
         self.request["cert"] = self._input_client_cert(cert)
@@ -1447,7 +1450,9 @@ class Keywords:
                 raise AssertionError(e) from e
         else:
             try:
-                validate_api_call(spec, raw_request=request, raw_response=response)
+                validate_api_call(
+                    spec, raw_request=request, raw_response=response
+                )
             except ValueError as e:
                 raise AssertionError(e)
 

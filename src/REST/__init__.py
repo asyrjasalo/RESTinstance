@@ -308,6 +308,13 @@ class REST(Keywords):
                     + "must have length of 2: %s" % (value)
                 )
             return value
+        if isinstance(value, (tuple)):
+            if len(value) != 2:
+                raise RuntimeError(
+                    "Client cert given as a (Python) tuple, "
+                    + "must have length of 2: %s" % (value)
+                )
+            return value
         try:
             value = loads(value)
             if not isinstance(value, str + (list)):
