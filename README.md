@@ -95,7 +95,7 @@ PUT with valid params to update the existing user, values matter here
     Boolean     response body isCoding    true
     PUT         /users/2                  { "sleep": null }
     Null        response body sleep
-    PUT         /users/2                  { "pockets": "", "money": 0.02 }
+    PUT         /users/2                  { "pockets": "", "money": 0.02 }
     String      response body pockets     ${EMPTY}
     Number      response body money       0.02
     Missing     response body moving      # fails if property moving exists
