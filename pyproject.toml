@@ -19,6 +19,7 @@ dependencies = [
     "requests",
     "robotframework",
     "tzlocal",
+    "setuptools<80",
 ]
 requires-python = ">=3.9"
 readme = "README.md"
@@ -54,7 +55,6 @@ test = [
     "pytest-clarity",
     "pytest-instafail",
     "pytest-spec",
-    "setuptools",
 ]
 
 [tool.pdm.scripts]
