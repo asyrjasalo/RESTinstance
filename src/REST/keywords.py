@@ -835,6 +835,7 @@ class Keywords:
         | `Integer` | response body id | 1 |
         | `Integer` | response body id | ${1} | # same as above |
         | `Integer` | $.id | 1 | # JSONPath alternative |
+        | `Integer` | $.id | | nullable=True | # accepts Integer or unll |
 
         | `GET`  | /users?_limit=10 | | | | # https://jsonplaceholder.typicode.com/users |
         | `Integer` | response body 0 id | 1 | | |
@@ -880,6 +881,7 @@ class Keywords:
         | `Number` | response body allocation | 95.0 |
         | `Number` | response body allocation | ${95.0} | # same as above |
         | `Number` | $.allocation | 95.0 | # JSONPath alternative |
+        | `Number` | $.allocation | | nullable=True | # accepts Number or unll |
 
         | `GET`  | /users?_limit=10 | | | | # https://jsonplaceholder.typicode.com/users |
         | `Number` | $[0].id | 1 | | | # integers are also numbers |
@@ -924,6 +926,7 @@ class Keywords:
         | `String` | response body email | Sincere@april.biz |
         | `String` | $.email | Sincere@april.biz | | # JSONPath alternative |
         | `String` | $.email | | format=email |
+        | `String` | $.email | | nullable=True | # accepts String or unll |
 
         | `GET`  | /users?_limit=10 | | | # https://jsonplaceholder.typicode.com/users |
         | `String` | response body 0 email | Sincere@april.biz |
@@ -967,6 +970,7 @@ class Keywords:
         | `GET`  | /users/1 | | # https://jsonplaceholder.typicode.com/users/1 |
         | `Object` | response body | |
         | `Object` | response body | required=["id", "name"] | # can have other properties |
+        | `Object` | response body | | nullable=True | # accepts Object or unll |
 
         | `GET`  | /users/1 | | # https://jsonplaceholder.typicode.com/users/1 |
         | `Object` | $.address.geo | required=["lat", "lng"] |
@@ -1010,6 +1014,7 @@ class Keywords:
         | `Array` | response body | | |
         | `Array` | $ | | | | # same as above |
         | `Array` | $ | minItems=1 | maxItems=10 | uniqueItems=true |
+        | `Array` | $ | nullable=True | # Accepts null |
         """
         return self._assert_keyword("array", field, *enum, **validations)
 
@@ -1594,7 +1599,13 @@ class Keywords:
         )
 
     def _set_type_validations(self, json_type, schema, validations):
+        allowNull = False
+
         if validations:
+            if "nullable" in validations:
+                allowNull = validations["nullable"]
+                del validations["nullable"]
+
             if "draft-04" in self.schema["$schema"]:
                 schema_version = "draft-04"
             elif "draft-06" in self.schema["$schema"]:
@@ -1603,15 +1614,18 @@ class Keywords:
                 schema_version = "draft-07"
             kws = list(SCHEMA_KEYWORDS["common"][schema_version])
             kws.extend(SCHEMA_KEYWORDS[json_type][schema_version])
-        for validation in validations:
-            if validation not in kws:
-                raise RuntimeError(
-                    "Unknown JSON Schema (%s)" % (schema_version)
-                    + " validation keyword "
-                    + f"for {json_type}:\n{validation}"
-                )
-            schema[validation] = self.input(validations[validation])
-        schema.update({"type": json_type})
+
+            for validation in validations:
+                if validation not in kws:
+                    raise RuntimeError(
+                        "Unknown JSON Schema (%s)" % (schema_version)
+                        + " validation keyword "
+                        + f"for {json_type}:\n{validation}"
+                    )
+                schema[validation] = self.input(validations[validation])
+
+        typeCheck = json_type if not allowNull else [json_type, "null"]
+        schema.update({"type": typeCheck})
 
     def _assert_keyword(self, input_type, field, *enum, **validations):
         input_methods = {
@@ -1624,18 +1638,23 @@ class Keywords:
         values = []
         for found in self._find_by_field(field):
             schema = found["schema"]
+
             reality = found["reality"]
             skip = self._input_boolean(validations.pop("skip", False))
             self._set_type_validations(input_type, schema, validations)
+
             if enum:
                 if "enum" not in schema:
                     schema["enum"] = []
+
                 for value in enum:
                     value = input_methods[input_type](value)
                     if value not in schema["enum"]:
                         schema["enum"].append(value)
+
             elif self._should_add_examples():
                 schema["examples"] = [reality]
+
             if not skip:
                 self._assert_schema(schema, reality)
             values.append(reality)
