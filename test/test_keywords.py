@@ -52,6 +52,33 @@ class TestKeywords(unittest.TestCase):
         )
         self.assertTrue(isinstance(observed, list))
 
+    def test_set_type_validations_string_pattern(self):
+        self.library.schema = MagicMock()
+        schema = {"type": "string"}
+        self.library._set_type_validations("string", schema, {"pattern": "a+"})
+        self.assertEqual(schema, {"type": "string", "pattern": "a+"})
+
+    def test_set_type_validations_nullable(self):
+        for type in ["string", "integer", "object", "number", "array"]:
+            schema = {"type": type}
+            self.library._set_type_validations(type, schema, {"nullable": True})
+            self.assertEqual(schema, {"type": [type, "null"]})
+
+    def test_set_type_validations_not_nullable(self):
+        for type in ["string", "integer", "object", "number", "array"]:
+            schema = {"type": type}
+            self.library._set_type_validations(
+                type, schema, {"nullable": False}
+            )
+            self.assertEqual(schema, {"type": type})
+
+    def test_set_type_validations_no_validations(self):
+        for validations in [None, {}]:
+            for type in ["string", "integer", "object", "number", "array"]:
+                schema = {"type": type}
+                self.library._set_type_validations(type, schema, validations)
+                self.assertEqual(schema, {"type": type})
+
     def test_find_by_field_numerical_value(self):
         self.library._last_instance_or_error = MagicMock()
         self.library._last_instance_or_error.return_value = {
