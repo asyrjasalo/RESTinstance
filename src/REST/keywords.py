@@ -10,7 +10,7 @@ from copy import deepcopy
 from datetime import datetime
 from io import open
 from json import dumps
-from os import getcwd, path
+from pathlib import Path
 from urllib.parse import parse_qsl, urljoin, urlparse
 
 with warnings.catch_warnings():
@@ -1050,7 +1050,7 @@ class Keywords:
             return None
         if not isinstance(what, str):
             return self._input_json_from_non_string(what)
-        if path.isfile(what):
+        if Path(what).is_file():
             return self._input_json_from_file(what)
         try:
             return self._input_json_as_string(what)
@@ -1136,7 +1136,7 @@ class Keywords:
             write_mode = "a" if self._input_boolean(append) else "w"
             try:
                 with open(
-                    path.join(getcwd(), file_path), write_mode, encoding="utf-8"
+                    Path.cwd() / file_path, write_mode, encoding="utf-8"
                 ) as file:
                     file.write(content)
             except OSError as e:
@@ -1238,7 +1238,7 @@ class Keywords:
             write_mode = "a" if self._input_boolean(append) else "w"
             try:
                 with open(
-                    path.join(getcwd(), file_path), write_mode, encoding="utf-8"
+                    Path.cwd() / file_path, write_mode, encoding="utf-8"
                 ) as file:
                     file.write(content)
             except OSError as e:
@@ -1273,10 +1273,12 @@ class Keywords:
             outputdir_path = BuiltIn().get_variable_value("${OUTPUTDIR}")
             if self.request["netloc"]:
                 file_path = (
-                    path.join(outputdir_path, self.request["netloc"]) + ".json"
-                )
+                    Path(outputdir_path) / self.request["netloc"]
+                ).with_suffix(".json")
             else:
-                file_path = path.join(outputdir_path, "instances") + ".json"
+                file_path = (Path(outputdir_path) / "instances").with_suffix(
+                    ".json"
+                )
         sort_keys = self._input_boolean(sort_keys)
         content = dumps(
             self.instances,
@@ -1287,7 +1289,7 @@ class Keywords:
             sort_keys=sort_keys,
         )
         try:
-            with open(file_path, "w", encoding="utf-8") as file:
+            with open(Path(file_path), "w", encoding="utf-8") as file:
                 file.write(content)
         except OSError as e:
             raise RuntimeError(
