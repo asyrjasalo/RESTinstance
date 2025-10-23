@@ -1,8 +1,8 @@
 import io
-import os
 import re
 import sys
 import unittest
+from pathlib import Path
 from unittest.mock import MagicMock, mock_open, patch
 
 from src import REST
@@ -199,8 +199,9 @@ class TestOutputConsole(OutputConsoleHelpers):
             self.library.output(self.output_dict, file_path="rest.log")
         log_clean = self._remove_ansi(self.log_buf.getvalue())
         self.assertEqual(log_clean, self.output_console)
+
         mock_log.assert_called_with(
-            f"{os.getcwd()}/rest.log", "w", encoding="utf-8"
+            Path.cwd() / "rest.log", "w", encoding="utf-8"
         )
         handle = mock_log()
         handle.write.assert_called_once_with(self.output_console_file)
@@ -214,7 +215,7 @@ class TestOutputConsole(OutputConsoleHelpers):
         log_clean = self._remove_ansi(self.log_buf.getvalue())
         self.assertEqual(log_clean, "")
         mock_log.assert_called_with(
-            f"{os.getcwd()}/rest.log", "w", encoding="utf-8"
+            Path.cwd() / "rest.log", "w", encoding="utf-8"
         )
         handle = mock_log()
         handle.write.assert_called_once_with(self.output_console_file)
@@ -252,7 +253,7 @@ class TestOutputSchemaConsole(OutputConsoleHelpers):
         log_clean = self._remove_ansi(self.log_buf.getvalue())
         self.assertEqual(log_clean, self.output_schema_console)
         mock_log.assert_called_with(
-            f"{os.getcwd()}/rest.log", "w", encoding="utf-8"
+            Path.cwd() / "rest.log", "w", encoding="utf-8"
         )
         handle = mock_log()
         handle.write.assert_called_once_with(self.output_schema_file)
@@ -266,7 +267,7 @@ class TestOutputSchemaConsole(OutputConsoleHelpers):
         log_clean = self._remove_ansi(self.log_buf.getvalue())
         self.assertEqual(log_clean, "")
         mock_log.assert_called_with(
-            f"{os.getcwd()}/rest.log", "w", encoding="utf-8"
+            Path.cwd() / "rest.log", "w", encoding="utf-8"
         )
         handle = mock_log()
         handle.write.assert_called_once_with(self.output_schema_file)

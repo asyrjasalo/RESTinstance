@@ -6,7 +6,7 @@
 
 from io import open
 from json import dumps, load, loads
-from os import path
+from pathlib import Path
 from urllib.parse import urlparse
 
 from pygments import formatters, highlight, lexers
@@ -235,7 +235,7 @@ class REST(Keywords):
         if isinstance(value, (dict)):
             return value
         try:
-            if path.isfile(value):
+            if Path(value).is_file():
                 json_value = REST._input_json_from_file(value)
             else:
                 json_value = loads(value)
@@ -254,7 +254,7 @@ class REST(Keywords):
         if isinstance(value, (list)):
             return value
         try:
-            if path.isfile(value):
+            if Path(value).is_file():
                 json_value = REST._input_json_from_file(value)
             else:
                 json_value = loads(value)
@@ -339,7 +339,7 @@ class REST(Keywords):
             return REST._input_boolean(value)
         except RuntimeError:
             value = REST._input_string(value)
-            if not path.isfile(value):
+            if not Path(value).is_file():
                 raise RuntimeError(
                     "SSL verify option is not "
                     + "a Python or a JSON boolean or a path to an existing "
@@ -384,7 +384,7 @@ class REST(Keywords):
         except RuntimeError:
             if isinstance(value, bytes):
                 data = value
-            elif path.isfile(value):
+            elif Path(value).is_file():
                 with open(value, "rb") as file:
                     data = file.read()
             else:
