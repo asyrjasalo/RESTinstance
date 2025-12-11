@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "RESTinstance"
-version = "1.6.1"
+version = "1.6.2"
 description = "Robot Framework library for RESTful JSON APIs"
 authors = [{ name = "Anssi Syrjäsalo", email = "opensource@syrjasalo.com" }]
 dependencies = [
