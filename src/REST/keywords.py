@@ -1050,7 +1050,12 @@ class Keywords:
             return None
         if not isinstance(what, str):
             return self._input_json_from_non_string(what)
-        if Path(what).is_file():
+        try:
+            is_file = Path(what).is_file()
+        except OSError:
+            # Handle cases where path is too long or invalid
+            is_file = False
+        if is_file:
             return self._input_json_from_file(what)
         try:
             return self._input_json_as_string(what)

@@ -130,3 +130,63 @@ class TestKeywords(unittest.TestCase):
         }
         self.library._find_by_path = MagicMock()
         self.assertRaises(RuntimeError, self.library._find_by_field, "$abba13")
+
+    def test_set_headers_with_long_bearer_token(self):
+        """Test that Set Headers handles long bearer tokens without raising OSError.
+
+        This test reproduces the issue where a long bearer token (longer than
+        filesystem filename limits) would cause OSError: [Errno 36] File name too long
+        when the code tried to check if the value was a file path.
+        """
+        # Create a very long bearer token (300+ characters, exceeding typical
+        # filesystem filename limits of 255 bytes)
+        long_token = "Bearer " + "x" * 300
+        headers = {"Authorization": long_token}
+
+        # This should not raise OSError
+        result = self.library.set_headers(headers)
+
+        # Verify the header was set correctly
+        self.assertEqual(
+            self.library.request["headers"]["Authorization"], long_token
+        )
+        self.assertIn("Authorization", result)
+
+    def test_set_headers_with_long_json_string(self):
+        """Test that Set Headers handles long JSON strings without raising OSError."""
+        # Create a JSON string with a very long value (300+ characters)
+        long_value = "x" * 300
+        headers_json = f'{{"Authorization": "Bearer {long_value}"}}'
+
+        # This should not raise OSError
+        result = self.library.set_headers(headers_json)
+
+        # Verify the header was set correctly
+        self.assertIn("Authorization", result)
+        self.assertTrue(result["Authorization"].startswith("Bearer"))
+
+    def test_input_object_with_long_string(self):
+        """Test that _input_object handles long strings without raising OSError."""
+        # Create a very long JSON string (300+ characters)
+        long_json = '{"key": "' + "x" * 300 + '"}'
+
+        # This should not raise OSError
+        result = REST.REST._input_object(long_json)
+
+        # Verify it was parsed as JSON
+        self.assertIsInstance(result, dict)
+        self.assertIn("key", result)
+        self.assertEqual(len(result["key"]), 300)
+
+    def test_input_array_with_long_string(self):
+        """Test that _input_array handles long strings without raising OSError."""
+        # Create a very long JSON array string (300+ characters)
+        long_json = '["' + "x" * 300 + '"]'
+
+        # This should not raise OSError
+        result = REST.REST._input_array(long_json)
+
+        # Verify it was parsed as JSON
+        self.assertIsInstance(result, list)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(len(result[0]), 300)
