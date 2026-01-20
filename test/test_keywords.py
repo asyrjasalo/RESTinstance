@@ -190,3 +190,69 @@ class TestKeywords(unittest.TestCase):
         self.assertIsInstance(result, list)
         self.assertEqual(len(result), 1)
         self.assertEqual(len(result[0]), 300)
+
+
+class TestFormat(unittest.TestCase):
+    def setUp(self) -> None:
+        self.library = REST.REST()
+        good_timestamp = "2025-12-22T07:56:46Z"
+        bad_timestamp = "foobar"
+        self.good_timestamp = good_timestamp
+        self.response = {
+            "response": {
+                "body": {
+                    "element": {"good": good_timestamp, "bad": bad_timestamp}
+                }
+            },
+            "schema": {
+                "properties": {
+                    "response": {
+                        "properties": {
+                            "body": {
+                                "good": good_timestamp,
+                                "bad": bad_timestamp,
+                            },
+                        }
+                    }
+                }
+            },
+        }
+        return super().setUp()
+
+    def test_string_format_datetime_ok(self):
+        self.library._last_instance_or_error = MagicMock()
+        self.library._last_instance_or_error.return_value = self.response
+        observed = self.library.string(
+            "response body element good", format="date-time"
+        )
+        expected = [self.good_timestamp]
+        self.assertEqual(observed, expected)
+
+    def test_string_format_datetime_fails(self):
+        self.library._last_instance_or_error = MagicMock()
+        self.library._last_instance_or_error.return_value = self.response
+        self.assertRaises(
+            AssertionError,
+            self.library.string,
+            "response body element bad",
+            format="date-time",
+        )
+
+    def test_string_unknown_format(self):
+        self.library._last_instance_or_error = MagicMock()
+        self.library._last_instance_or_error.return_value = self.response
+        expected = (
+            "Unknown format 'datetime' at schema. Did you mean 'date-time'?"
+        )
+        with self.assertRaisesRegex(AssertionError, expected):
+            self.library.string("response body element bad", format="datetime")
+
+    def test_string_format_dict(self):
+        self.library._last_instance_or_error = MagicMock()
+        self.library._last_instance_or_error.return_value = self.response
+        self.assertRaises(
+            AssertionError,
+            self.library.string,
+            "response body element bad",
+            format={},
+        )

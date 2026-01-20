@@ -4,6 +4,7 @@
 # Copyright(C) 2018- Anssi Syrjäsalo (http://a.syrjasalo.com)
 # Licensed under GNU Lesser General Public License v3 (LGPL-3.0).
 
+import difflib
 import warnings
 from collections import OrderedDict
 from copy import deepcopy
@@ -1476,9 +1477,27 @@ class Keywords:
         for field in schema:
             self._assert_schema(schema[field], json_dict[field])
 
+    def _assert_known_formats(self, schema, checker, path="schema"):
+        if not isinstance(schema, dict):
+            return
+        if "format" in schema:
+            fmt = schema["format"]
+            if not isinstance(fmt, str):
+                raise AssertionError(f"{fmt} is not a string")
+            if fmt not in checker.checkers:
+                suggestions = difflib.get_close_matches(
+                    fmt, checker.checkers, n=1
+                )
+                hint = (
+                    f" Did you mean '{suggestions[0]}'?" if suggestions else ""
+                )
+                raise AssertionError(f"Unknown format '{fmt}' at {path}.{hint}")
+
     def _assert_schema(self, schema, reality):
+        format_checker = FormatChecker()
         try:
-            validate(reality, schema, format_checker=FormatChecker())
+            self._assert_known_formats(schema, format_checker)
+            validate(reality, schema, format_checker=format_checker)
         except SchemaError as e:
             raise RuntimeError(e)
         except ValidationError as e:
