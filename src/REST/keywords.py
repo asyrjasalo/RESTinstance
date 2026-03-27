@@ -1531,7 +1531,8 @@ class Keywords:
                     "JSONPath query '%s' " % (field) + "did not match anything."
                 )
             for match in matches:
-                path = match.replace("[", "").replace("]", "").split(".")
+                match_str = match.replace("(", "").replace(")", "")
+                path = [part.strip("'\"[]") for part in match_str.split(".")]
                 paths.append(path)
         else:
             value = last_instance
