@@ -3,11 +3,11 @@
 You can use your favorite Python version manager (asdf, pyenv, ...) as long
 as it follows `.python-version`.
 
-Install [pre-commit](https://pre-commit.com/) if it is not already installed.
+Install [prek](https://prek.j178.dev/) if it is not already installed.
 
 Install pre-commit hooks in your git working copy:
 
-    pre-commit install --hook-type pre-commit --hook-type commit-msg
+    prek install --hook-type pre-commit --hook-type commit-msg
 
 Use [Conventional Commits](https://www.conventionalcommits.org/).
 
