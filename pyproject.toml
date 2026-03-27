@@ -21,7 +21,7 @@ dependencies = [
     "tzlocal",
     "setuptools<80",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 readme = "README.md"
 license = { text = "LGPLv3" }
 keywords = ["robotframework", "library", "http", "json", "api"]
