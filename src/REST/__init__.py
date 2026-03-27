@@ -155,6 +155,12 @@ class REST(Keywords):
         self.schema.update(self._input_object(schema))
         self.spec = {}
         self.spec.update(self._input_object(spec))
+        if self.spec.get("swagger"):
+            swagger_version = self.spec.get("swagger", "unknown")
+            logger.warn(
+                f"Swagger {swagger_version} spec support is deprecated and will be removed "
+                "in the future. Please migrate to OpenAPI 3.x."
+            )
         self._spec = None
         self.instances = self._input_array(instances)
         self.log_level = self._input_log_level(loglevel)

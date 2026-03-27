@@ -4,6 +4,9 @@
 
 [Keyword Documentation](https://asyrjasalo.github.io/RESTinstance)
 
+Note: Since 1.7.0, Swagger (OpenAPI 2.0) support is deprecated,
+and will likely be removed in the future.
+
 ## Advantages
 
 1.  **RESTinstance relies on Robot Framework's language-agnostic, clean
@@ -11,7 +14,7 @@
     particular programming language nor development framework. Using
     RESTinstance requires little, if any, programming knowledge. It
     builts on long-term technologies with well established communities,
-    such as HTTP, JSON (Schema), Swagger/OpenAPI and Robot Framework.
+    such as HTTP, JSON (Schema), OpenAPI and Robot Framework.
 2.  **It validates JSON using JSON Schema, guiding you to write API
     tests to base on properties** rather than on specific values (e.g.
     "email must be valid" vs "email is foo@bar.com"). This approach
@@ -24,10 +27,9 @@
     and the schema gets more accurate by your tests.** Output the schema
     to a file and reuse it as expectations to test the other methods, as
     most of them respond similarly with only minor differences. Or
-    extend the schema further to a full Swagger spec (version 2.0 and
-    OpenAPI 3.0), which RESTinstance can test requests and
-    responses against. All this leads to reusability, getting great test
-    coverage with minimum number of keystrokes and very clean tests.
+    extend the schema further to a full OpenAPI spec, which RESTinstance can
+    test requests and responses against. All this leads to reusability, getting
+    great test coverage with minimum number of keystrokes and very clean tests.
 
 ## Installation
 
@@ -58,7 +60,7 @@ Documentation   Test data can be read from variables and files.
 ...             Using (enum) values in tests optional. Only type is required.
 ...             All the JSON Schema validation keywords are also supported.
 ...             Thus, there is no need to write any own validation logic.
-...             Not a long path from schemas to full Swagger/OpenAPI specs.
+...             Not a long path from schemas to full OpenAPI specs.
 ...             The persistence of the created instances is the test suite.
 ...             Use keyword `Rest instances` to output the created instances.
 
@@ -163,17 +165,15 @@ Contributors:
 
 We use following Python excellence under the hood:
 
-- [Flex](https://github.com/pipermerriam/flex), by Piper Merriam, for
-Swagger 2.0 validation
 - [GenSON](https://github.com/wolverdude/GenSON), by Jon "wolverdude"
 Wolverton, for JSON Schema generator
 - [jsonpath-ng](https://github.com/h2non/jsonpath-ng), by Tomas
 Aparicio and Kenneth Knowles, for handling JSONPath queries
 - [jsonschema](https://github.com/Julian/jsonschema), by Julian
 Berman, for JSON Schema validator
+- [openapi-core](https://github.com/python-openapi/openapi-core), by Artur Maciag
+et al., for OpenAPI validation
 - [pygments](http://pygments.org), by Georg Brandl et al., for JSON
 syntax coloring
 - [requests](https://github.com/requests/requests), by Kenneth Reitz
 et al., for making HTTP requests
-- [openapi-core](https://github.com/python-openapi/openapi-core), by Artur Maciag
-et al., for OpenAPI 3 validation
