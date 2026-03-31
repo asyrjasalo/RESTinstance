@@ -4,8 +4,10 @@
 
 [Keyword Documentation](https://asyrjasalo.github.io/RESTinstance)
 
-Note: Since 1.7.0, Swagger (OpenAPI 2.0) support is deprecated,
-and will likely be removed in the future.
+Updates:
+- Since 1.7.1, JSON Schema Draft 2020-12 and Draft 2019-09 are also supported
+- Since 1.7.0, Swagger (OpenAPI 2.0) support is deprecated, and will be removed in the future
+- Since 1.7.0, OpenAPI 3.2 is supported, in addition to 3.0 and 3.1
 
 ## Advantages
 
