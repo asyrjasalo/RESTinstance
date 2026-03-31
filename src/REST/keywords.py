@@ -19,7 +19,8 @@ with warnings.catch_warnings():
 
 from genson import SchemaBuilder
 from jsonpath_ng.ext import parse as parse_jsonpath
-from jsonschema import FormatChecker, validate
+from jsonschema import FormatChecker
+from jsonschema import validators as jv_validators
 from jsonschema.exceptions import SchemaError, ValidationError
 from openapi_core import OpenAPI
 from openapi_core.contrib.requests import (
@@ -1478,7 +1479,17 @@ class Keywords:
 
     def _assert_schema(self, schema, reality):
         try:
-            validate(reality, schema, format_checker=FormatChecker())
+            top_schema = getattr(self, "schema", None)
+            if (
+                top_schema
+                and isinstance(top_schema, dict)
+                and "$schema" in top_schema
+            ):
+                validator_cls = jv_validators.validator_for(top_schema)
+            else:
+                validator_cls = jv_validators.validator_for(schema)
+            validator = validator_cls(schema, format_checker=FormatChecker())
+            validator.validate(reality)
         except SchemaError as e:
             raise RuntimeError(e)
         except ValidationError as e:
@@ -1614,10 +1625,15 @@ class Keywords:
                 allowNull = validations["nullable"]
                 del validations["nullable"]
 
-            if "draft-04" in self.schema["$schema"]:
+            meta = self.schema.get("$schema", "")
+            if "draft-04" in meta:
                 schema_version = "draft-04"
-            elif "draft-06" in self.schema["$schema"]:
+            elif "draft-06" in meta:
                 schema_version = "draft-06"
+            elif "draft/2020-12" in meta or "draft-2020-12" in meta:
+                schema_version = "draft-2020-12"
+            elif "draft/2019-09" in meta or "draft-2019-09" in meta:
+                schema_version = "draft-2019-09"
             else:
                 schema_version = "draft-07"
             kws = list(SCHEMA_KEYWORDS["common"][schema_version])

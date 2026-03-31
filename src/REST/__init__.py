@@ -57,8 +57,11 @@ class REST(Keywords):
     Request and response schemas are inferred if they are not already
     expected by using expectation keywords. All the validations the library
     implements are based on JSON Schema [http://json-schema.org/draft-07/json-schema-validation.html|draft-07] by default
-    but also [http://json-schema.org/draft-06/json-schema-validation.html|draft-06] and
-    [http://json-schema.org/draft-04/json-schema-validation.html|draft-04] can be configured.
+    but also [http://json-schema.org/draft-06/json-schema-validation.html|draft-06],
+    [http://json-schema.org/draft-04/json-schema-validation.html|draft-04],
+    [https://json-schema.org/draft/2019-09/schema|draft 2019-09] and
+    [https://json-schema.org/draft/2020-12/schema|draft 2020-12] can be configured
+    by setting ``"$schema"`` in the schema passed to the library.
 
     = The scope =
 
