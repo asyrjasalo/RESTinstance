@@ -10,8 +10,8 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from pygments import formatters, highlight, lexers
-from requests.packages.urllib3 import disable_warnings
 from robot.api import logger
+from urllib3 import disable_warnings  # type: ignore[import-untyped]
 from yaml import SafeLoader
 from yaml import load as load_yaml
 
@@ -336,7 +336,7 @@ class REST(Keywords):
             return value
         try:
             value = loads(value)
-            if not isinstance(value, str + (list)):
+            if not isinstance(value, (str, list)):
                 raise RuntimeError(
                     "Input is not a JSON string " + "or a list: %s" + (value)
                 )
